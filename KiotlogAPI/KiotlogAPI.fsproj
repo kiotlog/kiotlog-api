@@ -6,9 +6,11 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Include="Railway.fs" />
     <Compile Include="Utils.fs" />
     <Compile Include="json\OptionConverter.fs" />
     <Compile Include="DB.fs" />
+    <Compile Include="Json.fs" />
     <Compile Include="RestFul.fs" />
     <Compile Include="webparts\Devices.fs" />
     <Compile Include="API.fs" />

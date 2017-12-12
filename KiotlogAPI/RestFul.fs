@@ -1,92 +1,93 @@
 [<AutoOpen>]
 module Kiotlog.Web.RestFul
 
-open Newtonsoft.Json
+// open Newtonsoft.Json
 // open Newtonsoft.Json.Converters
 open Suave
+open System.Text
 open Operators
 // open Suave.Http
 open Successful
-open RequestErrors
+// open RequestErrors
 open Filters
 open System
-open Kiotlog.Web.Utils
+open System.Collections.Generic
+open System.ComponentModel.DataAnnotations
+
+open Utils
+open Json
+open Railway
 
 type RestResource<'a> = {
-    GetAll : unit -> 'a seq
-    Create : 'a -> 'a
+    Name : string
+    GetAll : unit -> Result<'a [], RestError>
+    Create : 'a -> Result<'a, RestError>
     // Update : 'a -> 'a option
-    Delete : Guid -> unit
-    GetById : Guid -> 'a option
-    UpdateById : Guid -> 'a -> 'a option
+    Delete : Guid -> Result<unit, RestError>
+    GetById : Guid -> Result<'a, RestError>
+    UpdateById : Guid -> 'a -> Result<'a, RestError>
     // IsExists : int -> bool
 }
 
-let JSON v =
-    let jsonSerializerSettings = JsonSerializerSettings()
-    // jsonSerializerSettings.ContractResolver <- new CamelCasePropertyNamesContractResolver()
-    jsonSerializerSettings.NullValueHandling <- NullValueHandling.Ignore
-
-    // TODO: remove for production
-    jsonSerializerSettings.Formatting <- Formatting.Indented
-
-    // jsonSerializerSettings.Converters.Add(IdiomaticDuConverter())
-    jsonSerializerSettings.Converters.Add(Newtonsoft.Json.FSharp.OptionConverter())
-    // jsonSerializerSettings.Converters.Add(IsoDateTimeConverter(DateTimeFormat = "yyyy-MM-dd"))
-
-    JsonConvert.SerializeObject(v, jsonSerializerSettings)
-    |> OK
-    >=> Writers.setMimeType "application/json; charset=utf-8"
-
-let fromJson<'a> json =
-    let conv = Newtonsoft.Json.FSharp.OptionConverter()
-    let lconv:JsonConverter [] = [|conv|]
-    JsonConvert.DeserializeObject(json, typeof<'a>, lconv) :?> 'a
-
-let getResourceFromReq<'a> (req : HttpRequest) = 
-    let getString rawForm = System.Text.Encoding.UTF8.GetString(rawForm)
-    req.rawForm |> getString |> fromJson<'a>
-
-let rest resourceName resource =
-    let resourcePath = "/" + resourceName
+let rest resource =
+    let resourcePath = "/" + resource.Name
     // let resourceIdPath = new PrintfFormat<(Guid -> string),unit,string,string,Guid>(resourcePath + "/%s")
 
-    let badRequest = BAD_REQUEST "Resource not found"
+    // let badRequest = BAD_REQUEST "Resource not found"
 
-    let handleResource requestError = function
-        | Some r -> r |> JSON
-        | _ -> requestError
+    let validate (entity : 'a) =
+        let vctx = ValidationContext(entity)
+        let results = new List<ValidationResult>()
+        let isValid = Validator.TryValidateObject(entity, vctx, results)
+        // (isValid, results)
+        match isValid with
+        | true -> Ok entity
+        | false -> Error { Errors = results |> Seq.map(fun x -> x.ErrorMessage) |> Seq.toArray; Status = HTTP_422 }
 
-    let getAll = warbler (fun _ -> resource.GetAll () |> JSON)
-        
-    let getResourceById = 
-        resource.GetById >> handleResource (NOT_FOUND "Resource not found")
+    // let handleValidate : WebPart =
+    //     fun (ctx : HttpContext) -> async {
+    //         return! NOT_FOUND "ciao" ctx
+    //     }
+
+    // let handleResource requestError = function
+    //     | Some r -> r |> JSON OK
+    //     | _ -> requestError
+
+    let handleRailwayResource = function
+        | Ok x -> JSON OK x
+        | Error e -> JSON (Encoding.UTF8.GetBytes >> Response.response e.Status) e
+
+    let getAll = warbler (fun _ -> resource.GetAll () |> handleRailwayResource)
+
+    let getResourceById =
+        resource.GetById >> handleRailwayResource
 
     let updateResourceById id =
-        request (getResourceFromReq >> (resource.UpdateById id) >> handleResource badRequest)
+        request (getResourceFromReq >> Result.bind (resource.UpdateById id) >> handleRailwayResource)
 
     let deleteResourceById id =
-        resource.Delete id
-        NO_CONTENT
+        match resource.Delete id with
+        | Ok _ -> NO_CONTENT
+        | Error e -> JSON (Encoding.UTF8.GetBytes >> Response.response e.Status) e
 
     //let isResourceExists id =
     //    if resource.IsExists id then OK "" else NOT_FOUND ""
 
     let uuidPatternRouting part : WebPart =
-        let f (r:HttpContext) =
+        fun (ctx : HttpContext) -> async {
             let resourceRegEx = resourcePath + "/([0-9A-F]{8}[-]([0-9A-F]{4}[-]){3}[0-9A-F]{12})$"
-            match r.request.url.AbsolutePath with
+            match ctx.request.url.AbsolutePath with
             | RegexMatch resourceRegEx groups ->
                 match Guid.TryParse(groups.[1].Value) with
-                | (true, g) -> part g r
-                | _ -> fail
-            | _ -> fail
-        f
+                | (true, g) -> return! part g ctx
+                | _ -> return! fail
+            | _ -> return! fail
+        }
 
     choose [
         path resourcePath >=> choose [
             GET >=> getAll
-            POST >=> request (getResourceFromReq >> resource.Create >> JSON)
+            POST >=> request (getResourceFromReq >> Result.bind validate >> Result.bind resource.Create >> handleRailwayResource)
             //PUT >=> request (getResourceFromReq >> resource.Update >> handleResource badRequest)
         ]
         // DELETE >=> pathScan resourceIdPath deleteResourceById
