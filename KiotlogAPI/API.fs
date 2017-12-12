@@ -2,7 +2,6 @@
 
 open Suave
 open System.Net
-open Kiotlog.Web.DB
 
 [<EntryPoint>]
 let main argv =
@@ -14,7 +13,7 @@ let main argv =
             RequestErrors.NOT_FOUND "Found no handlers"
         ]
 
-    let conf = {defaultConfig with bindings = [HttpBinding.create HTTP IPAddress.Loopback 8888us]}
+    let conf = { defaultConfig with bindings = [HttpBinding.create HTTP IPAddress.Loopback 8888us] }
     startWebServer conf app
 
     0 // return an integer exit code
