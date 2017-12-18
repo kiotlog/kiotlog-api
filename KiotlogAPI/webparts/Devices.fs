@@ -8,9 +8,7 @@ open Kiotlog.Web.Railway
 
 open KiotlogDB
 open Microsoft.EntityFrameworkCore
-// open Microsoft.FSharp.Linq
-// open System.Linq
-// open Kiotlog.Web.Webparts
+open Microsoft.EntityFrameworkCore.Query.Expressions
 
 
 let getDevicesAsync (cs : string) () =
@@ -106,16 +104,50 @@ let updateDeviceByIdAsync (cs : string) (deviceId: Guid) (device: Devices) =
 
         // // ctx.Entry(device).Property("Device").IsModified <- true
 
-        let! entity = ctx.Devices.FindAsync(deviceId) |> Async.AwaitTask
+        // let! entity = ctx.Devices.FindAsync(deviceId) |> Async.AwaitTask
+        let! res = loadDeviceWithSensorsAsync ctx deviceId
 
-        match entity with
-        | null -> return Error { Errors = [|"Device not found"|]; Status = HTTP_404}
-        | _ ->
+        match res with
+        // | null -> return Error { Errors = [|"Device not found"|]; Status = HTTP_404}
+        | Error _ -> return res
+        | Ok entity ->
             // d |> ctx.Devices.Remove |> ignore
             if not (String.IsNullOrEmpty device.Device) then entity.Device <- device.Device
             if not (isNull device.Auth) then entity.Auth <- device.Auth
             if not (isNull device.Frame) then entity.Frame <- entity.Frame
-            if not (isNull device.Sensors) && device.Sensors.Count > 0 then entity.Sensors <- device.Sensors
+
+            // let updateSensors = fun _ v ->
+            //     if not (isNull v.Id) then
+            //         let sensor = entity.Sensors.FindAsync(v.Id) |> Async.AwaitTask |> Async.RunSynchronously
+
+            //         match sensor with
+            //         | null -> ()
+            //         | _ -> sensor.Identity
+
+            if not (isNull device.Sensors) && device.Sensors.Count > 0 then
+                let updateSensor = fun (s : Sensors) ->
+                    // s |> ctx.Sensors.Attach |> ignore
+                    // ctx.Entry(s).State <- if s.Id = Guid.Empty then EntityState.Added else EntityState.Modified
+                    let existing =
+                        let f = 
+                            query {
+                                for x in entity.Sensors do
+                                where (x.Id = s.Id)
+                                select x
+                                exactlyOneOrDefault
+                            } // entity.Sensors.SingleOrDefault(fun x -> x.Id = s.Id)
+                        match f with
+                        | null ->
+                            entity.Sensors.Add s
+                            s
+                        | _ -> f
+
+                    existing |> ctx.Sensors.Attach |> ignore
+                    if not (isNull s.Meta) then
+                        existing.Meta <- s.Meta
+                        // ctx.Entry(existing).Property("_Meta").IsModified <- true
+
+                device.Sensors |> Seq.iter updateSensor
 
             try
                 ctx.SaveChanges() |> ignore
