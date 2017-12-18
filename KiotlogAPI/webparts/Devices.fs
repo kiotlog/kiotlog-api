@@ -15,7 +15,7 @@ open Microsoft.EntityFrameworkCore
 
 let getDevicesAsync (cs : string) () =
     async {
-        let ctx = getContext cs
+        use ctx = getContext cs
 
         try
             let! devices = ctx.Devices.ToArrayAsync() |> Async.AwaitTask
@@ -28,7 +28,7 @@ let getDevices (cs : string) () =
     getDevicesAsync cs () |> Async.RunSynchronously
 
 let createDevice (cs : string) (device: Devices) =
-    let ctx = getContext cs
+    use ctx = getContext cs
 
     device |> ctx.Devices.Add |> ignore
 
@@ -39,10 +39,8 @@ let createDevice (cs : string) (device: Devices) =
     | :? DbUpdateException -> Error { Errors = [|"Error adding Device"|]; Status = HTTP_409 }
     | _ -> Error { Errors = [|"Some DB error occurred"|]; Status = HTTP_500 }
 
-let getDeviceAsync (cs : string) (deviceId : Guid) =
+let private loadDeviceWithSensorsAsync (ctx : KiotlogDBContext) (deviceId : Guid) =
     async {
-        use ctx = getContext cs
-
         try
             // let! device = ctx.Devices
             //                 // .FindAsync(deviceId)
@@ -71,6 +69,13 @@ let getDeviceAsync (cs : string) (deviceId : Guid) =
             | d -> return Ok d
         with
         | _ -> return Error { Errors = [|"Some DB error occurred"|]; Status = HTTP_500 }
+    }
+
+let getDeviceAsync (cs : string) (deviceId : Guid) =
+    async {
+        use ctx = getContext cs
+        
+        return! loadDeviceWithSensorsAsync ctx deviceId
     }
 
 let getDevice (cs : string) (deviceId: Guid) =
@@ -105,7 +110,7 @@ let updateDeviceByIdAsync (cs : string) (deviceId: Guid) (device: Devices) =
 
         match entity with
         | null -> return Error { Errors = [|"Device not found"|]; Status = HTTP_404}
-        | d ->
+        | _ ->
             // d |> ctx.Devices.Remove |> ignore
             if not (String.IsNullOrEmpty device.Device) then entity.Device <- device.Device
             if not (isNull device.Auth) then entity.Auth <- device.Auth
@@ -114,7 +119,7 @@ let updateDeviceByIdAsync (cs : string) (deviceId: Guid) (device: Devices) =
 
             try
                 ctx.SaveChanges() |> ignore
-                return Ok device
+                return Ok entity
             with
             | :? DbUpdateException -> return Error { Errors = [|"Error updating Device"|]; Status = HTTP_409 }
             | _ -> return Error { Errors = [|"Some DB error occurred"|]; Status = HTTP_500 }
