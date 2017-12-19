@@ -8,7 +8,6 @@ open Kiotlog.Web.Railway
 
 open KiotlogDB
 open Microsoft.EntityFrameworkCore
-open Microsoft.EntityFrameworkCore.Query.Expressions
 
 
 let getDevicesAsync (cs : string) () =
@@ -99,16 +98,9 @@ let updateDeviceByIdAsync (cs : string) (deviceId: Guid) (device: Devices) =
 
         device.Id <- deviceId
 
-        // // device |> ctx.Devices.Update |> ignore
-        // device |> ctx.Devices.Attach |> ignore
-
-        // // ctx.Entry(device).Property("Device").IsModified <- true
-
-        // let! entity = ctx.Devices.FindAsync(deviceId) |> Async.AwaitTask
         let! res = loadDeviceWithSensorsAsync ctx deviceId
 
         match res with
-        // | null -> return Error { Errors = [|"Device not found"|]; Status = HTTP_404}
         | Error _ -> return res
         | Ok entity ->
             // d |> ctx.Devices.Remove |> ignore
@@ -116,18 +108,8 @@ let updateDeviceByIdAsync (cs : string) (deviceId: Guid) (device: Devices) =
             if not (isNull device.Auth) then entity.Auth <- device.Auth
             if not (isNull device.Frame) then entity.Frame <- entity.Frame
 
-            // let updateSensors = fun _ v ->
-            //     if not (isNull v.Id) then
-            //         let sensor = entity.Sensors.FindAsync(v.Id) |> Async.AwaitTask |> Async.RunSynchronously
-
-            //         match sensor with
-            //         | null -> ()
-            //         | _ -> sensor.Identity
-
             if not (isNull device.Sensors) && device.Sensors.Count > 0 then
                 let updateSensor = fun (s : Sensors) ->
-                    // s |> ctx.Sensors.Attach |> ignore
-                    // ctx.Entry(s).State <- if s.Id = Guid.Empty then EntityState.Added else EntityState.Modified
                     let existing =
                         let f = 
                             query {
@@ -146,6 +128,12 @@ let updateDeviceByIdAsync (cs : string) (deviceId: Guid) (device: Devices) =
                     if not (isNull s.Meta) then
                         existing.Meta <- s.Meta
                         // ctx.Entry(existing).Property("_Meta").IsModified <- true
+                    if s.ConversionId.HasValue then
+                        existing.ConversionId <- s.ConversionId
+                    if s.SensorTypeId.HasValue then
+                        existing.SensorTypeId <- s.SensorTypeId
+                    if not (isNull s.Fmt) then
+                        existing.Fmt <- s.Fmt
 
                 device.Sensors |> Seq.iter updateSensor
 
