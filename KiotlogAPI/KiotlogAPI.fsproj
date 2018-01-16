@@ -17,7 +17,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\Kiotlog\KiotlogDB\KiotlogDB.csproj" />
+    <ProjectReference Include="..\KiotlogDB\KiotlogDB.csproj" />
   </ItemGroup>
 
   <ItemGroup>
