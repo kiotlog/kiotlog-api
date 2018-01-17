@@ -1,0 +1,29 @@
+﻿{
+  "device": "mkr0-fona",
+  "meta": {
+    "name": "mkr0-fona",
+    "description": "MKRZERO Manchox"
+  },
+  "auth": {
+    "basic": {
+      "token": "fb2e2658-c6cd-498d-91e6-37ad92bbe89b"
+    }
+  },
+  "frame": {
+    "bigendian": false,
+    "bitfields": false
+  },
+  "sensors": [
+    {
+      "meta": {
+        "name": "status"
+      },
+      "fmt": {
+        "index": 0,
+        "fmt_chr": "B"
+      },
+      "sensor_type_id":"8b4f41b0-48ef-4004-b30c-8560b52cd3b7",
+      "conversion_id": "5b635746-c7aa-4604-8f8d-0066fe84a5a2"
+    }
+  ]
+}

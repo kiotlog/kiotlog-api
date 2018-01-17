@@ -36,4 +36,4 @@ COPY --from=build-env /Sln/${PROJECT}/out ./
 ENV LC_ALL en_US.UTF-8
 ENV LANG en_US.UTF-8
 
-ENTRYPOINT ["/App/Decoder"]
+ENTRYPOINT ["/App/KiotlogAPI"]
