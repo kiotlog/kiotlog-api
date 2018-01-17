@@ -4,15 +4,15 @@
     <TargetFramework>netcoreapp2.0</TargetFramework>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="Arguments.fs" />
-    <Compile Include="Railway.fs" />
-    <Compile Include="Utils.fs" />
-    <Compile Include="json\OptionConverter.fs" />
-    <Compile Include="DB.fs" />
-    <Compile Include="Json.fs" />
-    <Compile Include="RestFul.fs" />
-    <Compile Include="webparts\Devices.fs" />
-    <Compile Include="API.fs" />
+    <Compile Include="src/Arguments.fs" />
+    <Compile Include="src/Railway.fs" />
+    <Compile Include="src/Utils.fs" />
+    <Compile Include="src/json/OptionConverter.fs" />
+    <Compile Include="src/DB.fs" />
+    <Compile Include="src/Json.fs" />
+    <Compile Include="src/RestFul.fs" />
+    <Compile Include="src/webparts/Devices.fs" />
+    <Compile Include="src/API.fs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\KiotlogDB\KiotlogDB.csproj" />
