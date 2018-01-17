@@ -1,11 +1,13 @@
 ﻿module Kiotlog.Web.API
 
 open Suave
-open System.Net
+open Arguments
 
 [<EntryPoint>]
 let main argv =
-    let cs = "Username=postgres;Password=;Host=127.0.0.1;Port=7433;Database=trmpln"
+
+    let config = parseCLI argv
+    let cs = config.PostgresConnectionString
 
     let app =
         choose [
@@ -13,7 +15,7 @@ let main argv =
             RequestErrors.NOT_FOUND "Found no handlers"
         ]
 
-    let conf = { defaultConfig with bindings = [HttpBinding.create HTTP IPAddress.Loopback 8888us] }
+    let conf = { defaultConfig with bindings = [HttpBinding.createSimple HTTP config.HttpHost config.HttpPort] }
     startWebServer conf app
 
     0 // return an integer exit code
