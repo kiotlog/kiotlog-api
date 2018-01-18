@@ -1,2 +1,58 @@
+GET http://localhost/devices/86d36df8-6468-4ce6-a54a-e13fdb9a8c57
 
-GET http://localhost:8888/devices
+###
+
+POST http://localhost/devices
+content-type: application/json
+
+{
+  "device": "mkr0-fona",
+  "meta": {
+    "name": "mkr0-fona",
+    "description": "MKRZERO Manchox"
+  },
+  "auth": {
+    "basic": {
+      "token": "fb2e2658-c6cd-498d-91e6-37ad92bbe89b"
+    }
+  },
+  "frame": {
+    "bigendian": false,
+    "bitfields": false
+  },
+  "sensors": [
+    {
+      "meta": {
+        "name": "status"
+      },
+      "fmt": {
+        "index": 0,
+        "fmtchr": "B"
+      },
+      "sensortypeid": "8b4f41b0-48ef-4004-b30c-8560b52cd3b7",
+      "conversionid": "5b635746-c7aa-4604-8f8d-0066fe84a5a2"
+    }
+  ]
+}
+
+###
+
+POST http://localhost/devices
+content-type: application/json
+
+{
+  "device": "mkr-minimal",
+  "sensors": [
+    {
+      "meta": {
+        "name": "status"
+      },
+      "fmt": {
+        "index": 0,
+        "fmtchr": "B"
+      },
+      "sensortypeid": "8b4f41b0-48ef-4004-b30c-8560b52cd3b7",
+      "conversionid": "5b635746-c7aa-4604-8f8d-0066fe84a5a2"
+    }
+  ]
+}
