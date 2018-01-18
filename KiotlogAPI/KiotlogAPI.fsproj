@@ -14,6 +14,7 @@
     <Compile Include="src/Json.fs" />
     <Compile Include="src/RestFul.fs" />
     <Compile Include="src/webparts/Devices.fs" />
+    <Compile Include="src/webparts/SensorTypes.fs" />
     <Compile Include="src/API.fs" />
   </ItemGroup>
 

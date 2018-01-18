@@ -12,10 +12,17 @@ let main argv =
     let app =
         choose [
             Webparts.Devices.webPart cs
+            Webparts.SensorTypes.webPart cs
             RequestErrors.NOT_FOUND "Found no handlers"
         ]
 
-    let conf = { defaultConfig with bindings = [HttpBinding.createSimple HTTP config.HttpHost config.HttpPort] }
+    let conf =
+        { defaultConfig with
+            bindings =
+                [
+                    HttpBinding.createSimple HTTP config.HttpHost config.HttpPort
+                ]
+        }
     startWebServer conf app
 
     0 // return an integer exit code
