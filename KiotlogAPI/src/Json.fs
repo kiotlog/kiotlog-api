@@ -36,7 +36,7 @@ let fromJson<'a> json =
         let j = JsonConvert.DeserializeObject<'a>(json, jsonSerializerSettings)
         Ok j
     with
-    | _ -> Error { Errors = [|"Error parsing JSON body"|]; Status = HTTP_422 }
+    | e -> Error { Errors = [|"Error parsing JSON body: " + e.Message|]; Status = HTTP_422 }
 
 let getResourceFromReq<'a> (req : HttpRequest) =
     req.rawForm |> Encoding.UTF8.GetString |> fromJson<'a>
