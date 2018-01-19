@@ -1,3 +1,23 @@
+(*
+    Copyright (C) 2017 Giampaolo Mancini, Trampoline SRL.
+    Copyright (C) 2017 Francesco Varano, Trampoline SRL.
+
+    This file is part of Kiotlog.
+
+    Kiotlog is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    Kiotlog is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+*)
+
 module Kiotlog.Web.Webparts.Devices
 
 open System
@@ -41,7 +61,7 @@ let private loadDeviceWithSensorsAsync (ctx : KiotlogDBContext) (deviceId : Guid
         try
             // let! device = ctx.Devices
             //                 // .FindAsync(deviceId)
-            //                 .Where(fun d -> d.Id.Equals(deviceId))                            
+            //                 .Where(fun d -> d.Id.Equals(deviceId))
             //                 .Include("Sensors.SensorType")
             //                 // .Include(fun d -> d.Sensors)
             //                 // .ThenInclude(fun s -> s.SensorType)
@@ -71,7 +91,7 @@ let private loadDeviceWithSensorsAsync (ctx : KiotlogDBContext) (deviceId : Guid
 let getDeviceAsync (cs : string) (deviceId : Guid) =
     async {
         use ctx = getContext cs
-        
+
         return! loadDeviceWithSensorsAsync ctx deviceId
     }
 
@@ -111,7 +131,7 @@ let updateDeviceByIdAsync (cs : string) (deviceId: Guid) (device: Devices) =
             if not (isNull device.Sensors) && device.Sensors.Count > 0 then
                 let updateSensor = fun (s : Sensors) ->
                     let existing =
-                        let f = 
+                        let f =
                             query {
                                 for x in entity.Sensors do
                                 where (x.Id = s.Id)
