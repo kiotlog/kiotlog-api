@@ -1,3 +1,23 @@
+(*
+    Copyright (C) 2017 Giampaolo Mancini, Trampoline SRL.
+    Copyright (C) 2017 Francesco Varano, Trampoline SRL.
+
+    This file is part of Kiotlog.
+
+    Kiotlog is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    Kiotlog is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+*)
+
 module Kiotlog.Web.Webparts.Generics
 
 open System
@@ -32,27 +52,20 @@ let createEntity<'T when 'T : not struct> (cs : string) (entity: 'T) =
         ctx.SaveChanges() |> ignore
         Ok entity
     with
-    | :? DbUpdateException -> Error { Errors = [|"Error adding Entity"|]; Status = HTTP_409 }
+    | :? DbUpdateException -> Error { Errors = [|"Error adding" + entity.GetType().Name|]; Status = HTTP_409 }
     | _ -> Error { Errors = [|"Some DB error occurred"|]; Status = HTTP_500 }
 
 let private loadEntityAsync<'T when 'T : not struct and 'T : null> (ctx : KiotlogDBContext) (entityId : Guid) =
     async {
         try
             let entities = ctx.Set<'T>()
-            let q =
-                query {
-                    for st in entities do
-                    where (st.Id = entityId)
-                    select st
-                }
-            let! entity = q.SingleOrDefaultAsync () |> Async.AwaitTask
+            let! entity = entities.FindAsync entityId |> Async.AwaitTask
 
             match entity with
-            | null -> return Error { Errors = [|"Sensor Type not found"|]; Status = HTTP_404 }
+            | null -> return Error { Errors = [| entity.GetType().Name + " not found"|]; Status = HTTP_404 }
             | d -> return Ok d
         with
         | _ -> return Error { Errors = [|"Some DB error occurred"|]; Status = HTTP_500 }
-
     }
 
 let getEntityAsync<'T when 'T : not struct and 'T : null> (cs : string) (entityId : Guid) =
@@ -65,31 +78,32 @@ let getEntityAsync<'T when 'T : not struct and 'T : null> (cs : string) (entityI
 let getEntity<'T when 'T : not struct and 'T : null> (cs : string) (entityId: Guid) =
     getEntityAsync<'T> cs entityId |> Async.RunSynchronously
 
-// let updateEntityByIdAsync<'T when 'T : not struct and 'T : (member Id : Guid)> (cs : string) (entityId: Guid) (entity: 'T) =
-let updateEntityByIdAsync<'T when 'T : not struct> (cs : string) (entityId: Guid) (entity: 'T) =
+let updateEntityByIdAsync<'T when 'T : not struct and 'T : null> (cs : string) (entityId: Guid) updateFunc =
     async {
         use ctx = getContext cs
 
-        entity.Id <- entityId
+        // entity.Id <- entityId
 
         let! res = loadEntityAsync ctx entityId
 
         match res with
         | Error _ -> return res
-        | Ok e ->
-            if not (String.IsNullOrEmpty entity.Name) then e.Name <- entity.Name
-            if not (isNull entity.Meta) then e.Meta <- entity.Meta
-            if not (isNull entity.Type) then e.Type <- entity.Type
+        | Ok (entity : 'T) ->
+            updateFunc entity
+            // let updateFunc resource entity =
+            //      if not (String.IsNullOrEmpty resource.Name) then entity.Name <- resource.Name
+            //      if not (isNull resource.Meta) then entity.Meta <- resource.Meta
+            //      if not (isNull resource.Type) then entity.Type <- resource.Type
 
             try
                 ctx.SaveChanges() |> ignore
-                return Ok e
+                return Ok entity
             with
-            | :? DbUpdateException -> return Error { Errors = [|"Error updating Entity"|]; Status = HTTP_409 }
+            | :? DbUpdateException -> return Error { Errors = [|"Error updating" + entity.GetType().Name|]; Status = HTTP_409 }
             | _ -> return Error { Errors = [|"Some DB error occurred"|]; Status = HTTP_500 }
     }
-let updateEntityById<'T when 'T : not struct> (cs : string) (entityId: Guid) (entity: 'T) =
-    updateEntityByIdAsync<'T> cs entityId entity |> Async.RunSynchronously
+let updateEntityById<'T when 'T : not struct and 'T : null> (cs : string) (entityId: Guid) updateFunc =
+    updateEntityByIdAsync<'T> cs entityId updateFunc |> Async.RunSynchronously
 
 let deleteEntityAsync<'T when 'T : not struct and 'T : null> (cs : string) (entityId : Guid) =
     async {
@@ -99,7 +113,7 @@ let deleteEntityAsync<'T when 'T : not struct and 'T : null> (cs : string) (enti
         let! entity = set.FindAsync(entityId) |> Async.AwaitTask
 
         match entity with
-        | null -> return Error { Errors = [|"Entity not found"|]; Status = HTTP_404}
+        | null -> return Error { Errors = [|entity.GetType().Name + " not found"|]; Status = HTTP_404}
         | d ->
             d |> set.Remove |> ignore
 
@@ -107,7 +121,7 @@ let deleteEntityAsync<'T when 'T : not struct and 'T : null> (cs : string) (enti
                 ctx.SaveChanges() |> ignore
                 return Ok ()
             with
-            | :? DbUpdateException -> return Error { Errors = [|"Error adding Entity"|]; Status = HTTP_409 }
+            | :? DbUpdateException -> return Error { Errors = [|"Error adding" + entity.GetType().Name|]; Status = HTTP_409 }
             | _ -> return Error { Errors = [|"Some DB error occurred"|]; Status = HTTP_500 }
     }
 
