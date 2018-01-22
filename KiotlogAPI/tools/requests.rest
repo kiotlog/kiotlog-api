@@ -1,40 +1,8 @@
+GET http://localhost/devices
+
+###
+
 GET http://localhost/devices/86d36df8-6468-4ce6-a54a-e13fdb9a8c57
-
-###
-
-GET http://localhost/sensortypes
-
-###
-
-POST http://localhost/sensortypes
-Content-Type: application/json
-
-{
-    "Name": "SIM800X_Battery",
-    "Meta": {
-      "Max": 5000,
-      "Min": 0
-    },
-    "Type": "voltage"
-}
-
-###
-
-GET http://localhost/sensortypes/8b4f41b0-48ef-4004-b30c-8560b52cd3b7
-
-###
-
-PUT http://localhost/sensortypes/055b32ad-c025-42e9-a19a-0d0dea93bdb1
-Content-Type: application/json
-
-{
-    "Name": "SIM800X_Battery",
-    "Meta": {
-      "Max": 5000,
-      "Min": 3500
-    },
-    "Type": "voltage"
-}
 
 ###
 
@@ -42,9 +10,9 @@ POST http://localhost/devices
 content-type: application/json
 
 {
-  "device": "mkr0-fona",
+  "device": "mkr3-fona",
   "meta": {
-    "name": "mkr0-fona",
+    "name": "mkr3-fona",
     "description": "MKRZERO Manchox"
   },
   "auth": {
@@ -59,14 +27,48 @@ content-type: application/json
   "sensors": [
     {
       "meta": {
-        "name": "status"
+        "name": "debug"
       },
       "fmt": {
         "index": 0,
-        "fmtchr": "B"
+        "fmtchr": "h"
       },
-      "sensortypeid": "8b4f41b0-48ef-4004-b30c-8560b52cd3b7",
+      "sensortypeid": "f0548111-be7f-49db-a01c-ad8037d4a601",
       "conversionid": "5b635746-c7aa-4604-8f8d-0066fe84a5a2"
+    }
+  ]
+}
+
+###
+POST http://localhost/devices
+content-type: application/json
+
+{
+  "device": "mkr5-fona",
+  "meta": {
+    "name": "mkr5-fona",
+    "description": "MKRZERO Manchox"
+  },
+  "auth": {
+    "basic": {
+      "token": "fb2e2658-c6cd-498d-91e6-37ad92bbe89b"
+    }
+  },
+  "frame": {
+    "bigendian": false,
+    "bitfields": false
+  },
+  "sensors": [
+    {
+      "meta": {
+        "name": "debug5"
+      },
+      "fmt": {
+        "index": 0,
+        "fmtchr": "H"
+      },
+      "sensortypeid": "f0548111-be7f-49db-a01c-ad8037d4a601",
+      "conversionid": "e792ccb9-cef3-44a1-914d-b93b141e2f68"
     }
   ]
 }
@@ -91,4 +93,38 @@ content-type: application/json
       "conversionid": "5b635746-c7aa-4604-8f8d-0066fe84a5a2"
     }
   ]
+}
+
+GET http://localhost/sensortypes
+
+###
+
+POST http://localhost/sensortypes
+Content-Type: application/json
+
+{
+    "Name": "SIM800X_Battery",
+    "Meta": {
+      "Max": 5000,
+      "Min": 0
+    },
+    "Type": "voltage"
+}
+
+###
+
+GET http://localhost/sensortypes/c690bd61-b75a-43a1-8d7b-f0d84e068f9b
+
+###
+
+PUT http://localhost/sensortypes/c690bd61-b75a-43a1-8d7b-f0d84e068f9b
+Content-Type: application/json
+
+{
+    "Name": "SIM800X_Battery",
+    "Meta": {
+      "Max": 5000,
+      "Min": 3500
+    },
+    "Type": "voltage"
 }
