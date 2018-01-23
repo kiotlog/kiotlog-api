@@ -29,7 +29,7 @@ open Kiotlog.Web.Railway
 open KiotlogDB
 open Microsoft.EntityFrameworkCore
 
-let getSensorTypesAsync (cs : string) () =
+let private getSensorTypesAsync (cs : string) () =
     async {
         use ctx = getContext cs
 
@@ -75,7 +75,7 @@ let private loadSensorTypeAsync (ctx : KiotlogDBContext) (sensortypeId : Guid) =
 
     }
 
-let getSensorTypeAsync (cs : string) (sensortypeId : Guid) =
+let private getSensorTypeAsync (cs : string) (sensortypeId : Guid) =
     async {
         use ctx = getContext cs
 
@@ -85,7 +85,7 @@ let getSensorTypeAsync (cs : string) (sensortypeId : Guid) =
 let getSensorType (cs : string) (sensortypeId: Guid) =
     getSensorTypeAsync cs sensortypeId |> Async.RunSynchronously
 
-let updateSensorTypeByIdAsync (cs : string) (sensortypeId: Guid) (sensortype: SensorTypes) =
+let private updateSensorTypeByIdAsync (cs : string) (sensortypeId: Guid) (sensortype: SensorTypes) =
     async {
         use ctx = getContext cs
 
@@ -110,7 +110,7 @@ let updateSensorTypeByIdAsync (cs : string) (sensortypeId: Guid) (sensortype: Se
 let updateSensorTypeById (cs : string) (sensortypeId: Guid) (sensortype: SensorTypes) =
     updateSensorTypeByIdAsync cs sensortypeId sensortype |> Async.RunSynchronously
 
-let deleteSensorTypeAsync (cs : string) (sensortypeId : Guid) =
+let private deleteSensorTypeAsync (cs : string) (sensortypeId : Guid) =
     async {
         use ctx = getContext cs
 
