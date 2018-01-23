@@ -28,7 +28,7 @@ open Kiotlog.Web.Railway
 open KiotlogDB
 open Microsoft.EntityFrameworkCore
 
-let getEntitiesAsync<'T when 'T : not struct> (cs : string) () =
+let private getEntitiesAsync<'T when 'T : not struct> (cs : string) () =
     async {
         use ctx = getContext cs
         let set = ctx.Set<'T>()
@@ -68,7 +68,7 @@ let private loadEntityAsync<'T when 'T : not struct and 'T : null> (ctx : Kiotlo
         | _ -> return Error { Errors = [|"Some DB error occurred"|]; Status = HTTP_500 }
     }
 
-let getEntityAsync<'T when 'T : not struct and 'T : null> (cs : string) (entityId : Guid) =
+let private getEntityAsync<'T when 'T : not struct and 'T : null> (cs : string) (entityId : Guid) =
     async {
         use ctx = getContext cs
 
@@ -78,7 +78,7 @@ let getEntityAsync<'T when 'T : not struct and 'T : null> (cs : string) (entityI
 let getEntity<'T when 'T : not struct and 'T : null> (cs : string) (entityId: Guid) =
     getEntityAsync<'T> cs entityId |> Async.RunSynchronously
 
-let updateEntityByIdAsync<'T when 'T : not struct and 'T : null> (cs : string) (entityId: Guid) updateFunc =
+let private updateEntityByIdAsync<'T when 'T : not struct and 'T : null> (cs : string) (entityId: Guid) updateFunc =
     async {
         use ctx = getContext cs
 
@@ -105,7 +105,7 @@ let updateEntityByIdAsync<'T when 'T : not struct and 'T : null> (cs : string) (
 let updateEntityById<'T when 'T : not struct and 'T : null> (cs : string) (entityId: Guid) updateFunc =
     updateEntityByIdAsync<'T> cs entityId updateFunc |> Async.RunSynchronously
 
-let deleteEntityAsync<'T when 'T : not struct and 'T : null> (cs : string) (entityId : Guid) =
+let private deleteEntityAsync<'T when 'T : not struct and 'T : null> (cs : string) (entityId : Guid) =
     async {
         use ctx = getContext cs
         let set = ctx.Set<'T>()
@@ -125,5 +125,5 @@ let deleteEntityAsync<'T when 'T : not struct and 'T : null> (cs : string) (enti
             | _ -> return Error { Errors = [|"Some DB error occurred"|]; Status = HTTP_500 }
     }
 
-let deleteEntity (cs : string) (entityId : Guid) =
-    deleteEntityAsync cs entityId |> Async.RunSynchronously
+let deleteEntity<'T when 'T : not struct and 'T : null>  (cs : string) (entityId : Guid) =
+    deleteEntityAsync<'T> cs entityId |> Async.RunSynchronously
