@@ -33,6 +33,7 @@ let main argv =
         choose [
             Webparts.Devices.webPart cs
             Webparts.SensorTypes.webPart cs
+            Webparts.Sensors.webPart cs
             RequestErrors.NOT_FOUND "Found no handlers"
         ]
 
