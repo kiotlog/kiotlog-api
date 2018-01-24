@@ -52,14 +52,14 @@ let createEntity<'T when 'T : not struct> (cs : string) (entity: 'T) =
         ctx.SaveChanges() |> ignore
         Ok entity
     with
-    | :? DbUpdateException -> Error { Errors = [|"Error adding" + entity.GetType().Name|]; Status = HTTP_409 }
+    | :? DbUpdateException -> Error { Errors = [|"Error adding " + entity.GetType().Name|]; Status = HTTP_409 }
     | _ -> Error { Errors = [|"Some DB error occurred"|]; Status = HTTP_500 }
 
 let private loadEntityAsync<'T when 'T : not struct and 'T : null> (ctx : KiotlogDBContext) (entityId : Guid) =
     async {
         try
-            let entities = ctx.Set<'T>()
-            let! entity = entities.FindAsync entityId |> Async.AwaitTask
+            let entitiesSet = ctx.Set<'T>()
+            let! entity = entitiesSet.FindAsync entityId |> Async.AwaitTask
 
             match entity with
             | null -> return Error { Errors = [| entity.GetType().Name + " not found"|]; Status = HTTP_404 }
@@ -99,7 +99,7 @@ let private updateEntityByIdAsync<'T when 'T : not struct and 'T : null> (cs : s
                 ctx.SaveChanges() |> ignore
                 return Ok entity
             with
-            | :? DbUpdateException -> return Error { Errors = [|"Error updating" + entity.GetType().Name|]; Status = HTTP_409 }
+            | :? DbUpdateException -> return Error { Errors = [|"Error updating " + entity.GetType().Name|]; Status = HTTP_409 }
             | _ -> return Error { Errors = [|"Some DB error occurred"|]; Status = HTTP_500 }
     }
 let updateEntityById<'T when 'T : not struct and 'T : null> (cs : string) (entityId: Guid) updateFunc =
@@ -110,7 +110,7 @@ let private deleteEntityAsync<'T when 'T : not struct and 'T : null> (cs : strin
         use ctx = getContext cs
         let set = ctx.Set<'T>()
 
-        let! entity = set.FindAsync(entityId) |> Async.AwaitTask
+        let! entity = set.FindAsync entityId |> Async.AwaitTask
 
         match entity with
         | null -> return Error { Errors = [|entity.GetType().Name + " not found"|]; Status = HTTP_404}
