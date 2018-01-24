@@ -18,7 +18,7 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *)
 
-module Kiotlog.Web.Webparts.SensorTypes
+module Kiotlog.Web.Webparts.Conversions
 
 open System
 open Suave
@@ -28,22 +28,20 @@ open Kiotlog.Web.RestFul
 
 open KiotlogDB
 
-let updateSensorTypeById<'T when 'T : not struct and 'T : null> (cs : string) (sensortypeId: Guid) (sensortype: SensorTypes) =
-    let updateFunc (entity : SensorTypes) =
-        if not (String.IsNullOrEmpty sensortype.Name) then entity.Name <- sensortype.Name
-        if not (isNull sensortype.Meta) then entity.Meta <- sensortype.Meta
-        if not (isNull sensortype.Type) then entity.Type <- entity.Type
+let updateConversionById<'T when 'T : not struct and 'T : null> (cs : string) (conversionId: Guid) (conversion: Conversions) =
+    let updateFunc (entity : Conversions) =
+         if not (isNull conversion.Fun) then entity.Fun <- conversion.Fun
 
-    updateEntityById<SensorTypes> cs sensortypeId updateFunc
+    updateEntityById<Conversions> cs conversionId updateFunc
 
 let webPart (cs : string) =
     choose [
         rest {
-            Name = "sensortypes"
-            GetAll = getEntities<SensorTypes> cs
-            Create = createEntity<SensorTypes> cs
-            Delete = deleteEntity<SensorTypes> cs
-            GetById =  getEntity<SensorTypes> cs ["Sensors"]
-            UpdateById = updateSensorTypeById cs
+            Name = "conversions"
+            GetAll = getEntities<Conversions> cs
+            Create = createEntity<Conversions> cs
+            Delete = deleteEntity<Conversions> cs
+            GetById =  getEntity<Conversions> cs ["Sensors"]
+            UpdateById = updateConversionById cs
         }
     ]
