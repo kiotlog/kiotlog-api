@@ -55,11 +55,15 @@ let createEntity<'T when 'T : not struct> (cs : string) (entity: 'T) =
     | :? DbUpdateException -> Error { Errors = [|"Error adding " + entity.GetType().Name|]; Status = HTTP_409 }
     | _ -> Error { Errors = [|"Some DB error occurred"|]; Status = HTTP_500 }
 
-let private loadEntityAsync<'T when 'T : not struct and 'T : null> (ctx : KiotlogDBContext) (entityId : Guid) =
+let private loadEntityAsync<'T when 'T : not struct and 'T : null> (ctx : KiotlogDBContext) (includes: string list) (entityId : Guid) =
     async {
         try
             let entitiesSet = ctx.Set<'T>()
             let! entity = entitiesSet.FindAsync entityId |> Async.AwaitTask
+
+            match includes with
+            | [] -> ()
+            | _ -> List.iter (fun i -> ctx.Entry(entity).Collection(i).Load()) includes
 
             match entity with
             | null -> return Error { Errors = [| entity.GetType().Name + " not found"|]; Status = HTTP_404 }
@@ -68,33 +72,26 @@ let private loadEntityAsync<'T when 'T : not struct and 'T : null> (ctx : Kiotlo
         | _ -> return Error { Errors = [|"Some DB error occurred"|]; Status = HTTP_500 }
     }
 
-let private getEntityAsync<'T when 'T : not struct and 'T : null> (cs : string) (entityId : Guid) =
+let private getEntityAsync<'T when 'T : not struct and 'T : null> (cs : string) (includes: string list) (entityId : Guid) =
     async {
         use ctx = getContext cs
 
-        return! loadEntityAsync<'T> ctx entityId
+        return! loadEntityAsync<'T> ctx includes entityId
     }
 
-let getEntity<'T when 'T : not struct and 'T : null> (cs : string) (entityId: Guid) =
-    getEntityAsync<'T> cs entityId |> Async.RunSynchronously
+let getEntity<'T when 'T : not struct and 'T : null> (cs : string) (includes: string list) (entityId: Guid) =
+    getEntityAsync<'T> cs includes entityId |> Async.RunSynchronously
 
 let private updateEntityByIdAsync<'T when 'T : not struct and 'T : null> (cs : string) (entityId: Guid) updateFunc =
     async {
         use ctx = getContext cs
 
-        // entity.Id <- entityId
-
-        let! res = loadEntityAsync ctx entityId
+        let! res = loadEntityAsync ctx [] entityId
 
         match res with
         | Error _ -> return res
         | Ok (entity : 'T) ->
             updateFunc entity
-            // let updateFunc resource entity =
-            //      if not (String.IsNullOrEmpty resource.Name) then entity.Name <- resource.Name
-            //      if not (isNull resource.Meta) then entity.Meta <- resource.Meta
-            //      if not (isNull resource.Type) then entity.Type <- resource.Type
-
             try
                 ctx.SaveChanges() |> ignore
                 return Ok entity
@@ -121,7 +118,7 @@ let private deleteEntityAsync<'T when 'T : not struct and 'T : null> (cs : strin
                 ctx.SaveChanges() |> ignore
                 return Ok ()
             with
-            | :? DbUpdateException -> return Error { Errors = [|"Error adding" + entity.GetType().Name|]; Status = HTTP_409 }
+            | :? DbUpdateException -> return Error { Errors = [|"Error adding " + entity.GetType().Name|]; Status = HTTP_409 }
             | _ -> return Error { Errors = [|"Some DB error occurred"|]; Status = HTTP_500 }
     }
 
