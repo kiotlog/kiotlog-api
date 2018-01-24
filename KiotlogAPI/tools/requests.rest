@@ -1,8 +1,11 @@
+###
+
 GET http://localhost/devices
+# GET http://localhost:8888/devices
 
 ###
 
-GET http://localhost/devices/86d36df8-6468-4ce6-a54a-e13fdb9a8c57
+GET http://localhost/devices/77622684-afc8-4b99-81ff-f76a6239e3f9
 
 ###
 
@@ -95,7 +98,12 @@ content-type: application/json
   ]
 }
 
+###
+
 GET http://localhost/sensortypes
+
+###
+GET http://localhost:8888/sensortypes
 
 ###
 
@@ -113,7 +121,8 @@ Content-Type: application/json
 
 ###
 
-GET http://localhost/sensortypes/c690bd61-b75a-43a1-8d7b-f0d84e068f9b
+GET http://localhost/sensortypes/8b4f41b0-48ef-4004-b30c-8560b52cd3b7
+# GET http://localhost:8888/sensortypes/8b4f41b0-48ef-4004-b30c-8560b52cd3b7
 
 ###
 
@@ -127,4 +136,84 @@ Content-Type: application/json
       "Min": 3500
     },
     "Type": "voltage"
+}
+
+###
+
+GET http://localhost/sensors
+# GET http://localhost:8888/sensors
+
+###
+
+# POST http://localhost/sensors
+POST http://localhost:8888/sensors
+Content-Type: application/json
+
+{
+  "meta": { "name": "new_sensor" },
+  "fmt": { "index": 2, "fmtchr": "H" },
+  "deviceid": "77622684-afc8-4b99-81ff-f76a6239e3f9",
+  "sensortypeid": "f0548111-be7f-49db-a01c-ad8037d4a601",
+  "conversionid": "e792ccb9-cef3-44a1-914d-b93b141e2f68"
+}
+
+###
+
+# POST http://localhost:8181/sensors
+PUT http://localhost/sensors/8b3bfbd6-7646-443c-95a5-da520552a348
+Content-Type: application/json
+
+{
+  "meta": { "name": "pluvio" },
+  "fmt": { "index": 1, "fmtchr": "h" },
+  "deviceid": "77622684-afc8-4b99-81ff-f76a6239e3f9",
+  "sensortypeid": "cd1f1dd1-8447-4372-a8c5-edb3f173346a",
+  "conversionid": "a31dbdaa-1d56-4bc3-8ee6-facb2a9ada55"
+}
+
+###
+
+GET http://localhost/sensors/8b3bfbd6-7646-443c-95a5-da520552a348
+
+###
+
+GET http://localhost/sensors/70a3a022-9d66-4af4-b8ce-0994fe4f01f9
+# GET http://localhost:8888/sensors/70a3a022-9d66-4af4-b8ce-0994fe4f01f9
+
+###
+
+PUT http://localhost/sensors/70a3a022-9d66-4af4-b8ce-0994fe4f01f9
+Content-Type: application/json
+
+{
+  "meta": { "name": "pressure" },
+  "conversionid": "0c57d818-f542-45ff-b710-eae777124aed"
+}
+
+###
+
+GET http://localhost/conversions
+# GET http://localhost:8888/conversions
+
+###
+
+# GET http://localhost:8888/conversions/5b635746-c7aa-4604-8f8d-0066fe84a5a2
+GET http://localhost/conversions/5b635746-c7aa-4604-8f8d-0066fe84a5a2
+
+###
+
+POST http://localhost/conversions
+Content-Type: application/json
+
+{
+  "Fun": "float_to_int32"
+}
+
+###
+
+PUT http://localhost/conversions/5021c34f-36a8-4455-9588-3adb9fc5aefe
+Content-Type: application/json
+
+{
+  "Fun": "float_to_uint32"
 }
