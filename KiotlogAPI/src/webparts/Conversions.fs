@@ -1,4 +1,4 @@
-﻿(*
+(*
     Copyright (C) 2017 Giampaolo Mancini, Trampoline SRL.
     Copyright (C) 2017 Francesco Varano, Trampoline SRL.
 
@@ -18,33 +18,30 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *)
 
-module Kiotlog.Web.API
+module Kiotlog.Web.Webparts.Conversions
 
+open System
 open Suave
-open Arguments
 
-[<EntryPoint>]
-let main argv =
+open Kiotlog.Web.Webparts.Generics
+open Kiotlog.Web.RestFul
 
-    let config = parseCLI argv
-    let cs = config.PostgresConnectionString
+open KiotlogDB
 
-    let app =
-        choose [
-            Webparts.Devices.webPart cs
-            Webparts.SensorTypes.webPart cs
-            Webparts.Sensors.webPart cs
-            Webparts.Conversions.webPart cs
-            RequestErrors.NOT_FOUND "Found no handlers"
-        ]
+let updateConversionById<'T when 'T : not struct and 'T : null> (cs : string) (conversionId: Guid) (conversion: Conversions) =
+    let updateFunc (entity : Conversions) =
+         if not (isNull conversion.Fun) then entity.Fun <- conversion.Fun
 
-    let conf =
-        { defaultConfig with
-            bindings =
-                [
-                    HttpBinding.createSimple HTTP config.HttpHost config.HttpPort
-                ]
+    updateEntityById<Conversions> cs conversionId updateFunc
+
+let webPart (cs : string) =
+    choose [
+        rest {
+            Name = "conversions"
+            GetAll = getEntities<Conversions> cs
+            Create = createEntity<Conversions> cs
+            Delete = deleteEntity<Conversions> cs
+            GetById =  getEntity<Conversions> cs ["Sensors"]
+            UpdateById = updateConversionById cs
         }
-    startWebServer conf app
-
-    0 // return an integer exit code
+    ]

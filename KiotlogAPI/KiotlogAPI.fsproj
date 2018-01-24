@@ -18,6 +18,7 @@
     <Compile Include="src/webparts/Devices.fs" />
     <Compile Include="src/webparts/SensorTypes.fs" />
     <Compile Include="src/webparts/Sensors.fs" />
+    <Compile Include="src/webparts/Conversions.fs" />
     <Compile Include="src/API.fs" />
   </ItemGroup>
   <ItemGroup>
