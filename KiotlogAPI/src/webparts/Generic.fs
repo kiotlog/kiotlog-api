@@ -82,7 +82,7 @@ let private getEntityAsync<'T when 'T : not struct and 'T : null> (cs : string) 
 let getEntity<'T when 'T : not struct and 'T : null> (cs : string) (includes: string list) (entityId: Guid) =
     getEntityAsync<'T> cs includes entityId |> Async.RunSynchronously
 
-let private updateEntityByIdAsync<'T when 'T : not struct and 'T : null> (cs : string) (entityId: Guid) updateFunc =
+let private updateEntityByIdAsync<'T when 'T : not struct and 'T : null> updateFunc (cs : string) (entityId: Guid)  =
     async {
         use ctx = getContext cs
 
@@ -99,8 +99,8 @@ let private updateEntityByIdAsync<'T when 'T : not struct and 'T : null> (cs : s
             | :? DbUpdateException -> return Error { Errors = [|"Error updating " + entity.GetType().Name|]; Status = HTTP_409 }
             | _ -> return Error { Errors = [|"Some DB error occurred"|]; Status = HTTP_500 }
     }
-let updateEntityById<'T when 'T : not struct and 'T : null> (cs : string) (entityId: Guid) updateFunc =
-    updateEntityByIdAsync<'T> cs entityId updateFunc |> Async.RunSynchronously
+let updateEntityById<'T when 'T : not struct and 'T : null> updateFunc (cs : string) (entityId: Guid) =
+    updateEntityByIdAsync<'T> updateFunc cs entityId  |> Async.RunSynchronously
 
 let private deleteEntityAsync<'T when 'T : not struct and 'T : null> (cs : string) (entityId : Guid) =
     async {

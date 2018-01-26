@@ -32,7 +32,7 @@ let updateConversionById<'T when 'T : not struct and 'T : null> (cs : string) (c
     let updateFunc (entity : Conversions) =
          if not (isNull conversion.Fun) then entity.Fun <- conversion.Fun
 
-    updateEntityById<Conversions> cs conversionId updateFunc
+    updateEntityById<Conversions> updateFunc cs conversionId
 
 let webPart (cs : string) =
     choose [
