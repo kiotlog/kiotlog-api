@@ -72,7 +72,7 @@ let private loadDeviceWithSensorsAsync (ctx : KiotlogDBContext) (deviceId : Guid
             // version of query using C# helpers
             // let! device = Helpers.loadDeviceAsync(ctx, deviceId) |> Async.AwaitTask
 
-            let devices = ctx.Devices.Include("Sensors.SensorType")
+            let devices = ctx.Devices.Include("Sensors.SensorType").Include("Sensors.Conversion")
             let q =
                 query {
                     for d in devices do
