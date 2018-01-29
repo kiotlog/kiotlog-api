@@ -1,26 +1,28 @@
 ###
 
-GET http://localhost/devices
-# GET http://localhost:8888/devices
+GET http://{{host}}/devices
 
 ###
 
-GET http://localhost/devices/77622684-afc8-4b99-81ff-f76a6239e3f9
+@deviceid = 9905e0a3-8371-4bc4-a714-918e6e13c375
+
+GET http://{{host}}/devices/{{deviceid}}
 
 ###
 
-POST http://localhost/devices
+
+POST http://{{host}}/devices
 content-type: application/json
 
 {
-  "device": "mkr3-fona",
+  "device": "mkr{{$randomInt 10 100}}-fona",
   "meta": {
-    "name": "mkr3-fona",
+    "name": "mkr_gen-fona",
     "description": "MKRZERO Manchox"
   },
   "auth": {
     "basic": {
-      "token": "fb2e2658-c6cd-498d-91e6-37ad92bbe89b"
+      "token": "{{$guid}}"
     }
   },
   "frame": {
@@ -43,7 +45,7 @@ content-type: application/json
 }
 
 ###
-POST http://localhost/devices
+POST http://{{host}}/devices
 content-type: application/json
 
 {
@@ -78,7 +80,7 @@ content-type: application/json
 
 ###
 
-POST http://localhost/devices
+POST http://{{host}}/devices
 content-type: application/json
 
 {
@@ -100,14 +102,20 @@ content-type: application/json
 
 ###
 
-GET http://localhost/sensortypes
+@deviceid = 3b443ff4-f831-40ec-9163-0529fd2c5a32
+
+DELETE http://{{host}}/devices/{{deviceid}}
 
 ###
-GET http://localhost:8888/sensortypes
+
+GET http://{{host}}/sensortypes
+
+###
+GET http://{{host}}:8888/sensortypes
 
 ###
 
-POST http://localhost/sensortypes
+POST http://{{host}}/sensortypes
 Content-Type: application/json
 
 {
@@ -121,12 +129,11 @@ Content-Type: application/json
 
 ###
 
-GET http://localhost/sensortypes/8b4f41b0-48ef-4004-b30c-8560b52cd3b7
-# GET http://localhost:8888/sensortypes/8b4f41b0-48ef-4004-b30c-8560b52cd3b7
+GET http://{{host}}/sensortypes/8b4f41b0-48ef-4004-b30c-8560b52cd3b7
 
 ###
 
-PUT http://localhost/sensortypes/c690bd61-b75a-43a1-8d7b-f0d84e068f9b
+PUT http://{{host}}/sensortypes/c690bd61-b75a-43a1-8d7b-f0d84e068f9b
 Content-Type: application/json
 
 {
@@ -140,13 +147,11 @@ Content-Type: application/json
 
 ###
 
-GET http://localhost/sensors
-# GET http://localhost:8888/sensors
+GET http://{{host}}/sensors
 
 ###
 
-# POST http://localhost/sensors
-POST http://localhost:8888/sensors
+POST http://{{host}}/sensors
 Content-Type: application/json
 
 {
@@ -159,8 +164,7 @@ Content-Type: application/json
 
 ###
 
-# POST http://localhost:8181/sensors
-PUT http://localhost/sensors/8b3bfbd6-7646-443c-95a5-da520552a348
+PUT http://{{host}}/sensors/8b3bfbd6-7646-443c-95a5-da520552a348
 Content-Type: application/json
 
 {
@@ -173,16 +177,7 @@ Content-Type: application/json
 
 ###
 
-GET http://localhost/sensors/8b3bfbd6-7646-443c-95a5-da520552a348
-
-###
-
-GET http://localhost/sensors/70a3a022-9d66-4af4-b8ce-0994fe4f01f9
-# GET http://localhost:8888/sensors/70a3a022-9d66-4af4-b8ce-0994fe4f01f9
-
-###
-
-PUT http://localhost/sensors/70a3a022-9d66-4af4-b8ce-0994fe4f01f9
+PUT http://{{host}}/sensors/70a3a022-9d66-4af4-b8ce-0994fe4f01f9
 Content-Type: application/json
 
 {
@@ -192,17 +187,15 @@ Content-Type: application/json
 
 ###
 
-GET http://localhost/conversions
-# GET http://localhost:8888/conversions
+GET http://{{host}}/conversions
 
 ###
 
-# GET http://localhost:8888/conversions/5b635746-c7aa-4604-8f8d-0066fe84a5a2
-GET http://localhost/conversions/5b635746-c7aa-4604-8f8d-0066fe84a5a2
+GET http://{{host}}/conversions/5b635746-c7aa-4604-8f8d-0066fe84a5a2
 
 ###
 
-POST http://localhost/conversions
+POST http://{{host}}/conversions
 Content-Type: application/json
 
 {
@@ -211,7 +204,7 @@ Content-Type: application/json
 
 ###
 
-PUT http://localhost/conversions/5021c34f-36a8-4455-9588-3adb9fc5aefe
+PUT http://{{host}}/conversions/5021c34f-36a8-4455-9588-3adb9fc5aefe
 Content-Type: application/json
 
 {
