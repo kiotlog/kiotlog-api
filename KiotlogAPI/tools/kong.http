@@ -1,0 +1,72 @@
+@kongapi = http://localhost:8001
+@kongproxy = http://localhost:8000
+
+###
+
+POST {{kongapi}}/apis
+    ?name=kiotlogapi
+    &hosts=api.kiotlog.io
+    &upstream_url=http://honkytonky.toolbox.trmpln.com
+Content-Type: application/x-www-form-urlencoded
+
+###
+
+GET {{kongapi}}/apis/kiotlogapi
+
+###
+
+PATCH {{kongapi}}/apis/kiotlogapi
+Content-Type: application/jsone
+
+{
+    "upstream_url": "http://honkytonky.local"
+}
+
+###
+
+POST {{kongapi}}/apis/kiotlogapi/plugins
+Content-Type: application/json
+
+{
+    "name": "key-auth"
+}
+
+###
+
+POST {{kongapi}}/consumers
+Content-Type: application/json
+
+{
+    "username": "grafana",
+    "custom_id": "kl_grafana"
+}
+
+###
+
+GET {{kongapi}}/consumers
+Content-Type: application/json
+
+###
+
+POST {{kongapi}}/consumers/manchoz/key-auth
+Content-Type: application/json
+
+{}
+
+###
+
+GET {{kongapi}}/key-auths
+Content-Type: application/json
+
+###
+GET {{kongproxy}}/devices
+Host: api.kiotlog.io
+
+###
+
+
+GET {{kongproxy}}/devices
+Host: api.kiotlog.io
+apikey: sJcsWdiphQ85VnWo1fRMDS6M18IauOPa
+
+###
