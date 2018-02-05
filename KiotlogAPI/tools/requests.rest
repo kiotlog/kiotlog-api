@@ -4,9 +4,9 @@ GET http://{{host}}/devices
 
 ###
 
-@deviceid = 9905e0a3-8371-4bc4-a714-918e6e13c375
+@deviceid_1 = 86d36df8-6468-4ce6-a54a-e13fdb9a8c57
 
-GET http://{{host}}/devices/{{deviceid}}
+GET http://{{host}}/devices/{{deviceid_1}}
 
 ###
 
@@ -111,9 +111,6 @@ DELETE http://{{host}}/devices/{{deviceid}}
 GET http://{{host}}/sensortypes
 
 ###
-GET http://{{host}}:8888/sensortypes
-
-###
 
 POST http://{{host}}/sensortypes
 Content-Type: application/json
@@ -149,6 +146,9 @@ Content-Type: application/json
 
 GET http://{{host}}/sensors
 
+###
+
+GET http://{{host}}/sensors/e03995dc-9691-43f3-abcb-fe617060e2ef
 ###
 
 POST http://{{host}}/sensors

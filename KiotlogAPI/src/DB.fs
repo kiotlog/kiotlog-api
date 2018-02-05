@@ -21,11 +21,10 @@
 module Kiotlog.Web.DB
 
 open Microsoft.EntityFrameworkCore
-open KiotlogDB
+open KiotlogDBF
 
 let getContext (cs : string) =
-    let optionsBuilder = DbContextOptionsBuilder<KiotlogDBContext>()
-    // let cs = "Username=postgres;Password=;Host=127.0.0.1;Port=7432;Database=trmpln"
+    let optionsBuilder = DbContextOptionsBuilder<KiotlogDBFContext>()
     optionsBuilder.UseNpgsql(cs) |> ignore
 
-    new KiotlogDBContext(optionsBuilder.Options)
+    new KiotlogDBFContext(optionsBuilder.Options)

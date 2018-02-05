@@ -25,7 +25,7 @@ open Suave
 open Kiotlog.Web.DB
 open Kiotlog.Web.Railway
 
-open KiotlogDB
+open KiotlogDBF
 open Microsoft.EntityFrameworkCore
 
 let private getEntitiesAsync<'T when 'T : not struct> (cs : string) () =
@@ -55,38 +55,43 @@ let createEntity<'T when 'T : not struct> (cs : string) (entity: 'T) =
     | :? DbUpdateException -> Error { Errors = [|"Error adding " + entity.GetType().Name|]; Status = HTTP_409 }
     | _ -> Error { Errors = [|"Some DB error occurred"|]; Status = HTTP_500 }
 
-let private loadEntityAsync<'T when 'T : not struct and 'T : null> (ctx : KiotlogDBContext) (includes: string list) (entityId : Guid) =
+let private loadEntityAsync<'T when 'T : not struct> (ctx : KiotlogDBFContext) (collections: string list) (references: string list) (entityId : Guid) =
     async {
         try
             let entitiesSet = ctx.Set<'T>()
             let! entity = entitiesSet.FindAsync entityId |> Async.AwaitTask
 
-            match includes with
+            match collections with
             | [] -> ()
-            | _ -> List.iter (fun i -> ctx.Entry(entity).Collection(i).Load()) includes
+            | _ -> collections |> List.iter (fun i -> ctx.Entry(entity).Collection(i).Load())
 
-            match entity with
+            match references with
+            | [] -> ()
+            | _ -> references |> List.iter (fun i -> ctx.Entry(entity).Reference(i).Load())
+
+            match box entity with
             | null -> return Error { Errors = [| entity.GetType().Name + " not found"|]; Status = HTTP_404 }
-            | d -> return Ok d
+            | d -> return Ok (d :?> 'T)
+            // return Ok entity
         with
         | _ -> return Error { Errors = [|"Some DB error occurred"|]; Status = HTTP_500 }
     }
 
-let private getEntityAsync<'T when 'T : not struct and 'T : null> (cs : string) (includes: string list) (entityId : Guid) =
+let private getEntityAsync<'T when 'T : not struct> (cs : string) (collections: string list) (references: string list) (entityId : Guid) =
     async {
         use ctx = getContext cs
 
-        return! loadEntityAsync<'T> ctx includes entityId
+        return! loadEntityAsync<'T> ctx collections references entityId
     }
 
-let getEntity<'T when 'T : not struct and 'T : null> (cs : string) (includes: string list) (entityId: Guid) =
-    getEntityAsync<'T> cs includes entityId |> Async.RunSynchronously
+let getEntity<'T when 'T : not struct> (cs : string) (collections: string list) (references: string list) (entityId: Guid) =
+    getEntityAsync<'T> cs collections references entityId |> Async.RunSynchronously
 
-let private updateEntityByIdAsync<'T when 'T : not struct and 'T : null> updateFunc (cs : string) (entityId: Guid)  =
+let private updateEntityByIdAsync<'T when 'T : not struct> updateFunc (cs : string) (entityId: Guid)  =
     async {
         use ctx = getContext cs
 
-        let! res = loadEntityAsync ctx [] entityId
+        let! res = loadEntityAsync ctx [] [] entityId
 
         match res with
         | Error _ -> return res
@@ -99,21 +104,20 @@ let private updateEntityByIdAsync<'T when 'T : not struct and 'T : null> updateF
             | :? DbUpdateException -> return Error { Errors = [|"Error updating " + entity.GetType().Name|]; Status = HTTP_409 }
             | _ -> return Error { Errors = [|"Some DB error occurred"|]; Status = HTTP_500 }
     }
-let updateEntityById<'T when 'T : not struct and 'T : null> updateFunc (cs : string) (entityId: Guid) =
+let updateEntityById<'T when 'T : not struct> updateFunc (cs : string) (entityId: Guid) =
     updateEntityByIdAsync<'T> updateFunc cs entityId  |> Async.RunSynchronously
 
-let private deleteEntityAsync<'T when 'T : not struct and 'T : null> (cs : string) (entityId : Guid) =
+let private deleteEntityAsync<'T when 'T : not struct> (cs : string) (entityId : Guid) =
     async {
         use ctx = getContext cs
         let set = ctx.Set<'T>()
 
         let! entity = set.FindAsync entityId |> Async.AwaitTask
 
-        match entity with
+        match box entity with
         | null -> return Error { Errors = [|entity.GetType().Name + " not found"|]; Status = HTTP_404}
         | d ->
-            d |> set.Remove |> ignore
-
+            d :?> 'T |> set.Remove |> ignore
             try
                 ctx.SaveChanges() |> ignore
                 return Ok ()
@@ -122,5 +126,5 @@ let private deleteEntityAsync<'T when 'T : not struct and 'T : null> (cs : strin
             | _ -> return Error { Errors = [|"Some DB error occurred"|]; Status = HTTP_500 }
     }
 
-let deleteEntity<'T when 'T : not struct and 'T : null>  (cs : string) (entityId : Guid) =
+let deleteEntity<'T when 'T : not struct>  (cs : string) (entityId : Guid) =
     deleteEntityAsync<'T> cs entityId |> Async.RunSynchronously

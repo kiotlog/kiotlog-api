@@ -26,7 +26,7 @@ open Suave
 open Kiotlog.Web.Webparts.Generics
 open Kiotlog.Web.RestFul
 
-open KiotlogDB
+open KiotlogDBF
 
 let updateConversionById<'T when 'T : not struct and 'T : null> (cs : string) (conversionId: Guid) (conversion: Conversions) =
     let updateFunc (entity : Conversions) =
@@ -41,7 +41,7 @@ let webPart (cs : string) =
             GetAll = getEntities<Conversions> cs
             Create = createEntity<Conversions> cs
             Delete = deleteEntity<Conversions> cs
-            GetById =  getEntity<Conversions> cs ["Sensors"]
+            GetById =  getEntity<Conversions> cs ["Sensors"] []
             UpdateById = updateConversionById cs
         }
     ]
