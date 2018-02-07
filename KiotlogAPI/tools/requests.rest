@@ -4,7 +4,7 @@ GET http://{{host}}/devices
 
 ###
 
-@deviceid_1 = 86d36df8-6468-4ce6-a54a-e13fdb9a8c57
+@deviceid_1 = fef217cc-9ff1-45ce-9016-691015fe9607
 
 GET http://{{host}}/devices/{{deviceid_1}}
 
@@ -18,7 +18,8 @@ content-type: application/json
   "device": "mkr{{$randomInt 10 100}}-fona",
   "meta": {
     "name": "mkr_gen-fona",
-    "description": "MKRZERO Manchox"
+    "description": "MKRZERO Manchox",
+    "kind": "MKRZERO1000 + FonaX"
   },
   "auth": {
     "basic": {
@@ -31,8 +32,8 @@ content-type: application/json
   },
   "sensors": [
     {
-      "meta": {
-        "name": "debug"
+      "Meta": {
+        "Name": "debug"
       },
       "fmt": {
         "index": 0,
@@ -40,6 +41,37 @@ content-type: application/json
       },
       "sensortypeid": "f0548111-be7f-49db-a01c-ad8037d4a601",
       "conversionid": "5b635746-c7aa-4604-8f8d-0066fe84a5a2"
+    },
+    {
+      "meta": {
+        "name": "debug 2"
+      },
+      "fmt": {
+        "index": 1,
+        "fmtchr": "H"
+      },
+      "sensortype": {
+        "name": "SIM800P_Battery",
+        "meta": {
+          "Max": 5020,
+          "Min": 1231
+        },
+        "type": "voltage"
+      },
+      "conversionid": "5b635746-c7aa-4604-8f8d-0066fe84a5a2"
+    },
+    {
+      "meta": {
+        "name": "debug 3"
+      },
+      "fmt": {
+        "index": 2,
+        "fmtchr": "I"
+      },
+      "sensortypeid": "f0548111-be7f-49db-a01c-ad8037d4a601",
+      "conversion": {
+       "fun": "float_to_int32_alt"
+      }
     }
   ]
 }
@@ -84,7 +116,11 @@ POST http://{{host}}/devices
 content-type: application/json
 
 {
-  "device": "mkr-minimal",
+  "device": "mkr-minimal-11",
+      "meta": {
+        "name": "status",
+        "kind": "MKR11112"
+      },
   "sensors": [
     {
       "meta": {
@@ -102,9 +138,9 @@ content-type: application/json
 
 ###
 
-@deviceid = 3b443ff4-f831-40ec-9163-0529fd2c5a32
+@deviceid_del = d1a4cd31-6e2c-458d-8014-6bb844c61757
 
-DELETE http://{{host}}/devices/{{deviceid}}
+DELETE http://{{host}}/devices/{{deviceid_del}}
 
 ###
 
@@ -148,7 +184,7 @@ GET http://{{host}}/sensors
 
 ###
 
-GET http://{{host}}/sensors/e03995dc-9691-43f3-abcb-fe617060e2ef
+GET http://{{host}}/sensors/4dc6616e-fadc-4eb1-a3e3-5c4556978df3
 ###
 
 POST http://{{host}}/sensors
@@ -191,7 +227,7 @@ GET http://{{host}}/conversions
 
 ###
 
-GET http://{{host}}/conversions/5b635746-c7aa-4604-8f8d-0066fe84a5a2
+GET http://{{host}}/conversions/1fe37862-08d4-42a9-a74f-d890e36049ce
 
 ###
 
@@ -204,7 +240,7 @@ Content-Type: application/json
 
 ###
 
-PUT http://{{host}}/conversions/5021c34f-36a8-4455-9588-3adb9fc5aefe
+PUT http://{{host}}/conversions/486b982c-b59b-45e4-bbb6-af4db72b6437
 Content-Type: application/json
 
 {
