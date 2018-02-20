@@ -1,0 +1,71 @@
+{
+    "device": "beicauva01",
+    "sensors": [
+        {
+            "meta": {"name": "temperatura"},
+            "fmt": {"index": 0, "fmtchr": "h"},
+            "sensortypeid": "47cbfb77-d56a-4ade-b8b4-0860bdbfedd3",
+            "conversionid": "5b635746-c7aa-4604-8f8d-0066fe84a5a2"
+        },
+        {
+            "meta": {"name": "pressione"},
+            "fmt": {"index": 1, "fmtchr": "H"},
+            "sensortypeid": "cd1f1dd1-8447-4372-a8c5-edb3f173346a",
+            "conversionid": "5b635746-c7aa-4604-8f8d-0066fe84a5a2"
+        },
+        {
+            "meta": {"name": "umidità"},
+            "fmt": {"index": 2, "fmtchr": "H"},
+            "sensortypeid": "af23a956-1622-441c-9e6d-509c96adc76c",
+            "conversionid": "5b635746-c7aa-4604-8f8d-0066fe84a5a2"
+        },
+        {
+            "meta": {"name": "temperatura_suolo"},
+            "fmt": {"index": 3, "fmtchr": "h"},
+            "sensortype": { "name": "DS18B20", "type": "temperature", "meta": {"max": 50, "min": -30} },
+            "conversionid": "5b635746-c7aa-4604-8f8d-0066fe84a5a2"
+        },
+        {
+            "meta": {"name": "batteria_livello"},
+            "fmt": {"index": 4, "fmtchr": "B"},
+            "sensortypeid": "8c83e60b-dce2-4e8d-83b4-cbf633a31c6d",
+            "conversionid": "5b635746-c7aa-4604-8f8d-0066fe84a5a2"
+        },
+        {
+            "meta": {"name": "batteria_percent"},
+            "fmt": {"index": 5, "fmtchr": "H"},
+            "sensortype": { "name": "Battery_Percentage", "type": "percentage", "meta": {"max":  100 , "min": 0} },
+            "conversionid": "5b635746-c7aa-4604-8f8d-0066fe84a5a2"
+        },
+        {
+            "meta": {"name": "bagnatura"},
+            "fmt": {"index": 6, "fmtchr": "B"},
+            "sensortype": { "name": "Davis6420", "type": "range", "meta": {"max": 15, "min": 0} },
+            "conversionid": "5b635746-c7aa-4604-8f8d-0066fe84a5a2"
+        },
+        {
+            "meta": {"name": "vento_velocità"},
+            "fmt": {"index": 7, "fmtchr": "H"},
+            "sensortype": { "name": "Davis7911_Speed", "type": "speed", "meta": {"max": 50, "min": 0} },
+            "conversionid": "5b635746-c7aa-4604-8f8d-0066fe84a5a2"
+        },
+        {
+            "meta": {"name": "vento_direzione"},
+            "fmt": {"index": 8, "fmtchr": "H"},
+            "sensortype": { "name": "Davis7911_Direction", "type": "degree", "meta": {"max": 360, "min": 0} },
+            "conversionid": "5b635746-c7aa-4604-8f8d-0066fe84a5a2"
+        },
+        {
+            "meta": {"name": "pioggia"},
+            "fmt": {"index": 9, "fmtchr": "H"},
+            "sensortype": { "name": "Pronamic_Pro", "type": "volume", "meta": {"max": 40, "min": 0} },
+            "conversionid": "5b635746-c7aa-4604-8f8d-0066fe84a5a2"
+        },
+        {
+            "meta": {"name": "umidità_terreno"},
+            "fmt": {"index": 10, "fmtchr": "H"},
+            "sensortype": { "name": "Davis6440", "type": "percentage", "meta": {"max": 100, "min": 0} },
+            "conversionid": "5b635746-c7aa-4604-8f8d-0066fe84a5a2"
+        }
+    ]
+}
