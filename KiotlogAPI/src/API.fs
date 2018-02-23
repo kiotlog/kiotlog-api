@@ -21,6 +21,12 @@
 module Kiotlog.Web.API
 
 open Suave
+open Suave.Logging
+open Suave.Filters
+open Suave.Operators
+open Suave.CORS
+open Suave.Successful
+
 open Arguments
 
 [<EntryPoint>]
@@ -29,14 +35,20 @@ let main argv =
     let config = parseCLI argv
     let cs = config.PostgresConnectionString
 
+    let logger = Targets.create Verbose [||]
+
+    let cors =
+        cors defaultCORSConfig
+
     let app =
-        choose [
+        cors >=> choose [
+            OPTIONS >=> OK "CORS"
             Webparts.Devices.webPart cs
             Webparts.SensorTypes.webPart cs
             Webparts.Sensors.webPart cs
             Webparts.Conversions.webPart cs
             RequestErrors.NOT_FOUND "Found no handlers"
-        ]
+        ] >=> logStructured logger logFormatStructured
 
     let conf =
         { defaultConfig with

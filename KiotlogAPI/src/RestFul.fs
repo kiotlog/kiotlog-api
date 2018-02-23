@@ -24,7 +24,6 @@ module Kiotlog.Web.RestFul
 // open Newtonsoft.Json
 // open Newtonsoft.Json.Converters
 open Suave
-open Suave.CORS
 open System.Text
 open Operators
 // open Suave.Http
@@ -106,7 +105,7 @@ let rest resource =
         }
 
     choose [
-        path resourcePath >=> cors defaultCORSConfig >=> choose [
+        path resourcePath >=> choose [
             GET >=> getAll
             POST >=> request (getResourceFromReq >> Result.bind validate >> Result.bind resource.Create >> handleRailwayResource)
             //PUT >=> request (getResourceFromReq >> resource.Update >> handleResource badRequest)
@@ -114,8 +113,8 @@ let rest resource =
         // DELETE >=> pathScan resourceIdPath deleteResourceById
         // GET >=> pathScan resourceIdPath getResourceById
         // PUT >=> pathScan resourceIdPath updateResourceById
-        DELETE >=> cors defaultCORSConfig >=> uuidPatternRouting deleteResourceById
-        GET >=> cors defaultCORSConfig >=> uuidPatternRouting getResourceById
-        PUT >=> cors defaultCORSConfig >=> uuidPatternRouting updateResourceById
+        DELETE >=> uuidPatternRouting deleteResourceById
+        GET >=> uuidPatternRouting getResourceById
+        PUT >=> uuidPatternRouting updateResourceById
         //HEAD >=> pathScan resourceIdPath isResourceExists
     ]
