@@ -1,0 +1,1 @@
+{"version":3,"file":"ktlg-dashboard.js","sourceRoot":"","sources":["ktlg-dashboard.ts"],"names":[],"mappings":";;;;;;AACA,IAAU,OAAO,CAQhB;AARD,WAAU,OAAO;IAEb,MAAM,EAAC,aAAa,EAAC,GAAG,OAAO,CAAC,UAAU,CAAC;IAG3C,IAAM,aAAa,GAAnB,mBAAoB,SAAQ,OAAO,CAAC,OAAO;KAE1C,CAAA;IAFK,aAAa;QADlB,aAAa,CAAC,gBAAgB,CAAC;OAC1B,aAAa,CAElB;AACL,CAAC,EARS,OAAO,KAAP,OAAO,QAQhB"}

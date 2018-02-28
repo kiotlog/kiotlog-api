@@ -1,0 +1,36 @@
+{
+    "compilerOptions": {
+        "target": "es2016",
+        // "target": "es6",
+        // "lib": [
+        //     "es2017",
+        //     "dom"
+        // ],
+        // "module": "commonjs",
+        // "moduleResolution": "node",
+        // "isolatedModules": false,
+        // "declaration": false,
+        // "strictNullChecks": true,
+        // "noImplicitAny": true,
+        "noImplicitAny": false,
+        // "noUnusedLocals": true,
+        // "noUnusedParameters": true,
+        "removeComments": true,
+        "preserveConstEnums": true,
+        // "suppressImplicitAnyIndexErrors": false,
+        // "outDir": "lib",
+        // "rootDir": "src",
+        "sourceMap": true,
+        // "skipLibCheck": true,
+        "listFiles": false,
+        "noEmitOnError": true,
+        "experimentalDecorators": true
+        // "emitDecoratorMetadata": true
+    },
+    "include": [
+        "src/**/*.ts",
+        "bower_components/polymer/types/polymer-element.d.ts",
+        "bower_components/polymer-decorators/polymer-decorators.d.ts"
+    ]
+}
+  

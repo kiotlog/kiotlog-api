@@ -1,0 +1,58 @@
+<link rel="import" href="../../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../../bower_components/polymer-decorators/polymer-decorators.html">
+
+<link rel="import" href="../../bower_components/iron-ajax/iron-ajax.html">
+<link rel="import" href="../../bower_components/vaadin-material-theme/vaadin-text-field.html">
+<link rel="import" href="../../bower_components/vaadin-grid/vaadin-grid.html">
+<link rel="import" href="../../bower_components/vaadin-grid/vaadin-grid-sorter.html">
+<link rel="import" href="../../bower_components/vaadin-grid/vaadin-grid-filter.html">
+
+<link rel="import" href="../shared-styles.html">
+
+<dom-module id="ktlg-sensor-types-list">
+    <template>
+        <style include="shared-styles">
+            vaadin-grid {
+                height: auto;
+            }
+        </style>
+
+        <iron-ajax id="sensorTypesAjax"
+            url="[[_computedUrl]]"
+            handle-as="json"
+            on-response="_handleResponse">
+        </iron-ajax>
+
+        <vaadin-grid theme="row-dividers" items="[[sensortypes]]" column-reordering-allowed multi-sort>
+            <vaadin-grid-column flex-grow="1" resizable="true">
+                <template class="header">
+                    <vaadin-grid-filter aria-label="Id" path="Id" value="[[_filterId]]">
+                        <vaadin-text-field slot="filter" placeholder="Id" value="{{_filterId}}"></vaadin-text-field>
+                    </vaadin-grid-filter>
+                    <vaadin-grid-sorter path="Id"><br /></vaadin-grid-sorter>
+                </template>
+                <template>[[item.Id]]</template>
+            </vaadin-grid-column>
+            <vaadin-grid-column flex-grow="1" resizable="true">
+                <template class="header">
+                    <vaadin-grid-filter aria-label="Name" path="Name" value="[[_filterName]]">
+                        <vaadin-text-field slot="filter" placeholder="Name" value="{{_filterName}}" focus-target></vaadin-text-field>
+                    </vaadin-grid-filter>
+                    <vaadin-grid-sorter path="Name"><br /></vaadin-grid-sorter>
+                </template>
+                <template>[[item.Name]]</template>
+            </vaadin-grid-column>
+            <vaadin-grid-column flex-grow="2" resizable="false">
+                <template class="header">
+                    <vaadin-grid-filter aria-label="Type" path="Type" value="[[_filterType]]">
+                        <vaadin-text-field slot="filter" placeholder="Type" value="{{_filterType}}"></vaadin-text-field>
+                    </vaadin-grid-filter>
+                    <vaadin-grid-sorter path="Type"><br /></vaadin-grid-sorter>
+                </template>
+                <template>[[item.Type]]</template>
+            </vaadin-grid-column>
+        </vaadin-grid>
+    </template>
+
+    <script src="ktlg-sensor-types-list.js"></script>    
+</dom-module>

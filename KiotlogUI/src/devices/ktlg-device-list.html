@@ -1,0 +1,55 @@
+<link rel="import" href="../../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../../bower_components/polymer-decorators/polymer-decorators.html">
+
+<link rel="import" href="../../bower_components/iron-ajax/iron-ajax.html">
+<link rel="import" href="../../bower_components/vaadin-grid/vaadin-grid.html">
+<link rel="import" href="../../bower_components/vaadin-grid/vaadin-grid-sorter.html">
+<link rel="import" href="../../bower_components/vaadin-grid/vaadin-grid-filter.html">
+
+<dom-module id="ktlg-device-list">
+    <template>
+        <style>
+            vaadin-grid {
+                height: auto;
+            }
+        </style>
+        
+        <iron-ajax id="devicesAjax"
+            url="[[_computedUrl]]"
+            handle-as="json"
+            on-response="_handleResponse">
+        </iron-ajax>
+
+        <vaadin-grid theme="row-dividers" items="[[stations]]" column-reordering-allowed multi-sort>
+            <vaadin-grid-column flex-grow="1" resizable="true">
+                <template class="header">
+                    <vaadin-grid-filter aria-label="Id" path="Id" value="[[_filterId]]">
+                        <vaadin-text-field slot="filter" placeholder="Id" value="{{_filterId}}"></vaadin-text-field>
+                    </vaadin-grid-filter>
+                    <vaadin-grid-sorter path="Id"><br /></vaadin-grid-sorter>
+                </template>
+                <template>[[item.Id]]</template>
+            </vaadin-grid-column>
+            <vaadin-grid-column flex-grow="1" resizable="true">
+                <template class="header">
+                    <vaadin-grid-filter aria-label="Name" path="Meta.Name" value="[[_filterName]]">
+                        <vaadin-text-field slot="filter" placeholder="Name" value="{{_filterName}}" focus-target></vaadin-text-field>
+                    </vaadin-grid-filter>
+                    <vaadin-grid-sorter path="Meta.Name"><br /></vaadin-grid-sorter>
+                </template>
+                <template>[[item.Meta.Name]]</template>
+            </vaadin-grid-column>
+            <vaadin-grid-column flex-grow="2" resizable="false">
+                <template class="header">
+                    <vaadin-grid-filter aria-label="Description" path="Meta.Description" value="[[_filterDescription]]">
+                        <vaadin-text-field slot="filter" placeholder="Description" value="{{_filterDescription}}"></vaadin-text-field>
+                    </vaadin-grid-filter>
+                    <vaadin-grid-sorter path="Meta.Description"><br /></vaadin-grid-sorter>
+                </template>
+                <template>[[item.Meta.Description]]</template>
+            </vaadin-grid-column>
+        </vaadin-grid>
+    </template>
+
+    <script src="ktlg-device-list.js"></script>    
+</dom-module>
