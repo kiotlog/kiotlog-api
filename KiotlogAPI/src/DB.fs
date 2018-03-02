@@ -21,7 +21,7 @@
 module Kiotlog.Web.DB
 
 open Microsoft.EntityFrameworkCore
-open KiotlogDBF
+open KiotlogDBF.Context
 
 let getContext (cs : string) =
     let optionsBuilder = DbContextOptionsBuilder<KiotlogDBFContext>()
