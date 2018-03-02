@@ -22,12 +22,14 @@ module Kiotlog.Web.Webparts.Devices
 
 open System
 open Suave
+open Microsoft.EntityFrameworkCore
+
 open Kiotlog.Web.RestFul
 open Kiotlog.Web.DB
 open Kiotlog.Web.Railway
 
-open KiotlogDBF
-open Microsoft.EntityFrameworkCore
+open KiotlogDBF.Models
+open KiotlogDBF.Context
 
 let getDevicesAsync (cs : string) () =
     async {
