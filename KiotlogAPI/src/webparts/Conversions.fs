@@ -26,11 +26,11 @@ open Suave
 open Kiotlog.Web.Webparts.Generics
 open Kiotlog.Web.RestFul
 
-open KiotlogDBF
+open KiotlogDBF.Models
 
 let updateConversionById<'T when 'T : not struct and 'T : null> (cs : string) (conversionId: Guid) (conversion: Conversions) =
     let updateFunc (entity : Conversions) =
-         if not (isNull conversion.Fun) then entity.Fun <- conversion.Fun
+         if not (String.IsNullOrEmpty conversion.Fun) then entity.Fun <- conversion.Fun
 
     updateEntityById<Conversions> updateFunc cs conversionId
 

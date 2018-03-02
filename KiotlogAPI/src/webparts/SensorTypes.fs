@@ -26,13 +26,13 @@ open Suave
 open Kiotlog.Web.Webparts.Generics
 open Kiotlog.Web.RestFul
 
-open KiotlogDBF
+open KiotlogDBF.Models
 
 let updateSensorTypeById<'T when 'T : not struct> (cs : string) (sensortypeId: Guid) (sensortype: SensorTypes) =
     let updateFunc (entity : SensorTypes) =
         if not (String.IsNullOrEmpty sensortype.Name) then entity.Name <- sensortype.Name
-        entity.Meta <- sensortype.Meta
-        entity.Type <- entity.Type
+        if not (String.IsNullOrEmpty sensortype.Kind) then entity.Kind <- entity.Kind
+        if not (isNull (box sensortype.Meta)) then entity.Meta <- sensortype.Meta
 
     updateEntityById<SensorTypes> updateFunc cs sensortypeId
 
