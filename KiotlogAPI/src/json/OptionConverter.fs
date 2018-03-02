@@ -31,11 +31,11 @@ type OptionConverter() =
 
   // let logger = Logging.getLoggerByName "Newtonsoft.Json.FSharp.OptionConverter"
 
-  override x.CanConvert t =
+  override _x.CanConvert t =
     t.IsGenericType
     && typedefof<option<_>>.Equals (t.GetGenericTypeDefinition())
 
-  override x.WriteJson(writer, value, serializer) =
+  override _x.WriteJson(writer, value, serializer) =
     let value =
       match value with
       | null -> null
@@ -44,7 +44,7 @@ type OptionConverter() =
         fields.[0]
     serializer.Serialize(writer, value)
 
-  override x.ReadJson(reader, t, existingValue, serializer) =
+  override _x.ReadJson(reader, t, _existingValue, serializer) =
     let innerType = t.GetGenericArguments().[0]
 
     let innerType =
