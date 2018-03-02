@@ -104,6 +104,7 @@ let private updateEntityByIdAsync<'T when 'T : not struct and 'T : null> updateF
             | :? DbUpdateException -> return Error { Errors = [| "Error updating " + typeof<'T>.Name |]; Status = HTTP_409 }
             | _ -> return Error { Errors = [|"Some DB error occurred"|]; Status = HTTP_500 }
     }
+
 let updateEntityById<'T when 'T : not struct and 'T : null> updateFunc (cs : string) (entityId: Guid) =
     updateEntityByIdAsync<'T> updateFunc cs entityId  |> Async.RunSynchronously
 
