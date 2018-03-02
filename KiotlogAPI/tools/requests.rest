@@ -51,12 +51,12 @@ content-type: application/json
         "fmtchr": "H"
       },
       "sensortype": {
-        "name": "SIM800P_Battery",
+        "name": "SIM800S_Battery",
         "meta": {
           "Max": 5020,
           "Min": 1231
         },
-        "type": "voltage"
+        "kind": "voltage"
       },
       "conversionid": "5b635746-c7aa-4604-8f8d-0066fe84a5a2"
     },
@@ -85,15 +85,6 @@ content-type: application/json
   "meta": {
     "name": "mkr5-fona",
     "description": "MKRZERO Manchox"
-  },
-  "auth": {
-    "basic": {
-      "token": "fb2e2658-c6cd-498d-91e6-37ad92bbe89b"
-    }
-  },
-  "frame": {
-    "bigendian": false,
-    "bitfields": false
   },
   "sensors": [
     {
@@ -138,7 +129,7 @@ content-type: application/json
 
 ###
 
-@deviceid_del = d1a4cd31-6e2c-458d-8014-6bb844c61757
+@deviceid_del = 2f4f41a1-d521-41e8-9f18-9bbed4493a30
 
 DELETE http://{{host}}/devices/{{deviceid_del}}
 
@@ -157,16 +148,16 @@ Content-Type: application/json
       "Max": 5000,
       "Min": 0
     },
-    "Type": "voltage"
+    "Kind": "voltage"
 }
 
 ###
 
-GET http://{{host}}/sensortypes/8b4f41b0-48ef-4004-b30c-8560b52cd3b7
+GET http://{{host}}/sensortypes/194a32a8-6b3c-4811-8a5a-3ee903191b5d
 
 ###
 
-PUT http://{{host}}/sensortypes/c690bd61-b75a-43a1-8d7b-f0d84e068f9b
+PUT http://{{host}}/sensortypes/194a32a8-6b3c-4811-8a5a-3ee903191b5d
 Content-Type: application/json
 
 {
@@ -175,7 +166,7 @@ Content-Type: application/json
       "Max": 5000,
       "Min": 3500
     },
-    "Type": "voltage"
+    "Kind": "voltage"
 }
 
 ###
@@ -184,7 +175,7 @@ GET http://{{host}}/sensors
 
 ###
 
-GET http://{{host}}/sensors/4dc6616e-fadc-4eb1-a3e3-5c4556978df3
+GET http://{{host}}/sensors/0cec8ce0-29c0-441a-9063-4a72360ef8b2
 ###
 
 POST http://{{host}}/sensors
@@ -193,32 +184,32 @@ Content-Type: application/json
 {
   "meta": { "name": "new_sensor" },
   "fmt": { "index": 2, "fmtchr": "H" },
-  "deviceid": "77622684-afc8-4b99-81ff-f76a6239e3f9",
+  "deviceid": "86d36df8-6468-4ce6-a54a-e13fdb9a8c57",
   "sensortypeid": "f0548111-be7f-49db-a01c-ad8037d4a601",
   "conversionid": "e792ccb9-cef3-44a1-914d-b93b141e2f68"
 }
 
 ###
 
-PUT http://{{host}}/sensors/8b3bfbd6-7646-443c-95a5-da520552a348
+PUT http://{{host}}/sensors/0cec8ce0-29c0-441a-9063-4a72360ef8b2
 Content-Type: application/json
 
 {
   "meta": { "name": "pluvio" },
-  "fmt": { "index": 1, "fmtchr": "h" },
-  "deviceid": "77622684-afc8-4b99-81ff-f76a6239e3f9",
+  "fmt": { "index": 1, "fmtchr": "H" },
+  "deviceid": "86d36df8-6468-4ce6-a54a-e13fdb9a8c57",
   "sensortypeid": "cd1f1dd1-8447-4372-a8c5-edb3f173346a",
   "conversionid": "a31dbdaa-1d56-4bc3-8ee6-facb2a9ada55"
 }
 
 ###
 
-PUT http://{{host}}/sensors/70a3a022-9d66-4af4-b8ce-0994fe4f01f9
+PUT http://{{host}}/sensors/0cec8ce0-29c0-441a-9063-4a72360ef8b2
 Content-Type: application/json
 
 {
   "meta": { "name": "pressure" },
-  "conversionid": "0c57d818-f542-45ff-b710-eae777124aed"
+  "conversionid": "e792ccb9-cef3-44a1-914d-b93b141e2f68"
 }
 
 ###
@@ -227,7 +218,7 @@ GET http://{{host}}/conversions
 
 ###
 
-GET http://{{host}}/conversions/1fe37862-08d4-42a9-a74f-d890e36049ce
+GET http://{{host}}/conversions/8a357ed6-e112-46d8-94b9-ce7612ca0aac
 
 ###
 
@@ -240,7 +231,7 @@ Content-Type: application/json
 
 ###
 
-PUT http://{{host}}/conversions/486b982c-b59b-45e4-bbb6-af4db72b6437
+PUT http://{{host}}/conversions/8a357ed6-e112-46d8-94b9-ce7612ca0aac
 Content-Type: application/json
 
 {
