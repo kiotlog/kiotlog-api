@@ -117,7 +117,7 @@ let updateDeviceByIdAsync (cs : string) (deviceId: Guid) (device: Devices) =
                             } // entity.Sensors.SingleOrDefault(fun x -> x.Id = s.Id)
                         match box f with
                         | null ->
-                            entity.Sensors.Add s
+                            entity.Sensors.Add s |> ignore
                             s
                         | _ -> f
 
