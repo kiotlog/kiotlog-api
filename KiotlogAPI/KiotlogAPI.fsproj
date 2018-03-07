@@ -22,8 +22,8 @@
     <Compile Include="src/API.fs" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Argu" Version="4.2.1" />
-    <PackageReference Include="FSharp.Core" Version="4.2.3" />
+    <PackageReference Include="FSharp.Core" Version="4.3.4" />
+    <PackageReference Include="Argu" Version="5.1.0" />
     <PackageReference Include="Newtonsoft.Json" Version="11.0.1" />
     <PackageReference Include="Suave" Version="2.3.0-beta3" />
   </ItemGroup>
