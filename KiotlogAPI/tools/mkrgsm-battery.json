@@ -1,0 +1,8 @@
+{
+    "Meta": {
+        "Max": 5000,
+        "Min": 0
+    },
+    "Name": "MKRGSM_Battery",
+    "Kind": "voltage"
+}
