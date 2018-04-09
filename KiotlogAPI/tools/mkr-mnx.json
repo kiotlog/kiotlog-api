@@ -11,7 +11,6 @@
   },
   "Sensors": [
     {
-      "Id": "ab6aa681-06b4-4d98-b797-0df8f1bba9bd",
       "Meta": {
         "Name": "pressure"
       },
@@ -23,7 +22,6 @@
       "SensorTypeId": "cd1f1dd1-8447-4372-a8c5-edb3f173346a"
     },
     {
-      "Id": "97b668f4-4223-4d11-bc1b-a82c00a12859",
       "Meta": {
         "Name": "humidity"
       },
@@ -35,7 +33,6 @@
       "SensorTypeId": "af23a956-1622-441c-9e6d-509c96adc76c"
     },
     {
-      "Id": "070c6f80-e411-46b7-abd5-2276696b130c",
       "Meta": {
         "Name": "temperature"
       },
@@ -47,7 +44,6 @@
       "SensorTypeId": "47cbfb77-d56a-4ade-b8b4-0860bdbfedd3"
     },
     {
-      "Id": "c9d9000c-c055-436c-a44c-0168ab1e0456",
       "Meta": {
         "Name": "battery"
       },
@@ -56,7 +52,7 @@
         "FmtChr": "H"
       },
       "ConversionId": "f8600146-8591-406f-bc0b-73d52ed5b7e0",
-      "SensorTypeId": "23934c01-d799-4730-830d-bc705c6f9225"
+      "SensorTypeId": "b5e8e8fe-e2b4-4f3f-833e-380c66d2ffd0"
     }
   ]
 }
