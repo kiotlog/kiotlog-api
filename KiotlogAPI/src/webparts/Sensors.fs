@@ -29,8 +29,8 @@ open KiotlogDBF.Models
 
 let updateSensorById<'T when 'T : not struct and 'T : null> (cs : string) (sensorId: Guid) (sensor: Sensors) =
     let updateFunc (entity : Sensors) =
-         if not (isNull (box sensor.Meta)) then entity.Meta <- sensor.Meta
-         if not (isNull (box sensor.Fmt)) then entity.Fmt <- sensor.Fmt
+         if not (isNull sensor.Meta) then entity.Meta <- sensor.Meta
+         if not (isNull sensor.Fmt) then entity.Fmt <- sensor.Fmt
          if Guid.Empty <> sensor.SensorTypeId then entity.SensorTypeId <- sensor.SensorTypeId
          if Guid.Empty <> sensor.ConversionId then entity.ConversionId <- sensor.ConversionId
 

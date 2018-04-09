@@ -122,13 +122,13 @@ let updateDeviceByIdAsync (cs : string) (deviceId: Guid) (device: Devices) =
                         | _ -> f
 
                     existing |> ctx.Sensors.Attach |> ignore
-                    if not (isNull (box s.Meta)) then existing.Meta <- s.Meta
+                    if not (isNull s.Meta) then existing.Meta <- s.Meta
                         // ctx.Entry(existing).Property("_Meta").IsModified <- true
                     // if s.ConversionId. then
                     existing.ConversionId <- s.ConversionId
                     // if s.SensorTypeId.HasValue then
                     existing.SensorTypeId <- s.SensorTypeId
-                    if not (isNull (box s.Fmt)) then existing.Fmt <- s.Fmt
+                    if not (isNull s.Fmt) then existing.Fmt <- s.Fmt
 
                 device.Sensors |> Seq.iter updateSensor
 

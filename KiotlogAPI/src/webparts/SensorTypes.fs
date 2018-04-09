@@ -32,7 +32,7 @@ let updateSensorTypeById<'T when 'T : not struct> (cs : string) (sensortypeId: G
     let updateFunc (entity : SensorTypes) =
         if not (String.IsNullOrEmpty sensortype.Name) then entity.Name <- sensortype.Name
         if not (String.IsNullOrEmpty sensortype.Kind) then entity.Kind <- entity.Kind
-        if not (isNull (box sensortype.Meta)) then entity.Meta <- sensortype.Meta
+        if not (isNull sensortype.Meta) then entity.Meta <- sensortype.Meta
 
     updateEntityById<SensorTypes> updateFunc cs sensortypeId
 
