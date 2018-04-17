@@ -1,13 +1,8 @@
 {
-  "device": "mkr0-fona",
+  "device": "test-01",
   "meta": {
-    "name": "mkr0-fona",
-    "description": "MKRZERO Manchox"
-  },
-  "auth": {
-    "basic": {
-      "token": "fb2e2658-c6cd-498d-91e6-37ad92bbe89b"
-    }
+    "name": "test-01",
+    "description": "Test HackNight"
   },
   "frame": {
     "bigendian": false,
