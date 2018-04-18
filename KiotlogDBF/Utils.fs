@@ -37,10 +37,10 @@ module Json =
             let unionType = value.GetType()
             let unionCases = FSharpType.GetUnionCases(unionType)
             let case, fields = FSharpValue.GetUnionFields(value, unionType)
-            let allCasesHaveValues = unionCases |> Seq.forall (fun c -> c.GetFields() |> Seq.length > 0)
+            let _allCasesHaveValues = unionCases |> Seq.forall (fun c -> c.GetFields() |> Seq.length > 0)
 
             let distinctCases = unionCases |> Seq.distinctBy (fun c->c.GetFields() |> Seq.map (fun f-> f.DeclaringType))
-            let hasAmbigious = (distinctCases |> Seq.length) <> (unionCases |> Seq.length)
+            let _hasAmbigious = (distinctCases |> Seq.length) <> (unionCases |> Seq.length)
 
             let allSingle = unionCases |> Seq.forall (fun c -> c.GetFields() |> Seq.length = 1)
 
@@ -62,7 +62,7 @@ module Json =
                 writer.WriteEndObject()
             | _,_ -> failwith "Handle this new case"
 
-        override __.ReadJson(reader, destinationType, existingValue, serializer) =
+        override __.ReadJson(reader, destinationType, _existingValue, serializer) =
             let parts =
                 if reader.TokenType <> JsonToken.StartObject then [| (JsonToken.Undefined, obj()), (reader.TokenType, reader.Value) |]
                 else
@@ -106,7 +106,7 @@ module Json =
                 //simpliest case - just like an enum
                 | Some case, 1 -> FSharpValue.MakeUnion(case,[||])
                 //case is specified - just create the case with the values as parameters
-                | Some case, n -> FSharpValue.MakeUnion(case,valuesOnly)
+                | Some case, _n -> FSharpValue.MakeUnion(case,valuesOnly)
                 //case not specified - look up the record type which suites the best
                 | None, _ ->
                     //this is the second case - this disc union is not of simple value - it may be records or multiple values
@@ -119,7 +119,7 @@ module Json =
                         //we need the get the record type and look at the fields
                         let recordType = ucDef.PropertyType
                         let recordFields = recordType.GetProperties()
-                        let matched = fieldsValues |> Seq.forall ( fun (fieldName,_,fieldValue) ->
+                        let matched = fieldsValues |> Seq.forall ( fun (fieldName, _, _fieldValue) ->
                             recordFields |> Array.exists(fun f-> f.Name = (fieldName :?> string))
                         )
                         //if we have found a match onthe record let's keep the union case and type of the record
@@ -180,7 +180,7 @@ module Json =
             | null -> FSharpValue.MakeUnion(cases.[0], [||])
             | _ -> FSharpValue.MakeUnion(cases.[1], [|value|])
 
-    let snakeSettings =
+    let private snakeSettings =
         JsonSerializerSettings (
             NullValueHandling = NullValueHandling.Include,
             MissingMemberHandling = MissingMemberHandling.Error,
@@ -192,7 +192,7 @@ module Json =
                 )
             )
 
-    let camelSettings =
+    let private camelSettings =
         JsonSerializerSettings (
             NullValueHandling = NullValueHandling.Include,
             MissingMemberHandling = MissingMemberHandling.Error,
@@ -212,16 +212,6 @@ module Json =
                 NullValueHandling = NullValueHandling.Ignore,
                 // MissingMemberHandling = MissingMemberHandling.Ignore,
                 ReferenceLoopHandling = ReferenceLoopHandling.Ignore))
-
-    let jsonGetter<'T when 'T : null > json =
-        match String.IsNullOrEmpty json with
-        | true -> null
-        | false -> JsonConvert.DeserializeObject<'T>(json, camelSettings)
-
-    let jsonSetter<'T when 'T : null > (value : 'T) =
-        match isNull value with
-        | true -> null
-        | false -> JsonConvert.SerializeObject(value)
 
     let jsonConverter<'T> =
         new ValueConverter<'T, string> (

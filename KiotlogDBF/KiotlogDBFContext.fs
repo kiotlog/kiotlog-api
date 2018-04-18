@@ -128,17 +128,17 @@ type KiotlogDBFContext (dbContextOptions: DbContextOptions<KiotlogDBFContext>) =
                 entity.HasKey(fun s -> s.Id :> obj).HasName("sensors_pkey") |> ignore
                 entity.Property(fun s -> s.Id)
                     .HasColumnName("id")
-                    .HasDefaultValueSql("gen_random_uuid()")  |> ignore
+                    .HasDefaultValueSql("gen_random_uuid()") |> ignore
                 entity.Property(fun s -> s.Fmt)
                     .HasColumnName("fmt")
                     .HasColumnType("jsonb")                    
                     .HasConversion(jsonConverter<SensorsFmt>)
-                    .HasDefaultValueSql("'{}'::jsonb")  |> ignore
+                    .HasDefaultValueSql("'{}'::jsonb") |> ignore
                 entity.Property(fun s -> s.Meta)
                     .HasColumnName("meta")
                     .HasColumnType("jsonb")
                     .HasConversion(jsonConverter<SensorsMeta>)                    
-                    .HasDefaultValueSql("'{}'::jsonb")  |> ignore
+                    .HasDefaultValueSql("'{}'::jsonb") |> ignore
                 entity.Property("DeviceId")
                     .HasColumnName("device_id")
                     .HasColumnType("uuid") |> ignore                
@@ -188,7 +188,7 @@ type KiotlogDBFContext (dbContextOptions: DbContextOptions<KiotlogDBFContext>) =
                 entity.HasKey(fun c -> c.Id :> obj).HasName("convertions_pkey") |> ignore
                 entity.Property(fun c -> c.Id)
                     .HasColumnName("id")
-                    .HasDefaultValueSql("gen_random_uuid()")  |> ignore
+                    .HasDefaultValueSql("gen_random_uuid()") |> ignore
                 entity.Property(fun c -> c.Fun)
                     .HasColumnName("fun")
                     .IsRequired()
