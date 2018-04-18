@@ -1,0 +1,3 @@
+[submodule "KiotlogDBF"]
+	path = KiotlogDBF
+	url = https://github.com/kiotlog/kiotlogdbf
