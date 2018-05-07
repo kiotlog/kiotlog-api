@@ -1,4 +1,4 @@
-port module Views.Drawer exposing (view)
+module Views.Drawer exposing (view)
 
 import Html exposing (..)
 import Html.Attributes exposing (id, class, href, attribute)
