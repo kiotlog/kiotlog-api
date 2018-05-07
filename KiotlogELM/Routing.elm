@@ -7,7 +7,7 @@ import Types exposing (..)
 
 extractRoute : Location -> Route
 extractRoute location =
-    case (parsePath matchRoute location) of
+    case (parseHash matchRoute location) of
         Just route ->
             route
 

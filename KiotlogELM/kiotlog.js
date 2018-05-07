@@ -10438,247 +10438,6 @@ var _evancz$url_parser$UrlParser$intParam = function (name) {
 	return A2(_evancz$url_parser$UrlParser$customParam, name, _evancz$url_parser$UrlParser$intParamHelp);
 };
 
-var _kiotlog$kiotlogweb$Drawer$view = function (model) {
-	return A2(
-		_elm_lang$html$Html$aside,
-		{
-			ctor: '::',
-			_0: _elm_lang$html$Html_Attributes$id('kiotlog-actions-menu'),
-			_1: {
-				ctor: '::',
-				_0: _elm_lang$html$Html_Attributes$class('mdc-drawer mdc-drawer--temporary mdc-typography'),
-				_1: {
-					ctor: '::',
-					_0: A2(_elm_lang$html$Html_Attributes$attribute, 'data-mdc-auto-init', 'MDCTemporaryDrawer'),
-					_1: {ctor: '[]'}
-				}
-			}
-		},
-		{
-			ctor: '::',
-			_0: A2(
-				_elm_lang$html$Html$nav,
-				{
-					ctor: '::',
-					_0: _elm_lang$html$Html_Attributes$class('mdc-drawer__drawer'),
-					_1: {ctor: '[]'}
-				},
-				{
-					ctor: '::',
-					_0: A2(
-						_elm_lang$html$Html$header,
-						{
-							ctor: '::',
-							_0: _elm_lang$html$Html_Attributes$class('mdc-drawer__header'),
-							_1: {ctor: '[]'}
-						},
-						{
-							ctor: '::',
-							_0: A2(
-								_elm_lang$html$Html$div,
-								{
-									ctor: '::',
-									_0: _elm_lang$html$Html_Attributes$class('mdc-drawer__header-content'),
-									_1: {ctor: '[]'}
-								},
-								{
-									ctor: '::',
-									_0: _elm_lang$html$Html$text('Header'),
-									_1: {ctor: '[]'}
-								}),
-							_1: {ctor: '[]'}
-						}),
-					_1: {
-						ctor: '::',
-						_0: A2(
-							_elm_lang$html$Html$div,
-							{
-								ctor: '::',
-								_0: _elm_lang$html$Html_Attributes$class('mdc-drawer__content mdc-list-group'),
-								_1: {ctor: '[]'}
-							},
-							{
-								ctor: '::',
-								_0: A2(
-									_elm_lang$html$Html$nav,
-									{
-										ctor: '::',
-										_0: _elm_lang$html$Html_Attributes$class('mdc-list'),
-										_1: {ctor: '[]'}
-									},
-									{
-										ctor: '::',
-										_0: A2(
-											_elm_lang$html$Html$a,
-											{
-												ctor: '::',
-												_0: _elm_lang$html$Html_Attributes$class('mdc-list-item'),
-												_1: {
-													ctor: '::',
-													_0: _elm_lang$html$Html_Attributes$href('/'),
-													_1: {ctor: '[]'}
-												}
-											},
-											{
-												ctor: '::',
-												_0: A2(
-													_elm_lang$html$Html$i,
-													{
-														ctor: '::',
-														_0: _elm_lang$html$Html_Attributes$class('material-icons mdc-list-item__graphic'),
-														_1: {ctor: '[]'}
-													},
-													{
-														ctor: '::',
-														_0: _elm_lang$html$Html$text('dashboard'),
-														_1: {ctor: '[]'}
-													}),
-												_1: {
-													ctor: '::',
-													_0: _elm_lang$html$Html$text('Dashboard'),
-													_1: {ctor: '[]'}
-												}
-											}),
-										_1: {
-											ctor: '::',
-											_0: A2(
-												_elm_lang$html$Html$a,
-												{
-													ctor: '::',
-													_0: _elm_lang$html$Html_Attributes$class('mdc-list-item'),
-													_1: {
-														ctor: '::',
-														_0: _elm_lang$html$Html_Attributes$href('/devices'),
-														_1: {ctor: '[]'}
-													}
-												},
-												{
-													ctor: '::',
-													_0: A2(
-														_elm_lang$html$Html$i,
-														{
-															ctor: '::',
-															_0: _elm_lang$html$Html_Attributes$class('material-icons mdc-list-item__graphic'),
-															_1: {ctor: '[]'}
-														},
-														{
-															ctor: '::',
-															_0: _elm_lang$html$Html$text('device_hub'),
-															_1: {ctor: '[]'}
-														}),
-													_1: {
-														ctor: '::',
-														_0: _elm_lang$html$Html$text('Devices'),
-														_1: {ctor: '[]'}
-													}
-												}),
-											_1: {
-												ctor: '::',
-												_0: A2(
-													_elm_lang$html$Html$a,
-													{
-														ctor: '::',
-														_0: _elm_lang$html$Html_Attributes$class('mdc-list-item'),
-														_1: {
-															ctor: '::',
-															_0: _elm_lang$html$Html_Attributes$href('/sensors'),
-															_1: {ctor: '[]'}
-														}
-													},
-													{
-														ctor: '::',
-														_0: A2(
-															_elm_lang$html$Html$i,
-															{
-																ctor: '::',
-																_0: _elm_lang$html$Html_Attributes$class('material-icons mdc-list-item__graphic'),
-																_1: {ctor: '[]'}
-															},
-															{
-																ctor: '::',
-																_0: _elm_lang$html$Html$text('memory'),
-																_1: {ctor: '[]'}
-															}),
-														_1: {
-															ctor: '::',
-															_0: _elm_lang$html$Html$text('Sensors'),
-															_1: {ctor: '[]'}
-														}
-													}),
-												_1: {ctor: '[]'}
-											}
-										}
-									}),
-								_1: {
-									ctor: '::',
-									_0: A2(
-										_elm_lang$html$Html$hr,
-										{
-											ctor: '::',
-											_0: _elm_lang$html$Html_Attributes$class('mdc-list-divider'),
-											_1: {ctor: '[]'}
-										},
-										{ctor: '[]'}),
-									_1: {
-										ctor: '::',
-										_0: A2(
-											_elm_lang$html$Html$nav,
-											{
-												ctor: '::',
-												_0: _elm_lang$html$Html_Attributes$class('mdc-list'),
-												_1: {ctor: '[]'}
-											},
-											{
-												ctor: '::',
-												_0: A2(
-													_elm_lang$html$Html$a,
-													{
-														ctor: '::',
-														_0: _elm_lang$html$Html_Attributes$class('mdc-list-item'),
-														_1: {
-															ctor: '::',
-															_0: _elm_lang$html$Html_Attributes$href('/boh'),
-															_1: {ctor: '[]'}
-														}
-													},
-													{
-														ctor: '::',
-														_0: A2(
-															_elm_lang$html$Html$i,
-															{
-																ctor: '::',
-																_0: _elm_lang$html$Html_Attributes$class('material-icons mdc-list-item__graphic'),
-																_1: {ctor: '[]'}
-															},
-															{
-																ctor: '::',
-																_0: _elm_lang$html$Html$text('boh'),
-																_1: {ctor: '[]'}
-															}),
-														_1: {ctor: '[]'}
-													}),
-												_1: {
-													ctor: '::',
-													_0: _elm_lang$html$Html$text('boh'),
-													_1: {ctor: '[]'}
-												}
-											}),
-										_1: {ctor: '[]'}
-									}
-								}
-							}),
-						_1: {ctor: '[]'}
-					}
-				}),
-			_1: {ctor: '[]'}
-		});
-};
-var _kiotlog$kiotlogweb$Drawer$openDrawer = _elm_lang$core$Native_Platform.outgoingPort(
-	'openDrawer',
-	function (v) {
-		return null;
-	});
-
 var _krisajenkins$remotedata$RemoteData$isNotAsked = function (data) {
 	var _p0 = data;
 	if (_p0.ctor === 'NotAsked') {
@@ -10965,6 +10724,7 @@ var _kiotlog$kiotlogweb$Types$DevicesReceived = function (a) {
 	return {ctor: 'DevicesReceived', _0: a};
 };
 var _kiotlog$kiotlogweb$Types$FetchDevices = {ctor: 'FetchDevices'};
+var _kiotlog$kiotlogweb$Types$CloseDrawer = {ctor: 'CloseDrawer'};
 var _kiotlog$kiotlogweb$Types$OpenDrawer = {ctor: 'OpenDrawer'};
 var _kiotlog$kiotlogweb$Types$LocationChanged = function (a) {
 	return {ctor: 'LocationChanged', _0: a};
@@ -10976,6 +10736,242 @@ var _kiotlog$kiotlogweb$Types$DeviceRoute = function (a) {
 };
 var _kiotlog$kiotlogweb$Types$DevicesRoute = {ctor: 'DevicesRoute'};
 var _kiotlog$kiotlogweb$Types$DashboardRoute = {ctor: 'DashboardRoute'};
+
+var _kiotlog$kiotlogweb$Drawer$view = function (model) {
+	return A2(
+		_elm_lang$html$Html$aside,
+		{
+			ctor: '::',
+			_0: _elm_lang$html$Html_Attributes$id('kiotlog-actions-menu'),
+			_1: {
+				ctor: '::',
+				_0: _elm_lang$html$Html_Attributes$class('mdc-drawer mdc-drawer--temporary mdc-typography'),
+				_1: {
+					ctor: '::',
+					_0: A2(_elm_lang$html$Html_Attributes$attribute, 'data-mdc-auto-init', 'MDCTemporaryDrawer'),
+					_1: {ctor: '[]'}
+				}
+			}
+		},
+		{
+			ctor: '::',
+			_0: A2(
+				_elm_lang$html$Html$nav,
+				{
+					ctor: '::',
+					_0: _elm_lang$html$Html_Attributes$class('mdc-drawer__drawer'),
+					_1: {ctor: '[]'}
+				},
+				{
+					ctor: '::',
+					_0: A2(
+						_elm_lang$html$Html$header,
+						{
+							ctor: '::',
+							_0: _elm_lang$html$Html_Attributes$class('mdc-drawer__header'),
+							_1: {ctor: '[]'}
+						},
+						{
+							ctor: '::',
+							_0: A2(
+								_elm_lang$html$Html$div,
+								{
+									ctor: '::',
+									_0: _elm_lang$html$Html_Attributes$class('mdc-drawer__header-content'),
+									_1: {ctor: '[]'}
+								},
+								{
+									ctor: '::',
+									_0: _elm_lang$html$Html$text('Header'),
+									_1: {ctor: '[]'}
+								}),
+							_1: {ctor: '[]'}
+						}),
+					_1: {
+						ctor: '::',
+						_0: A2(
+							_elm_lang$html$Html$div,
+							{
+								ctor: '::',
+								_0: _elm_lang$html$Html_Attributes$class('mdc-drawer__content mdc-list-group'),
+								_1: {ctor: '[]'}
+							},
+							{
+								ctor: '::',
+								_0: A2(
+									_elm_lang$html$Html$nav,
+									{
+										ctor: '::',
+										_0: _elm_lang$html$Html_Attributes$class('mdc-list'),
+										_1: {ctor: '[]'}
+									},
+									{
+										ctor: '::',
+										_0: A2(
+											_elm_lang$html$Html$a,
+											{
+												ctor: '::',
+												_0: _elm_lang$html$Html_Attributes$class('mdc-list-item'),
+												_1: {
+													ctor: '::',
+													_0: _elm_lang$html$Html_Attributes$href('#/'),
+													_1: {ctor: '[]'}
+												}
+											},
+											{
+												ctor: '::',
+												_0: A2(
+													_elm_lang$html$Html$i,
+													{
+														ctor: '::',
+														_0: _elm_lang$html$Html_Attributes$class('material-icons mdc-list-item__graphic'),
+														_1: {ctor: '[]'}
+													},
+													{
+														ctor: '::',
+														_0: _elm_lang$html$Html$text('dashboard'),
+														_1: {ctor: '[]'}
+													}),
+												_1: {
+													ctor: '::',
+													_0: _elm_lang$html$Html$text('Dashboard'),
+													_1: {ctor: '[]'}
+												}
+											}),
+										_1: {
+											ctor: '::',
+											_0: A2(
+												_elm_lang$html$Html$a,
+												{
+													ctor: '::',
+													_0: _elm_lang$html$Html_Attributes$class('mdc-list-item'),
+													_1: {
+														ctor: '::',
+														_0: _elm_lang$html$Html_Attributes$href('#/devices'),
+														_1: {ctor: '[]'}
+													}
+												},
+												{
+													ctor: '::',
+													_0: A2(
+														_elm_lang$html$Html$i,
+														{
+															ctor: '::',
+															_0: _elm_lang$html$Html_Attributes$class('material-icons mdc-list-item__graphic'),
+															_1: {ctor: '[]'}
+														},
+														{
+															ctor: '::',
+															_0: _elm_lang$html$Html$text('device_hub'),
+															_1: {ctor: '[]'}
+														}),
+													_1: {
+														ctor: '::',
+														_0: _elm_lang$html$Html$text('Devices'),
+														_1: {ctor: '[]'}
+													}
+												}),
+											_1: {
+												ctor: '::',
+												_0: A2(
+													_elm_lang$html$Html$a,
+													{
+														ctor: '::',
+														_0: _elm_lang$html$Html_Attributes$class('mdc-list-item'),
+														_1: {
+															ctor: '::',
+															_0: _elm_lang$html$Html_Attributes$href('#/sensors'),
+															_1: {ctor: '[]'}
+														}
+													},
+													{
+														ctor: '::',
+														_0: A2(
+															_elm_lang$html$Html$i,
+															{
+																ctor: '::',
+																_0: _elm_lang$html$Html_Attributes$class('material-icons mdc-list-item__graphic'),
+																_1: {ctor: '[]'}
+															},
+															{
+																ctor: '::',
+																_0: _elm_lang$html$Html$text('memory'),
+																_1: {ctor: '[]'}
+															}),
+														_1: {
+															ctor: '::',
+															_0: _elm_lang$html$Html$text('Sensors'),
+															_1: {ctor: '[]'}
+														}
+													}),
+												_1: {ctor: '[]'}
+											}
+										}
+									}),
+								_1: {
+									ctor: '::',
+									_0: A2(
+										_elm_lang$html$Html$hr,
+										{
+											ctor: '::',
+											_0: _elm_lang$html$Html_Attributes$class('mdc-list-divider'),
+											_1: {ctor: '[]'}
+										},
+										{ctor: '[]'}),
+									_1: {
+										ctor: '::',
+										_0: A2(
+											_elm_lang$html$Html$nav,
+											{
+												ctor: '::',
+												_0: _elm_lang$html$Html_Attributes$class('mdc-list'),
+												_1: {ctor: '[]'}
+											},
+											{
+												ctor: '::',
+												_0: A2(
+													_elm_lang$html$Html$a,
+													{
+														ctor: '::',
+														_0: _elm_lang$html$Html_Attributes$class('mdc-list-item'),
+														_1: {
+															ctor: '::',
+															_0: _elm_lang$html$Html_Attributes$href('/boh'),
+															_1: {ctor: '[]'}
+														}
+													},
+													{
+														ctor: '::',
+														_0: A2(
+															_elm_lang$html$Html$i,
+															{
+																ctor: '::',
+																_0: _elm_lang$html$Html_Attributes$class('material-icons mdc-list-item__graphic'),
+																_1: {ctor: '[]'}
+															},
+															{
+																ctor: '::',
+																_0: _elm_lang$html$Html$text('boh'),
+																_1: {ctor: '[]'}
+															}),
+														_1: {ctor: '[]'}
+													}),
+												_1: {
+													ctor: '::',
+													_0: _elm_lang$html$Html$text('boh'),
+													_1: {ctor: '[]'}
+												}
+											}),
+										_1: {ctor: '[]'}
+									}
+								}
+							}),
+						_1: {ctor: '[]'}
+					}
+				}),
+			_1: {ctor: '[]'}
+		});
+};
 
 var _kiotlog$kiotlogweb$Toolbar$view = function (model) {
 	return A2(
@@ -11103,7 +11099,7 @@ var _kiotlog$kiotlogweb$Views_Devices$viewDevice = function (device) {
 								{
 									ctor: '::',
 									_0: _elm_lang$html$Html_Attributes$href(
-										A2(_elm_lang$core$Basics_ops['++'], '/devices/', device.id)),
+										A2(_elm_lang$core$Basics_ops['++'], '#/devices/', device.id)),
 									_1: {ctor: '[]'}
 								},
 								{
@@ -11130,7 +11126,7 @@ var _kiotlog$kiotlogweb$Views_Devices$showDeviceLink = function (_p1) {
 				{
 					ctor: '::',
 					_0: _elm_lang$html$Html_Attributes$href(
-						A2(_elm_lang$core$Basics_ops['++'], '/devices/', _p2.id)),
+						A2(_elm_lang$core$Basics_ops['++'], '#/devices/', _p2.id)),
 					_1: {ctor: '[]'}
 				},
 				{
@@ -11361,7 +11357,7 @@ var _kiotlog$kiotlogweb$Routing$matchRoute = _evancz$url_parser$UrlParser$oneOf(
 		}
 	});
 var _kiotlog$kiotlogweb$Routing$extractRoute = function (location) {
-	var _p0 = A2(_evancz$url_parser$UrlParser$parsePath, _kiotlog$kiotlogweb$Routing$matchRoute, location);
+	var _p0 = A2(_evancz$url_parser$UrlParser$parseHash, _kiotlog$kiotlogweb$Routing$matchRoute, location);
 	if (_p0.ctor === 'Just') {
 		return _p0._0;
 	} else {
@@ -11398,6 +11394,16 @@ var _kiotlog$kiotlogweb$Ports$initMDC = _elm_lang$core$Native_Platform.outgoingP
 	function (v) {
 		return null;
 	});
+var _kiotlog$kiotlogweb$Ports$openDrawer = _elm_lang$core$Native_Platform.outgoingPort(
+	'openDrawer',
+	function (v) {
+		return null;
+	});
+var _kiotlog$kiotlogweb$Ports$closeDrawer = _elm_lang$core$Native_Platform.outgoingPort(
+	'closeDrawer',
+	function (v) {
+		return null;
+	});
 
 var _kiotlog$kiotlogweb$State$update = F2(
 	function (msg, model) {
@@ -11409,7 +11415,14 @@ var _kiotlog$kiotlogweb$State$update = F2(
 				return {
 					ctor: '_Tuple2',
 					_0: model,
-					_1: _kiotlog$kiotlogweb$Drawer$openDrawer(
+					_1: _kiotlog$kiotlogweb$Ports$openDrawer(
+						{ctor: '_Tuple0'})
+				};
+			case 'CloseDrawer':
+				return {
+					ctor: '_Tuple2',
+					_0: model,
+					_1: _kiotlog$kiotlogweb$Ports$closeDrawer(
 						{ctor: '_Tuple0'})
 				};
 			case 'LocationChanged':
@@ -11420,7 +11433,8 @@ var _kiotlog$kiotlogweb$State$update = F2(
 						{
 							currentRoute: _kiotlog$kiotlogweb$Routing$extractRoute(_p0._0)
 						}),
-					_1: _elm_lang$core$Platform_Cmd$none
+					_1: _kiotlog$kiotlogweb$Ports$closeDrawer(
+						{ctor: '_Tuple0'})
 				};
 			case 'FetchDevices':
 				var devices = model.devices;

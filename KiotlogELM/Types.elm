@@ -24,6 +24,7 @@ type Msg
     = NoOp
     | LocationChanged Location
     | OpenDrawer
+    | CloseDrawer
     | FetchDevices
     | DevicesReceived (WebData (List Device))
     | SetDevicesTableState Table.State

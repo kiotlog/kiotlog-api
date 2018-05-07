@@ -5,8 +5,7 @@ import Routing exposing (extractRoute)
 import RemoteData exposing (WebData)
 import Types exposing (Msg(..), Model, Route)
 import Rest exposing (fetchDevicesCommand)
-import Ports exposing (initMDC)
-import Drawer exposing (openDrawer)
+import Ports exposing (initMDC, openDrawer, closeDrawer)
 import Table exposing (initialSort)
 
 
@@ -33,13 +32,16 @@ update msg model =
             ( model, Cmd.none )
 
         OpenDrawer ->
-            ( model, Drawer.openDrawer () )
+            ( model, openDrawer () )
+
+        CloseDrawer ->
+            ( model, closeDrawer () )
 
         LocationChanged location ->
             ( { model
                 | currentRoute = Routing.extractRoute location
               }
-            , Cmd.none
+            , closeDrawer ()
             )
 
         FetchDevices ->

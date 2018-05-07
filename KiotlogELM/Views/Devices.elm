@@ -82,7 +82,7 @@ detailsColumn =
 showDeviceLink : Device -> Table.HtmlDetails Msg
 showDeviceLink { id } =
     Table.HtmlDetails []
-        [ a [ href ("/devices/" ++ id) ] [ text "show" ]
+        [ a [ href ("#/devices/" ++ id) ] [ text "show" ]
         ]
 
 
@@ -107,7 +107,7 @@ viewDevice device =
         , td []
             [ text device.device ]
         , td []
-            [ a [ href ("/devices/" ++ device.id) ] [ text "show" ] ]
+            [ a [ href ("#/devices/" ++ device.id) ] [ text "show" ] ]
         ]
 
 

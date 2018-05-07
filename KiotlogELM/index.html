@@ -18,6 +18,10 @@
 			app.ports.openDrawer.subscribe(function() {
 				document.getElementById('kiotlog-actions-menu').MDCTemporaryDrawer.open = true;
 			});
+			
+			app.ports.closeDrawer.subscribe(function() {
+				document.getElementById('kiotlog-actions-menu').MDCTemporaryDrawer.open = false;
+			});
 		</script>
 	</body>
 </html>
