@@ -1,0 +1,10 @@
+@import "@material/drawer/mdc-drawer";
+
+.mdc-drawer__header {
+    background-color: lighten($mdc-theme-background, 10%);
+}
+
+[dir="rtl"] [dir="ltr"] .material-icons.mdc-list-item__graphic {
+  margin-left: 0 !important;
+  margin-right: 32px !important;
+}

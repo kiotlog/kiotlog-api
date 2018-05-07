@@ -1,0 +1,30 @@
+@import "variables";
+
+@import "@material/typography/mdc-typography";
+@import "@material/theme/mdc-theme";
+@import "@material/top-app-bar/mdc-top-app-bar";
+@import "@material/list/mdc-list";
+@import "@material/button/mdc-button";
+
+@import "drawer";
+
+html {
+    box-sizing: border-box;
+}
+
+*, *:before, *:after {
+    box-sizing: inherit;
+}
+
+body {
+    padding: 0;
+    margin: 0;
+
+    // @media (min-width: map-get($mdc-layout-grid-breakpoints, 'desktop')) {
+    //     margin-bottom: $footerHeight;
+    // }
+}
+
+#kiotlog-app > div {
+    display: flex;
+}

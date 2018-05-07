@@ -1,0 +1,23 @@
+<!DOCTYPE HTML>
+<html>
+	<head>
+		<link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+		<link rel="stylesheet" href="/css/kiotlog.css">
+	</head>
+	<body>
+		<div id="kiotlog-app"></div>
+		<script src="/kiotlog.js"></script>
+		<script src="/js/material-components-web.min.js"></script>
+		<script>
+			var app = Elm.Main.embed(document.getElementById("kiotlog-app"));
+
+			app.ports.initMDC.subscribe(function() {
+				window.mdc.autoInit();
+			});
+			
+			app.ports.openDrawer.subscribe(function() {
+				document.getElementById('kiotlog-actions-menu').MDCTemporaryDrawer.open = true;
+			});
+		</script>
+	</body>
+</html>

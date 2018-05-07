@@ -1,0 +1,30 @@
+{
+  "name": "kiotlogelm",
+  "version": "1.0.0",
+  "description": "Kiotlog UI",
+  "main": "kiotlog.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kiotlog/kiotlogweb.git"
+  },
+  "keywords": [
+    "kiotlog",
+    "elm",
+    "mdc"
+  ],
+  "author": "",
+  "license": "GPL-3.0",
+  "bugs": {
+    "url": "https://github.com/kiotlog/kiotlogweb/issues"
+  },
+  "homepage": "https://github.com/kiotlog/kiotlogweb#readme",
+  "dependencies": {
+    "@material/button": "^0.35.0",
+    "@material/drawer": "^0.35.0",
+    "@material/list": "^0.35.0",
+    "@material/top-app-bar": "^0.35.0"
+  }
+}
