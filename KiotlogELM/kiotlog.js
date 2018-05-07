@@ -10737,7 +10737,82 @@ var _kiotlog$kiotlogweb$Types$DeviceRoute = function (a) {
 var _kiotlog$kiotlogweb$Types$DevicesRoute = {ctor: 'DevicesRoute'};
 var _kiotlog$kiotlogweb$Types$DashboardRoute = {ctor: 'DashboardRoute'};
 
-var _kiotlog$kiotlogweb$Drawer$view = function (model) {
+var _kiotlog$kiotlogweb$Views_Toolbar$view = function (model) {
+	return A2(
+		_elm_lang$html$Html$header,
+		{
+			ctor: '::',
+			_0: _elm_lang$html$Html_Attributes$class('mdc-top-app-bar mdc-top-app-bar--fixed'),
+			_1: {ctor: '[]'}
+		},
+		{
+			ctor: '::',
+			_0: A2(
+				_elm_lang$html$Html$div,
+				{
+					ctor: '::',
+					_0: _elm_lang$html$Html_Attributes$class('mdc-top-app-bar__row'),
+					_1: {ctor: '[]'}
+				},
+				{
+					ctor: '::',
+					_0: A2(
+						_elm_lang$html$Html$section,
+						{
+							ctor: '::',
+							_0: _elm_lang$html$Html_Attributes$class('mdc-top-app-bar__section mdc-top-app-bar__section--align-start'),
+							_1: {ctor: '[]'}
+						},
+						{
+							ctor: '::',
+							_0: A2(
+								_elm_lang$html$Html$button,
+								{
+									ctor: '::',
+									_0: _elm_lang$html$Html_Attributes$type_('button'),
+									_1: {
+										ctor: '::',
+										_0: _elm_lang$html$Html_Events$onClick(_kiotlog$kiotlogweb$Types$OpenDrawer),
+										_1: {
+											ctor: '::',
+											_0: _elm_lang$html$Html_Attributes$id('kiotlog-actions-button'),
+											_1: {
+												ctor: '::',
+												_0: _elm_lang$html$Html_Attributes$class('material-icons mdc-top-app-bar__navigation-icon'),
+												_1: {ctor: '[]'}
+											}
+										}
+									}
+								},
+								{
+									ctor: '::',
+									_0: _elm_lang$html$Html$text('menu'),
+									_1: {ctor: '[]'}
+								}),
+							_1: {
+								ctor: '::',
+								_0: A2(
+									_elm_lang$html$Html$span,
+									{
+										ctor: '::',
+										_0: _elm_lang$html$Html_Attributes$class('mdc-top-app-bar__title'),
+										_1: {ctor: '[]'}
+									},
+									{
+										ctor: '::',
+										_0: _elm_lang$html$Html$text('Kiotlog'),
+										_1: {ctor: '[]'}
+									}),
+								_1: {ctor: '[]'}
+							}
+						}),
+					_1: {ctor: '[]'}
+				}),
+			_1: {ctor: '[]'}
+		});
+};
+
+var _kiotlog$kiotlogweb$Views_Drawer$view = function (model) {
 	return A2(
 		_elm_lang$html$Html$aside,
 		{
@@ -10968,81 +11043,6 @@ var _kiotlog$kiotlogweb$Drawer$view = function (model) {
 							}),
 						_1: {ctor: '[]'}
 					}
-				}),
-			_1: {ctor: '[]'}
-		});
-};
-
-var _kiotlog$kiotlogweb$Toolbar$view = function (model) {
-	return A2(
-		_elm_lang$html$Html$header,
-		{
-			ctor: '::',
-			_0: _elm_lang$html$Html_Attributes$class('mdc-top-app-bar mdc-top-app-bar--fixed'),
-			_1: {ctor: '[]'}
-		},
-		{
-			ctor: '::',
-			_0: A2(
-				_elm_lang$html$Html$div,
-				{
-					ctor: '::',
-					_0: _elm_lang$html$Html_Attributes$class('mdc-top-app-bar__row'),
-					_1: {ctor: '[]'}
-				},
-				{
-					ctor: '::',
-					_0: A2(
-						_elm_lang$html$Html$section,
-						{
-							ctor: '::',
-							_0: _elm_lang$html$Html_Attributes$class('mdc-top-app-bar__section mdc-top-app-bar__section--align-start'),
-							_1: {ctor: '[]'}
-						},
-						{
-							ctor: '::',
-							_0: A2(
-								_elm_lang$html$Html$button,
-								{
-									ctor: '::',
-									_0: _elm_lang$html$Html_Attributes$type_('button'),
-									_1: {
-										ctor: '::',
-										_0: _elm_lang$html$Html_Events$onClick(_kiotlog$kiotlogweb$Types$OpenDrawer),
-										_1: {
-											ctor: '::',
-											_0: _elm_lang$html$Html_Attributes$id('kiotlog-actions-button'),
-											_1: {
-												ctor: '::',
-												_0: _elm_lang$html$Html_Attributes$class('material-icons mdc-top-app-bar__navigation-icon'),
-												_1: {ctor: '[]'}
-											}
-										}
-									}
-								},
-								{
-									ctor: '::',
-									_0: _elm_lang$html$Html$text('menu'),
-									_1: {ctor: '[]'}
-								}),
-							_1: {
-								ctor: '::',
-								_0: A2(
-									_elm_lang$html$Html$span,
-									{
-										ctor: '::',
-										_0: _elm_lang$html$Html_Attributes$class('mdc-top-app-bar__title'),
-										_1: {ctor: '[]'}
-									},
-									{
-										ctor: '::',
-										_0: _elm_lang$html$Html$text('Kiotlog'),
-										_1: {ctor: '[]'}
-									}),
-								_1: {ctor: '[]'}
-							}
-						}),
-					_1: {ctor: '[]'}
 				}),
 			_1: {ctor: '[]'}
 		});
@@ -11307,7 +11307,7 @@ var _kiotlog$kiotlogweb$View$view = function (model) {
 		{ctor: '[]'},
 		{
 			ctor: '::',
-			_0: _kiotlog$kiotlogweb$Toolbar$view(
+			_0: _kiotlog$kiotlogweb$Views_Toolbar$view(
 				{ctor: '[]'}),
 			_1: {
 				ctor: '::',
@@ -11325,7 +11325,7 @@ var _kiotlog$kiotlogweb$View$view = function (model) {
 					}),
 				_1: {
 					ctor: '::',
-					_0: _kiotlog$kiotlogweb$Drawer$view(
+					_0: _kiotlog$kiotlogweb$Views_Drawer$view(
 						{ctor: '[]'}),
 					_1: {ctor: '[]'}
 				}

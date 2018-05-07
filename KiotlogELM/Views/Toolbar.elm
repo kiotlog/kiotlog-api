@@ -1,9 +1,9 @@
-module Toolbar exposing (view)
+module Views.Toolbar exposing (view)
 
 import Html exposing (..)
 import Html.Attributes exposing (id, class, type_)
 import Html.Events exposing (onClick)
-import Types exposing (Msg(..))
+import Types exposing (Msg(OpenDrawer))
 
 
 view : a -> Html Msg

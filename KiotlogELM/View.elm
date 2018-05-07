@@ -3,8 +3,8 @@ module View exposing (view)
 import Html exposing (..)
 import Html.Attributes exposing (class)
 import Types exposing (Model, Msg, Route(..))
-import Toolbar exposing (view)
-import Drawer exposing (view)
+import Views.Toolbar as Toolbar exposing (view)
+import Views.Drawer as Drawer exposing (view)
 import Views.Devices as Devices exposing (view)
 
 
