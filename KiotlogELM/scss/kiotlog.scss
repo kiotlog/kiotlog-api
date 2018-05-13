@@ -5,11 +5,17 @@
 @import "@material/top-app-bar/mdc-top-app-bar";
 @import "@material/list/mdc-list";
 @import "@material/button/mdc-button";
+@import "@material/layout-grid/mdc-layout-grid";
+@import "@material/card/mdc-card.scss";
 
 @import "drawer";
+@import "lists";
+@import "utils";
 
 html {
     box-sizing: border-box;
+    position: relative;
+    min-height: 100%;
 }
 
 *, *:before, *:after {
@@ -27,4 +33,12 @@ body {
 
 #kiotlog-app > div {
     display: flex;
+}
+
+.kiotlog-wrap {
+    width: 100%;
+}
+
+.kiotlog-page {
+    padding: 8px 24px;
 }

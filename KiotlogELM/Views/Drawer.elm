@@ -15,7 +15,7 @@ view model =
                 ]
             , div [ class "mdc-drawer__content mdc-list-group" ]
                 [ nav [ class "mdc-list" ]
-                    [ a [ class "mdc-list-item", href "#/" ]
+                    [ a [ class "mdc-list-item", href "#/dashboard" ]
                         [ i [ class "material-icons mdc-list-item__graphic" ]
                             [ text "dashboard" ]
                         , text "Dashboard"

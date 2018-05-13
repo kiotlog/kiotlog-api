@@ -2,25 +2,31 @@ module View exposing (view)
 
 import Html exposing (..)
 import Html.Attributes exposing (class)
-import Types exposing (Model, Msg, Route(..))
+import Types exposing (Model, Msg, Route(..), Page(..))
 import Views.Toolbar as Toolbar exposing (view)
 import Views.Drawer as Drawer exposing (view)
-import Views.Devices as Devices exposing (view)
+import Views.Devices as Devices exposing (viewDevices)
 
 
 mainPage : Model -> Html Msg
 mainPage model =
-    case model.currentRoute of
-        DashboardRoute ->
+    case model.pageState of
+        BlankPage ->
+            div [] [ text "Benvenuto!" ]
+
+        DashboardPage ->
             div [] [ text "dashboard" ]
 
-        DevicesRoute ->
-            Devices.view model
+        DevicesPage ->
+            Devices.viewDevices model
 
-        DeviceRoute id ->
-            div [] [ text ("device " ++ id) ]
+        DevicePage ->
+            Devices.viewDevice model
 
-        NotFoundRoute ->
+        SensorsPage ->
+            div [] [ text "Sensors" ]
+
+        NotFoundPage ->
             notFoundView
 
 
@@ -28,7 +34,7 @@ view : Model -> Html Msg
 view model =
     div []
         [ Toolbar.view []
-        , div [ class "mdc-top-app-bar--fixed-adjust" ] [ mainPage model ]
+        , div [ class "kiotlog-wrap mdc-top-app-bar--fixed-adjust" ] [ mainPage model ]
         , Drawer.view []
         ]
 

@@ -19,6 +19,7 @@ matchRoute : Parser (Route -> a) a
 matchRoute =
     oneOf
         [ map DashboardRoute top
+        , map DashboardRoute (s "dashboard")
         , map DevicesRoute (s "devices")
         , map DeviceRoute (s "devices" </> string)
         ]
