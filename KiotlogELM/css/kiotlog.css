@@ -548,19 +548,19 @@
     padding-right: 20px; }
 
 .mdc-top-app-bar--fixed-adjust {
-  margin-top: 64px; }
+  padding-top: 64px; }
 
 .mdc-top-app-bar--dense-fixed-adjust {
-  margin-top: 48px; }
+  padding-top: 48px; }
 
 .mdc-top-app-bar--short-fixed-adjust {
-  margin-top: 56px; }
+  padding-top: 56px; }
 
 .mdc-top-app-bar--prominent-fixed-adjust {
-  margin-top: 128px; }
+  padding-top: 128px; }
 
 .mdc-top-app-bar--dense-prominent-fixed-adjust {
-  margin-top: 96px; }
+  padding-top: 96px; }
 
 @media (max-width: 599px) {
   .mdc-top-app-bar__row {
