@@ -1,17 +1,17 @@
-module Views.Devices exposing (viewDevices, viewDevice)
+module Views.Devices exposing (viewDevices, viewDevice, addDevice)
 
 import Html exposing (..)
-import Html.Attributes exposing (href, class, type_, style)
+import Html.Attributes exposing (id, href, class, type_, style, for, attribute)
 import Html.Events exposing (onClick)
 import Http
 import Types exposing (..)
 import RemoteData exposing (WebData)
-import Table exposing (Config, stringColumn, intColumn, defaultCustomizations, Status(..), HtmlDetails)
+import Table exposing (Config, stringColumn, intColumn, defaultCustomizations, Status(..), HtmlDetails, customConfig, veryCustomColumn)
 
 
 viewDevices : Model -> Html Msg
 viewDevices model =
-    case model.devices.data of
+    case model.devices of
         RemoteData.NotAsked ->
             text ""
 
@@ -19,7 +19,7 @@ viewDevices model =
             h3 [] [ text "Loading..." ]
 
         RemoteData.Success devices ->
-            devicesTable devices (model.devices.table)
+            devicesTable devices (model.devicesTable)
 
         RemoteData.Failure httpError ->
             viewError "Couldn't fetch devices at this time." (createErrorMessage httpError)
@@ -52,7 +52,7 @@ viewError errorHeading errorMessage =
 devicesTable : List Device -> Table.State -> Html Msg
 devicesTable devices tableState =
     div [ class "kiotlog-page" ]
-        [ h3 []
+        [ h1 [ class "text-right" ]
             [ text "Devices"
             , button
                 [ type_ "button"
@@ -61,6 +61,13 @@ devicesTable devices tableState =
                 ]
                 [ i [ class "material-icons" ]
                     [ text "refresh" ]
+                ]
+            , a
+                [ href "#/devices/new"
+                , class "mdc-button mdc-button--unelevated"
+                ]
+                [ i [ class "material-icons" ]
+                    [ text "add" ]
                 ]
             ]
         , Table.view config tableState devices
@@ -99,7 +106,7 @@ deviceCards device =
 
 config : Table.Config Device Msg
 config =
-    Table.customConfig
+    customConfig
         { toId = .id
         , toMsg = SetDevicesTableState
         , columns =
@@ -120,16 +127,16 @@ config =
 
 detailsColumn : Table.Column Device Msg
 detailsColumn =
-    Table.veryCustomColumn
+    veryCustomColumn
         { name = ""
         , viewData = showDeviceLink
         , sorter = Table.unsortable
         }
 
 
-showDeviceLink : Device -> Table.HtmlDetails Msg
+showDeviceLink : Device -> HtmlDetails Msg
 showDeviceLink { id } =
-    Table.HtmlDetails []
+    HtmlDetails []
         [ a [ href ("#/devices/" ++ id), class "mdc-button" ] [ text "show" ]
         ]
 
@@ -145,19 +152,19 @@ simpleTheadHelp ( name, status, onClick ) =
         content =
             case status of
                 Unsortable ->
-                    [ Html.text name ]
+                    [ text name ]
 
                 Sortable selected ->
                     [ if selected then
                         darkGrey "arrow_downward"
                       else
                         lightGrey "arrow_downward"
-                    , Html.text name
+                    , text name
                     ]
 
                 Reversible Nothing ->
                     [ lightGrey "sort"
-                    , Html.text name
+                    , text name
                     ]
 
                 Reversible (Just isReversed) ->
@@ -167,20 +174,20 @@ simpleTheadHelp ( name, status, onClick ) =
                          else
                             "arrow_downward"
                         )
-                    , Html.text name
+                    , text name
                     ]
     in
-        Html.th [ onClick ] content
+        th [ onClick ] content
 
 
 darkGrey : String -> Html msg
 darkGrey symbol =
-    Html.i [ style [ ( "color", "#555" ) ], class "material-icons" ] [ text symbol ]
+    i [ style [ ( "color", "#555" ) ], class "material-icons" ] [ text symbol ]
 
 
 lightGrey : String -> Html msg
 lightGrey symbol =
-    Html.i [ style [ ( "color", "#ccc" ) ], class "material-icons" ] [ text symbol ]
+    i [ style [ ( "color", "#ccc" ) ], class "material-icons" ] [ text symbol ]
 
 
 
@@ -220,3 +227,96 @@ createErrorMessage httpError =
 
         Http.BadPayload message response ->
             message
+
+
+addSensor : Html msg
+addSensor =
+    div [ class "mdc-layout-grid__inner" ]
+        [ div
+            [ class "mdc-text-field mdc-layout-grid__cell"
+            , attribute "data-mdc-auto-init" "MDCTextField"
+            ]
+            [ input
+                [ type_ "text"
+                , id "new_sensor_device_id_num"
+                , class "mdc-text-field__input"
+                ]
+                []
+            , label
+                [ class "mdc-floating-label"
+                , for "new_sensor_device_id_num"
+                ]
+                [ text "Name" ]
+            , div [ class "mdc-line-ripple" ] []
+            ]
+        ]
+
+
+addDevice : Model -> Html Msg
+addDevice model =
+    div [ class "kiotlog-page" ]
+        [ div [ class "mdc-layout-grid" ]
+            [ div [ class "mdc-layout-grid__inner" ]
+                [ h1 [ class "mdc-layout-grid__cell--span-6 margin-0" ]
+                    [ a
+                        [ href "#/devices"
+                        , class "mdc-button"
+                        ]
+                        [ i [ class "material-icons mdc-button__icon" ]
+                            [ text "arrow_back" ]
+                        , text "Back"
+                        ]
+                    , button
+                        [ type_ "button"
+                        , class "mdc-button mdc-button--unelevated"
+                        ]
+                        [ i [ class "material-icons mdc-button__icon" ]
+                            [ text "check" ]
+                        , text "Add"
+                        ]
+                    ]
+                , h1 [ class "mdc-layout-grid__cell--span-6 margin-0 text-right" ]
+                    [ text "Add new device" ]
+                ]
+            , div [ class "mdc-layout-grid__inner" ]
+                [ div
+                    [ class "mdc-text-field mdc-layout-grid__cell"
+                    , attribute "data-mdc-auto-init" "MDCTextField"
+                    ]
+                    [ input
+                        [ type_ "text"
+                        , id "new_device_device_id"
+                        , class "mdc-text-field__input"
+                        ]
+                        []
+                    , label
+                        [ class "mdc-floating-label"
+                        , for "new_device_device_id"
+                        ]
+                        [ text "Device Id" ]
+                    , div [ class "mdc-line-ripple" ] []
+                    ]
+                , div
+                    [ class "mdc-text-field mdc-layout-grid__cell"
+                    , attribute "data-mdc-auto-init" "MDCTextField"
+                    ]
+                    [ input
+                        [ type_ "text"
+                        , id "new_device_name"
+                        , class "mdc-text-field__input"
+                        ]
+                        []
+                    , label
+                        [ class "mdc-floating-label"
+                        , for "new_device_name"
+                        ]
+                        [ text "Name" ]
+                    , div [ class "mdc-line-ripple" ] []
+                    ]
+                ]
+            , div [ class "mdc-layout-grid__inner" ]
+                [ h2 [ class "mdc-layout-grid__cell--span-12 text-center" ]
+                    [ text "Sensors" ]
+                ]
+            ]
+        ]

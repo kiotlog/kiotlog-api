@@ -21,5 +21,6 @@ matchRoute =
         [ map DashboardRoute top
         , map DashboardRoute (s "dashboard")
         , map DevicesRoute (s "devices")
+        , map NewDeviceRoute (s "devices" </> s "new")
         , map DeviceRoute (s "devices" </> string)
         ]

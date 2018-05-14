@@ -32,10 +32,8 @@ type alias Device =
 
 
 type alias Model =
-    { devices :
-        { data : WebData (List Device)
-        , table : Table.State
-        }
+    { devices : WebData (List Device)
+    , devicesTable : Table.State
     , device : WebData Device
     , currentRoute : Route
     , pageState : Page
@@ -56,6 +54,7 @@ type Msg
 type Route
     = DashboardRoute
     | DevicesRoute
+    | NewDeviceRoute
     | DeviceRoute String
     | NotFoundRoute
 
@@ -66,4 +65,5 @@ type Page
     | DashboardPage
     | DevicesPage
     | DevicePage
+    | AddDevicePage
     | SensorsPage

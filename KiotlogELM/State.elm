@@ -12,10 +12,8 @@ import Http exposing (Error(..))
 
 initialModel : Model
 initialModel =
-    { devices =
-        { data = RemoteData.NotAsked
-        , table = (Table.initialSort "Id")
-        }
+    { devices = RemoteData.NotAsked
+    , devicesTable = (Table.initialSort "Id")
     , device = RemoteData.NotAsked
     , currentRoute = NotFoundRoute
     , pageState = BlankPage
@@ -59,7 +57,7 @@ setRoute route model =
             DeviceRoute id ->
                 let
                     dev =
-                        case model.devices.data of
+                        case model.devices of
                             RemoteData.Success devices ->
                                 findDeviceById id devices |> fromMaybe (BadUrl id)
 
@@ -76,6 +74,9 @@ setRoute route model =
                         page DevicePage
                 in
                     { newModel | device = dev } ! [ pageCmd, (fetchDeviceCommand id) ]
+
+            NewDeviceRoute ->
+                page AddDevicePage
 
             _ ->
                 page NotFoundPage
@@ -104,27 +105,15 @@ update msg model =
             setRoute (Routing.extractRoute location) model
 
         FetchDevices ->
-            let
-                devices =
-                    model.devices
-            in
-                ( { model | devices = { devices | data = RemoteData.Loading } }, fetchDevicesCommand )
+            ( { model | devices = RemoteData.Loading }, fetchDevicesCommand )
 
         DevicesReceived response ->
-            let
-                devices =
-                    model.devices
-            in
-                ( { model | devices = { devices | data = response } }, Cmd.none )
+            ( { model | devices = response }, Cmd.none )
 
         SetDevicesTableState newstate ->
-            let
-                devices =
-                    model.devices
-            in
-                ( { model | devices = { devices | table = newstate } }
-                , Cmd.none
-                )
+            ( { model | devicesTable = newstate }
+            , Cmd.none
+            )
 
         DeviceReceived response ->
             ( { model | device = response }, Cmd.none )

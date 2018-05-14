@@ -15,13 +15,19 @@ mainPage model =
             div [] [ text "Benvenuto!" ]
 
         DashboardPage ->
-            div [] [ text "dashboard" ]
+            div [ class "kiotlog-page" ]
+                [ h1 [ class "text-right" ]
+                    [ text "Dashboard" ]
+                ]
 
         DevicesPage ->
             Devices.viewDevices model
 
         DevicePage ->
             Devices.viewDevice model
+
+        AddDevicePage ->
+            Devices.addDevice model
 
         SensorsPage ->
             div [] [ text "Sensors" ]
