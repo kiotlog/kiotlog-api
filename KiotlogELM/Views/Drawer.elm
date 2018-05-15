@@ -1,13 +1,13 @@
 module Views.Drawer exposing (view)
 
 import Html exposing (..)
-import Html.Attributes exposing (id, class, href, attribute)
+import Html.Attributes exposing (id, class, href)
 import Types exposing (Msg)
 
 
 view : a -> Html Msg
 view model =
-    aside [ id "kiotlog-actions-menu", class "mdc-drawer mdc-drawer--temporary mdc-typography", attribute "data-mdc-auto-init" "MDCTemporaryDrawer" ]
+    aside [ id "kiotlog-actions-menu", class "mdc-drawer mdc-drawer--temporary mdc-typography" ]
         [ nav [ class "mdc-drawer__drawer" ]
             [ header [ class "mdc-drawer__header" ]
                 [ div [ class "mdc-drawer__header-content" ]

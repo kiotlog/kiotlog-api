@@ -7,21 +7,6 @@
 	<body>
 		<div id="kiotlog-app"></div>
 		<script src="/kiotlog.js"></script>
-		<script src="/js/material-components-web.min.js"></script>
-		<script>
-			var app = Elm.Main.embed(document.getElementById("kiotlog-app"));
-
-			app.ports.initMDC.subscribe(function() {
-				window.mdc.autoInit();
-			});
-			
-			app.ports.openDrawer.subscribe(function() {
-				document.getElementById('kiotlog-actions-menu').MDCTemporaryDrawer.open = true;
-			});
-			
-			app.ports.closeDrawer.subscribe(function() {
-				document.getElementById('kiotlog-actions-menu').MDCTemporaryDrawer.open = false;
-			});
-		</script>
+		<script src="/js/kiotlog-bundle.js"></script>
 	</body>
 </html>

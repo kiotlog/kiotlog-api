@@ -1,10 +1,11 @@
-module Rest exposing (fetchDevicesCommand, fetchDeviceCommand)
+module Rest exposing (fetchDevicesCommand, fetchDeviceCommand, createDeviceCommand)
 
 import Types exposing (..)
 import Http exposing (..)
 import RemoteData exposing (WebData)
 import Json.Decode exposing (string, int, list, bool, Decoder)
 import Json.Decode.Pipeline exposing (decode, required, optional)
+import Json.Encode as Encode
 
 
 apiBaseUrl =
@@ -55,3 +56,64 @@ fetchDeviceCommand id =
         |> Http.get (apiBaseUrl ++ "devices/" ++ id)
         |> RemoteData.sendRequest
         |> Cmd.map DeviceReceived
+
+
+createDeviceCommand : Device -> Cmd Msg
+createDeviceCommand device =
+    createDeviceRequest device
+        |> Http.send DeviceCreated
+
+
+createDeviceRequest : Device -> Http.Request Device
+createDeviceRequest device =
+    Http.request
+        { method = "POST"
+        , headers = []
+        , url = apiBaseUrl ++ "devices"
+        , body = Http.jsonBody (newDeviceEncoder device)
+        , expect = Http.expectJson deviceDecoder
+        , timeout = Nothing
+        , withCredentials = False
+        }
+
+
+metaEncoder : Meta -> Encode.Value
+metaEncoder meta =
+    Encode.object
+        [ ( "name", Encode.string meta.name )
+        , ( "description", Encode.string meta.description )
+        ]
+
+
+frameEncoder : Frame -> Encode.Value
+frameEncoder frame =
+    Encode.object
+        [ ( "bigendian", Encode.bool frame.bigendian )
+        , ( "bitfields", Encode.bool frame.bitfields )
+        ]
+
+
+sensorEncoder : Sensor -> Encode.Value
+sensorEncoder sensor =
+    Encode.object
+        [ ( "meta", metaEncoder sensor.meta )
+        ]
+
+
+sensorsEncoder : List Sensor -> Encode.Value
+sensorsEncoder sensors =
+    Encode.list
+        (List.map
+            sensorEncoder
+            sensors
+        )
+
+
+newDeviceEncoder : Device -> Encode.Value
+newDeviceEncoder device =
+    Encode.object
+        [ ( "device", Encode.string device.device )
+        , ( "meta", metaEncoder device.meta )
+        , ( "frame", frameEncoder device.frame )
+        , ( "sensors", sensorsEncoder device.sensors )
+        ]

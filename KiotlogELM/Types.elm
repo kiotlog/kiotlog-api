@@ -3,6 +3,7 @@ module Types exposing (..)
 import RemoteData exposing (WebData)
 import Navigation exposing (Location)
 import Table
+import Http
 
 
 type alias Sensor =
@@ -35,6 +36,7 @@ type alias Model =
     { devices : WebData (List Device)
     , devicesTable : Table.State
     , device : WebData Device
+    , newDevice : Device
     , currentRoute : Route
     , pageState : Page
     }
@@ -49,6 +51,12 @@ type Msg
     | DevicesReceived (WebData (List Device))
     | SetDevicesTableState Table.State
     | DeviceReceived (WebData Device)
+    | NewDeviceDevice String
+    | NewDeviceName String
+    | NewDeviceBigendian Bool
+    | CreateNewDevice
+    | AddSensor
+    | DeviceCreated (Result Http.Error Device)
 
 
 type Route

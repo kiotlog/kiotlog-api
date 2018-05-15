@@ -9,8 +9,10 @@
 @import "@material/card/mdc-card";
 @import "@material/textfield/mdc-text-field";
 
+@import "clearfix";
 @import "drawer";
 @import "lists";
+@import "switch";
 @import "utils";
 
 html {
@@ -41,5 +43,26 @@ body {
 }
 
 .kiotlog-page {
-    padding: 8px 24px;
+    @extend .padding-gutter;
+}
+
+.kiotlog-container {
+    position: relative;
+    width: 100%;
+    max-width: 1140px;
+    margin: 0 auto;
+    // height: 100%;
+    padding: 0 16px;
+
+    @include clearfix();
+}
+
+.kiotlog-container-small {
+    @extend .kiotlog-container;
+
+    max-width: 800px;
+
+    .kiotlog-container-small {
+        padding: 0;
+    }
 }

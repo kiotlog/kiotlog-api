@@ -45,6 +45,11 @@
     padding-bottom: 20px;
 }
 
+.padding-gutter {
+    padding: 24px;
+    padding: var(--mdc-layout-grid-margin-desktop, 24px);
+}
+
 .align-center {
     align-items: center;
 }

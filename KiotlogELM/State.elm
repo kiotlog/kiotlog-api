@@ -3,11 +3,36 @@ module State exposing (init, update)
 import Navigation exposing (Location)
 import Routing exposing (extractRoute)
 import RemoteData exposing (WebData, fromMaybe)
-import Types exposing (Msg(..), Model, Route(..), Page(..), Device)
-import Rest exposing (fetchDevicesCommand, fetchDeviceCommand)
+import Types exposing (Msg(..), Model, Route(..), Page(..), Device, Sensor)
+import Rest exposing (fetchDevicesCommand, fetchDeviceCommand, createDeviceCommand)
 import Ports exposing (initMDC, openDrawer, closeDrawer)
 import Table exposing (initialSort)
 import Http exposing (Error(..))
+
+
+emptyDevice : Device
+emptyDevice =
+    { id = ""
+    , device = ""
+    , meta =
+        { name = ""
+        , description = ""
+        }
+    , frame =
+        { bigendian = False
+        , bitfields = False
+        }
+    , sensors = []
+    }
+
+
+emptySensor : Sensor
+emptySensor =
+    { meta =
+        { name = ""
+        , description = ""
+        }
+    }
 
 
 initialModel : Model
@@ -15,6 +40,7 @@ initialModel =
     { devices = RemoteData.NotAsked
     , devicesTable = (Table.initialSort "Id")
     , device = RemoteData.NotAsked
+    , newDevice = emptyDevice
     , currentRoute = NotFoundRoute
     , pageState = BlankPage
     }
@@ -52,7 +78,7 @@ setRoute route model =
                     ( newModel, pageCmd ) =
                         page DevicesPage
                 in
-                    newModel ! [ pageCmd, fetchDevicesCommand ]
+                    { newModel | devices = RemoteData.Loading } ! [ pageCmd, fetchDevicesCommand ]
 
             DeviceRoute id ->
                 let
@@ -76,7 +102,11 @@ setRoute route model =
                     { newModel | device = dev } ! [ pageCmd, (fetchDeviceCommand id) ]
 
             NewDeviceRoute ->
-                page AddDevicePage
+                let
+                    ( newModel, pageCmd ) =
+                        page AddDevicePage
+                in
+                    { newModel | newDevice = emptyDevice } ! [ pageCmd ]
 
             _ ->
                 page NotFoundPage
@@ -117,3 +147,100 @@ update msg model =
 
         DeviceReceived response ->
             ( { model | device = response }, Cmd.none )
+
+        NewDeviceDevice deviceId ->
+            let
+                updatedNewDevice =
+                    setDeviceDevice deviceId model.newDevice
+            in
+                ( { model | newDevice = updatedNewDevice }, Cmd.none )
+
+        NewDeviceName name ->
+            let
+                updatedNewDevice =
+                    setDeviceName name model.newDevice
+            in
+                ( { model | newDevice = updatedNewDevice }, Cmd.none )
+
+        NewDeviceBigendian on ->
+            let
+                updatedNewDevice =
+                    setDeviceBigendian on model.newDevice
+            in
+                ( { model | newDevice = updatedNewDevice }, Cmd.none )
+
+        CreateNewDevice ->
+            ( model, createDeviceCommand model.newDevice )
+
+        AddSensor ->
+            let
+                newDev =
+                    model.newDevice
+            in
+                ( { model | newDevice = { newDev | sensors = emptySensor :: newDev.sensors } }, Cmd.none )
+
+        DeviceCreated (Ok device) ->
+            -- should add new device in device list?
+            ( model, Cmd.none )
+
+        DeviceCreated (Err _) ->
+            -- TODO display error
+            ( model, Cmd.none )
+
+
+
+-- update/add device helpers
+
+
+updateNewDevice :
+    String
+    -> (String -> Device -> Device)
+    -> Model
+    -> ( Model, Cmd Msg )
+updateNewDevice newValue updateFunction model =
+    let
+        updatedNewDevice =
+            updateFunction newValue model.newDevice
+    in
+        ( { model | newDevice = updatedNewDevice }, Cmd.none )
+
+
+setDeviceDevice : String -> Device -> Device
+setDeviceDevice newDevice device =
+    { device | device = newDevice }
+
+
+setDeviceName : String -> Device -> Device
+setDeviceName newName device =
+    let
+        meta =
+            device.meta
+    in
+        { device | meta = { meta | name = newName } }
+
+
+setDeviceDescription : String -> Device -> Device
+setDeviceDescription newDescr device =
+    let
+        meta =
+            device.meta
+    in
+        { device | meta = { meta | description = newDescr } }
+
+
+setDeviceBigendian : Bool -> Device -> Device
+setDeviceBigendian newBigendian device =
+    let
+        frame =
+            device.frame
+    in
+        { device | frame = { frame | bigendian = Debug.log "bigendian: " newBigendian } }
+
+
+setDeviceBitfields : Bool -> Device -> Device
+setDeviceBitfields newBitfields device =
+    let
+        frame =
+            device.frame
+    in
+        { device | frame = { frame | bitfields = newBitfields } }

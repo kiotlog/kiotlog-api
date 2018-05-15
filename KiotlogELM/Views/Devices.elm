@@ -2,7 +2,7 @@ module Views.Devices exposing (viewDevices, viewDevice, addDevice)
 
 import Html exposing (..)
 import Html.Attributes exposing (id, href, class, type_, style, for, attribute)
-import Html.Events exposing (onClick)
+import Html.Events exposing (onClick, onInput)
 import Http
 import Types exposing (..)
 import RemoteData exposing (WebData)
@@ -16,7 +16,10 @@ viewDevices model =
             text ""
 
         RemoteData.Loading ->
-            h3 [] [ text "Loading..." ]
+            div [ class "kiotlog-page text-center" ]
+                [ h1 []
+                    [ text "Loading..." ]
+                ]
 
         RemoteData.Success devices ->
             devicesTable devices (model.devicesTable)
@@ -52,22 +55,27 @@ viewError errorHeading errorMessage =
 devicesTable : List Device -> Table.State -> Html Msg
 devicesTable devices tableState =
     div [ class "kiotlog-page" ]
-        [ h1 [ class "text-right" ]
-            [ text "Devices"
-            , button
-                [ type_ "button"
-                , onClick FetchDevices
-                , class "mdc-button"
-                ]
-                [ i [ class "material-icons" ]
-                    [ text "refresh" ]
-                ]
-            , a
-                [ href "#/devices/new"
-                , class "mdc-button mdc-button--unelevated"
-                ]
-                [ i [ class "material-icons" ]
-                    [ text "add" ]
+        [ div [ class "mdc-layout-grid padding-0" ]
+            [ div [ class "mdc-layout-grid__inner" ]
+                [ h1 [ class "mdc-layout-grid__cell--span-6 margin-0" ]
+                    [ text "Devices" ]
+                , h1 [ class "text-right mdc-layout-grid__cell--span-6 margin-0" ]
+                    [ button
+                        [ type_ "button"
+                        , onClick FetchDevices
+                        , class "mdc-button"
+                        ]
+                        [ i [ class "material-icons" ]
+                            [ text "refresh" ]
+                        ]
+                    , a
+                        [ href "#/devices/new"
+                        , class "mdc-button mdc-button--unelevated"
+                        ]
+                        [ i [ class "material-icons" ]
+                            [ text "add" ]
+                        ]
+                    ]
                 ]
             ]
         , Table.view config tableState devices
@@ -86,9 +94,9 @@ deviceCards device =
         [ div [ class "mdc-layout-grid__inner" ]
             [ div [ class "mdc-card padding-20 mdc-layout-grid__cell--span-6" ]
                 [ h3 []
-                    [ text ("Id " ++ device.id) ]
+                    [ text ("Device Id: " ++ device.device) ]
                 , p []
-                    [ text ("Name " ++ device.device) ]
+                    [ text ("Name: " ++ device.meta.name) ]
                 ]
             , div
                 [ class "mdc-card padding-20 mdc-layout-grid__cell--span-6" ]
@@ -255,9 +263,11 @@ addSensor =
 addDevice : Model -> Html Msg
 addDevice model =
     div [ class "kiotlog-page" ]
-        [ div [ class "mdc-layout-grid" ]
+        [ div [ class "mdc-layout-grid padding-0" ]
             [ div [ class "mdc-layout-grid__inner" ]
                 [ h1 [ class "mdc-layout-grid__cell--span-6 margin-0" ]
+                    [ text "Add new device" ]
+                , h1 [ class "mdc-layout-grid__cell--span-6 margin-0 text-right" ]
                     [ a
                         [ href "#/devices"
                         , class "mdc-button"
@@ -269,24 +279,26 @@ addDevice model =
                     , button
                         [ type_ "button"
                         , class "mdc-button mdc-button--unelevated"
+                        , onClick CreateNewDevice
                         ]
                         [ i [ class "material-icons mdc-button__icon" ]
                             [ text "check" ]
                         , text "Add"
                         ]
                     ]
-                , h1 [ class "mdc-layout-grid__cell--span-6 margin-0 text-right" ]
-                    [ text "Add new device" ]
                 ]
-            , div [ class "mdc-layout-grid__inner" ]
+            ]
+        , div [ class "mdc-layout-grid kiotlog-container-small" ]
+            [ div [ class "mdc-layout-grid__inner" ]
                 [ div
-                    [ class "mdc-text-field mdc-layout-grid__cell"
+                    [ class "mdc-text-field mdc-layout-grid__cell--span-12"
                     , attribute "data-mdc-auto-init" "MDCTextField"
                     ]
                     [ input
                         [ type_ "text"
                         , id "new_device_device_id"
                         , class "mdc-text-field__input"
+                        , onInput NewDeviceDevice
                         ]
                         []
                     , label
@@ -297,13 +309,14 @@ addDevice model =
                     , div [ class "mdc-line-ripple" ] []
                     ]
                 , div
-                    [ class "mdc-text-field mdc-layout-grid__cell"
+                    [ class "mdc-text-field mdc-layout-grid__cell--span-12"
                     , attribute "data-mdc-auto-init" "MDCTextField"
                     ]
                     [ input
                         [ type_ "text"
                         , id "new_device_name"
                         , class "mdc-text-field__input"
+                        , onInput NewDeviceName
                         ]
                         []
                     , label
@@ -313,10 +326,85 @@ addDevice model =
                         [ text "Name" ]
                     , div [ class "mdc-line-ripple" ] []
                     ]
+                , div
+                    [ class "mdc-layout-grid__cell--span-12"
+                    , style [ ( "display", "flex" ), ( "flex-direction", "row" ), ( "align-items", "center" ) ]
+                    ]
+                    [ div [ class "mdc-switch" ]
+                        [ input
+                            [ type_ "checkbox"
+                            , id "new_device_bigendian"
+                            , class "mdc-switch__native-control"
+                            , attribute "role" "switch"
+                            , onClick (NewDeviceBigendian (not model.newDevice.frame.bigendian))
+                            ]
+                            []
+                        , div [ class "mdc-switch__background" ]
+                            [ div [ class "mdc-switch__knob" ] []
+                            ]
+                        ]
+                    , label
+                        [ for "new_device_bigendian"
+                        , class "mdc-switch-label"
+                        ]
+                        [ text "Bigendian" ]
+                    ]
                 ]
             , div [ class "mdc-layout-grid__inner" ]
                 [ h2 [ class "mdc-layout-grid__cell--span-12 text-center" ]
-                    [ text "Sensors" ]
+                    [ text "Sensors"
+                    , button
+                        [ class "mdc-button mdc-button--unelevated"
+                        , onClick AddSensor
+                        ]
+                        [ i [ class "material-icons" ]
+                            [ text "add" ]
+                        ]
+                    ]
+                , div [ class "mdc-layout-grid__cell--span-12" ]
+                    (List.map addDeviceShowSensors model.newDevice.sensors)
                 ]
+            ]
+        ]
+
+
+addDeviceShowSensors : Sensor -> Html Msg
+addDeviceShowSensors sensor =
+    div [ class "new-device-sensor mdc-layout-grid__inner" ]
+        [ div
+            [ class "mdc-text-field mdc-layout-grid__cell--span-6"
+            , attribute "data-mdc-auto-init" "MDCTextField"
+            ]
+            [ input
+                [ type_ "text"
+                , id "new_device_new_sensor-name"
+                , class "mdc-text-field__input"
+                , onInput NewDeviceDevice
+                ]
+                []
+            , label
+                [ class "mdc-floating-label"
+                , for "new_device_new_sensor-name"
+                ]
+                [ text "Name" ]
+            , div [ class "mdc-line-ripple" ] []
+            ]
+        , div
+            [ class "mdc-text-field mdc-layout-grid__cell--span-6"
+            , attribute "data-mdc-auto-init" "MDCTextField"
+            ]
+            [ input
+                [ type_ "text"
+                , id "new_device_new_sensor-description"
+                , class "mdc-text-field__input"
+                , onInput NewDeviceDevice
+                ]
+                []
+            , label
+                [ class "mdc-floating-label"
+                , for "new_device_new_sensor-description"
+                ]
+                [ text "Description" ]
+            , div [ class "mdc-line-ripple" ] []
             ]
         ]

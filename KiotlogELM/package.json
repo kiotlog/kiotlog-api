@@ -22,12 +22,20 @@
   },
   "homepage": "https://github.com/kiotlog/kiotlogweb#readme",
   "dependencies": {
+    "@material/auto-init": "^0.35.0",
     "@material/button": "^0.35.0",
     "@material/card": "^0.35.0",
     "@material/drawer": "^0.35.0",
     "@material/layout-grid": "^0.34.0",
     "@material/list": "^0.35.0",
+    "@material/switch": "^0.35.0",
     "@material/textfield": "^0.35.1",
     "@material/top-app-bar": "^0.35.1"
+  },
+  "devDependencies": {
+    "babel-loader": "^7.1.4",
+    "babel-preset-env": "^1.7.0",
+    "webpack": "^4.8.3",
+    "webpack-cli": "^2.1.3"
   }
 }
