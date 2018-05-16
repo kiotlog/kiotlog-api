@@ -1,4 +1,11 @@
-module Rest exposing (fetchDevicesCommand, fetchDeviceCommand, createDeviceCommand)
+module Rest
+    exposing
+        ( fetchDevicesCommand
+        , fetchDeviceCommand
+        , createDeviceCommand
+        , fetchSensorTypesCommand
+        , fetchConversionsCommand
+        )
 
 import Types exposing (..)
 import Http exposing (..)
@@ -42,39 +49,93 @@ deviceDecoder =
         |> optional "Sensors" (list sensorDecoder) []
 
 
+stMetaDecoder : Decoder SensorTypeMeta
+stMetaDecoder =
+    decode SensorTypeMeta
+        |> required "Min" int
+        |> required "Max" int
+
+
+sensorTypeDecoder : Decoder SensorType
+sensorTypeDecoder =
+    decode SensorType
+        |> required "Id" string
+        |> required "Name" string
+        |> required "Type" string
+        |> required "Meta" stMetaDecoder
+
+
+conversionsDecoder : Decoder Conversion
+conversionsDecoder =
+    decode Conversion
+        |> required "Id" string
+        |> required "Fun" string
+
+
+get : String -> Decoder a -> (WebData a -> Msg) -> Cmd Msg
+get url decoder msg =
+    decoder
+        |> Http.get (apiBaseUrl ++ url)
+        |> RemoteData.sendRequest
+        |> Cmd.map msg
+
+
+post : a -> String -> (a -> Encode.Value) -> Decoder a -> (Result Error a -> Msg) -> Cmd Msg
+post obj endpoint encoder decoder msg =
+    let
+        request =
+            Http.request
+                { method = "POST"
+                , headers = []
+                , url = apiBaseUrl ++ endpoint
+                , body = Http.jsonBody (encoder obj)
+                , expect = Http.expectJson decoder
+                , timeout = Nothing
+                , withCredentials = False
+                }
+    in
+        request |> Http.send msg
+
+
 fetchDevicesCommand : Cmd Msg
 fetchDevicesCommand =
-    list deviceDecoder
-        |> Http.get (apiBaseUrl ++ "devices")
-        |> RemoteData.sendRequest
-        |> Cmd.map DevicesReceived
+    get "devices" (list deviceDecoder) DevicesReceived
 
 
 fetchDeviceCommand : String -> Cmd Msg
 fetchDeviceCommand id =
-    deviceDecoder
-        |> Http.get (apiBaseUrl ++ "devices/" ++ id)
-        |> RemoteData.sendRequest
-        |> Cmd.map DeviceReceived
+    get ("devices/" ++ id) deviceDecoder DeviceReceived
+
+
+fetchSensorTypesCommand : Cmd Msg
+fetchSensorTypesCommand =
+    get "sensortypes" (list sensorTypeDecoder) SensorTypesReceived
+
+
+fetchConversionsCommand : Cmd Msg
+fetchConversionsCommand =
+    get "conversions" (list conversionsDecoder) ConversionsReceived
 
 
 createDeviceCommand : Device -> Cmd Msg
 createDeviceCommand device =
-    createDeviceRequest device
-        |> Http.send DeviceCreated
+    post device "devices" newDeviceEncoder deviceDecoder DeviceCreated
 
 
-createDeviceRequest : Device -> Http.Request Device
-createDeviceRequest device =
-    Http.request
-        { method = "POST"
-        , headers = []
-        , url = apiBaseUrl ++ "devices"
-        , body = Http.jsonBody (newDeviceEncoder device)
-        , expect = Http.expectJson deviceDecoder
-        , timeout = Nothing
-        , withCredentials = False
-        }
+
+-- createDeviceRequest device
+--     |> Http.send DeviceCreated
+-- createDeviceRequest : Device -> Http.Request Device
+-- createDeviceRequest device =
+--     Http.request
+--         { method = "POST"
+--         , headers = []
+--         , url = apiBaseUrl ++ "devices"
+--         , body = Http.jsonBody (newDeviceEncoder device)
+--         , expect = Http.expectJson deviceDecoder
+--         , timeout = Nothing
+--         , withCredentials = False
+--         }
 
 
 metaEncoder : Meta -> Encode.Value

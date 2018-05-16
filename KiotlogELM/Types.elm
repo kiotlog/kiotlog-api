@@ -6,8 +6,31 @@ import Table
 import Http
 
 
+type alias Device =
+    { id : String
+    , device : String
+    , meta : Meta
+    , frame : Frame
+    , sensors : List Sensor
+    }
+
+
 type alias Sensor =
     { meta : Meta
+    }
+
+
+type alias SensorType =
+    { id : String
+    , name : String
+    , type_ : String
+    , meta : SensorTypeMeta
+    }
+
+
+type alias Conversion =
+    { id : String
+    , fun : String
     }
 
 
@@ -23,12 +46,9 @@ type alias Frame =
     }
 
 
-type alias Device =
-    { id : String
-    , device : String
-    , meta : Meta
-    , frame : Frame
-    , sensors : List Sensor
+type alias SensorTypeMeta =
+    { min : Int
+    , max : Int
     }
 
 
@@ -36,6 +56,8 @@ type alias Model =
     { devices : WebData (List Device)
     , devicesTable : Table.State
     , device : WebData Device
+    , sensorTypes : WebData (List SensorType)
+    , conversions : WebData (List Conversion)
     , newDevice : Device
     , currentRoute : Route
     , pageState : Page
@@ -57,6 +79,8 @@ type Msg
     | CreateNewDevice
     | AddSensor
     | DeviceCreated (Result Http.Error Device)
+    | SensorTypesReceived (WebData (List SensorType))
+    | ConversionsReceived (WebData (List Conversion))
 
 
 type Route

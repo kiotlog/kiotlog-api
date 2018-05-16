@@ -4,7 +4,7 @@ import Navigation exposing (Location)
 import Routing exposing (extractRoute)
 import RemoteData exposing (WebData, fromMaybe)
 import Types exposing (Msg(..), Model, Route(..), Page(..), Device, Sensor)
-import Rest exposing (fetchDevicesCommand, fetchDeviceCommand, createDeviceCommand)
+import Rest exposing (fetchDevicesCommand, fetchDeviceCommand, createDeviceCommand, fetchSensorTypesCommand, fetchConversionsCommand)
 import Ports exposing (initMDC, openDrawer, closeDrawer)
 import Table exposing (initialSort)
 import Http exposing (Error(..))
@@ -40,6 +40,8 @@ initialModel =
     { devices = RemoteData.NotAsked
     , devicesTable = (Table.initialSort "Id")
     , device = RemoteData.NotAsked
+    , sensorTypes = RemoteData.NotAsked
+    , conversions = RemoteData.NotAsked
     , newDevice = emptyDevice
     , currentRoute = NotFoundRoute
     , pageState = BlankPage
@@ -106,7 +108,7 @@ setRoute route model =
                     ( newModel, pageCmd ) =
                         page AddDevicePage
                 in
-                    { newModel | newDevice = emptyDevice } ! [ pageCmd ]
+                    { newModel | newDevice = emptyDevice } ! [ pageCmd, fetchSensorTypesCommand, fetchConversionsCommand ]
 
             _ ->
                 page NotFoundPage
@@ -186,6 +188,12 @@ update msg model =
         DeviceCreated (Err _) ->
             -- TODO display error
             ( model, Cmd.none )
+
+        SensorTypesReceived response ->
+            ( { model | sensorTypes = response }, Cmd.none )
+
+        ConversionsReceived response ->
+            ( { model | conversions = response }, Cmd.none )
 
 
 

@@ -1,7 +1,7 @@
 module Views.Devices exposing (viewDevices, viewDevice, addDevice)
 
 import Html exposing (..)
-import Html.Attributes exposing (id, href, class, type_, style, for, attribute)
+import Html.Attributes exposing (id, href, class, type_, style, for, attribute, value)
 import Html.Events exposing (onClick, onInput)
 import Http
 import Types exposing (..)
@@ -362,14 +362,14 @@ addDevice model =
                         ]
                     ]
                 , div [ class "mdc-layout-grid__cell--span-12" ]
-                    (List.map addDeviceShowSensors model.newDevice.sensors)
+                    (List.map (addDeviceShowSensors model.sensorTypes model.conversions) model.newDevice.sensors)
                 ]
             ]
         ]
 
 
-addDeviceShowSensors : Sensor -> Html Msg
-addDeviceShowSensors sensor =
+addDeviceShowSensors : WebData (List SensorType) -> WebData (List Conversion) -> Sensor -> Html Msg
+addDeviceShowSensors sensorTypes conversions sensor =
     div [ class "new-device-sensor mdc-layout-grid__inner" ]
         [ div
             [ class "mdc-text-field mdc-layout-grid__cell--span-6"
@@ -407,4 +407,78 @@ addDeviceShowSensors sensor =
                 [ text "Description" ]
             , div [ class "mdc-line-ripple" ] []
             ]
+        , div
+            [ class "mdc-select mdc-layout-grid__cell--span-6"
+            , attribute "data-mdc-auto-init" "MDCSelect"
+            ]
+            [ select [ class "mdc-select__native-control" ]
+                (sensorTypesOptions sensorTypes)
+            , label [ class "mdc-floating-label" ]
+                [ text "Sensor Type" ]
+            , div [ class "mdc-line-ripple" ] []
+            ]
+        , div
+            [ class "mdc-select mdc-layout-grid__cell--span-6"
+            , attribute "data-mdc-auto-init" "MDCSelect"
+            ]
+            [ select [ class "mdc-select__native-control" ]
+                (conversionsOptions conversions)
+            , label [ class "mdc-floating-label" ]
+                [ text "Conversion" ]
+            , div [ class "mdc-line-ripple" ] []
+            ]
         ]
+
+
+sensorTypesOptions : WebData (List SensorType) -> List (Html Msg)
+sensorTypesOptions st =
+    case st of
+        RemoteData.NotAsked ->
+            [ option []
+                [ text "..." ]
+            ]
+
+        RemoteData.Loading ->
+            [ option []
+                [ text "Loading ..." ]
+            ]
+
+        RemoteData.Success sTypes ->
+            let
+                opt sType =
+                    option [ value sType.id ]
+                        [ text sType.name ]
+            in
+                List.map opt sTypes
+
+        RemoteData.Failure httpError ->
+            [ option []
+                [ text ("error" ++ (createErrorMessage httpError)) ]
+            ]
+
+
+conversionsOptions : WebData (List Conversion) -> List (Html Msg)
+conversionsOptions conv =
+    case conv of
+        RemoteData.NotAsked ->
+            [ option []
+                [ text "..." ]
+            ]
+
+        RemoteData.Loading ->
+            [ option []
+                [ text "Loading ..." ]
+            ]
+
+        RemoteData.Success sTypes ->
+            let
+                opt sType =
+                    option [ value sType.id ]
+                        [ text sType.fun ]
+            in
+                List.map opt sTypes
+
+        RemoteData.Failure httpError ->
+            [ option []
+                [ text ("error" ++ (createErrorMessage httpError)) ]
+            ]
