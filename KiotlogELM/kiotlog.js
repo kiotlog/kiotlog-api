@@ -11766,7 +11766,7 @@ var _kiotlog$kiotlogweb$Views_Devices$addDeviceShowSensors = F4(
 												},
 												{
 													ctor: '::',
-													_0: _elm_lang$html$Html$text('Conversion'),
+													_0: _elm_lang$html$Html$text('Format'),
 													_1: {ctor: '[]'}
 												}),
 											_1: {
@@ -12233,7 +12233,7 @@ var _kiotlog$kiotlogweb$Views_Devices$addDevice = function (model) {
 									_elm_lang$html$Html$div,
 									{
 										ctor: '::',
-										_0: _elm_lang$html$Html_Attributes$class('mdc-layout-grid__inner'),
+										_0: _elm_lang$html$Html_Attributes$class('mdc-layout-grid__inner padding-vertical-gutter'),
 										_1: {ctor: '[]'}
 									},
 									{

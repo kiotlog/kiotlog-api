@@ -344,7 +344,7 @@ addDevice model =
                 , div [ class "mdc-layout-grid__cell--span-12" ]
                     (List.indexedMap (addDeviceShowSensors model.sensorTypes model.conversions) model.newDevice.sensors)
                 ]
-            , div [ class "mdc-layout-grid__inner" ]
+            , div [ class "mdc-layout-grid__inner padding-vertical-gutter" ]
                 [ button
                     [ class "mdc-button mdc-button--unelevated mdc-layout-grid__cell--span-12"
                     , attribute "data-mdc-auto-init" "MDCRipple"
@@ -442,7 +442,7 @@ addDeviceShowSensors sensorTypes conversions idx sensor =
                 , option [ value "Q" ] [ text "unsigned long long" ]
                 ]
             , label [ class "mdc-floating-label" ]
-                [ text "Conversion" ]
+                [ text "Format" ]
             , div [ class "mdc-line-ripple" ] []
             ]
         ]

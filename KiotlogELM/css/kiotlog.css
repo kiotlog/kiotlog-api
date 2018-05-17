@@ -3371,6 +3371,12 @@ table.devices-list {
   padding-top: 20px;
   padding-bottom: 20px; }
 
+.padding-vertical-gutter {
+  padding-top: 24px;
+  padding-bottom: 24px;
+  padding-top: var(--mdc-layout-grid-margin-desktop, 24px);
+  padding-bottom: var(--mdc-layout-grid-margin-desktop, 24px); }
+
 .padding-gutter, .kiotlog-page {
   padding: 24px;
   padding: var(--mdc-layout-grid-margin-desktop, 24px); }
