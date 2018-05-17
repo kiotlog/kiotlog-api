@@ -2,11 +2,12 @@ module Views.Devices exposing (viewDevices, viewDevice, addDevice)
 
 import Html exposing (..)
 import Html.Attributes exposing (id, href, class, type_, style, for, attribute, value)
-import Html.Events exposing (onClick, onInput)
+import Html.Events exposing (onClick, onInput, on)
 import Http
 import Types exposing (..)
 import RemoteData exposing (WebData)
 import Table exposing (Config, stringColumn, intColumn, defaultCustomizations, Status(..), HtmlDetails, customConfig, veryCustomColumn)
+import Json.Decode as JD
 
 
 viewDevices : Model -> Html Msg
@@ -63,6 +64,7 @@ devicesTable devices tableState =
                     [ button
                         [ type_ "button"
                         , onClick FetchDevices
+                        , attribute "data-mdc-auto-init" "MDCRipple"
                         , class "mdc-button"
                         ]
                         [ i [ class "material-icons" ]
@@ -70,6 +72,7 @@ devicesTable devices tableState =
                         ]
                     , a
                         [ href "#/devices/new"
+                        , attribute "data-mdc-auto-init" "MDCRipple"
                         , class "mdc-button mdc-button--unelevated"
                         ]
                         [ i [ class "material-icons" ]
@@ -145,7 +148,12 @@ detailsColumn =
 showDeviceLink : Device -> HtmlDetails Msg
 showDeviceLink { id } =
     HtmlDetails []
-        [ a [ href ("#/devices/" ++ id), class "mdc-button" ] [ text "show" ]
+        [ a
+            [ href ("#/devices/" ++ id)
+            , class "mdc-button"
+            , attribute "data-mdc-auto-init" "MDCRipple"
+            ]
+            [ text "show" ]
         ]
 
 
@@ -237,29 +245,6 @@ createErrorMessage httpError =
             message
 
 
-addSensor : Html msg
-addSensor =
-    div [ class "mdc-layout-grid__inner" ]
-        [ div
-            [ class "mdc-text-field mdc-layout-grid__cell"
-            , attribute "data-mdc-auto-init" "MDCTextField"
-            ]
-            [ input
-                [ type_ "text"
-                , id "new_sensor_device_id_num"
-                , class "mdc-text-field__input"
-                ]
-                []
-            , label
-                [ class "mdc-floating-label"
-                , for "new_sensor_device_id_num"
-                ]
-                [ text "Name" ]
-            , div [ class "mdc-line-ripple" ] []
-            ]
-        ]
-
-
 addDevice : Model -> Html Msg
 addDevice model =
     div [ class "kiotlog-page" ]
@@ -271,6 +256,7 @@ addDevice model =
                     [ a
                         [ href "#/devices"
                         , class "mdc-button"
+                        , attribute "data-mdc-auto-init" "MDCRipple"
                         ]
                         [ i [ class "material-icons mdc-button__icon" ]
                             [ text "arrow_back" ]
@@ -279,6 +265,7 @@ addDevice model =
                     , button
                         [ type_ "button"
                         , class "mdc-button mdc-button--unelevated"
+                        , attribute "data-mdc-auto-init" "MDCRipple"
                         , onClick CreateNewDevice
                         ]
                         [ i [ class "material-icons mdc-button__icon" ]
@@ -353,33 +340,36 @@ addDevice model =
             , div [ class "mdc-layout-grid__inner" ]
                 [ h2 [ class "mdc-layout-grid__cell--span-12 text-center" ]
                     [ text "Sensors"
-                    , button
-                        [ class "mdc-button mdc-button--unelevated"
-                        , onClick AddSensor
-                        ]
-                        [ i [ class "material-icons" ]
-                            [ text "add" ]
-                        ]
                     ]
                 , div [ class "mdc-layout-grid__cell--span-12" ]
-                    (List.map (addDeviceShowSensors model.sensorTypes model.conversions) model.newDevice.sensors)
+                    (List.indexedMap (addDeviceShowSensors model.sensorTypes model.conversions) model.newDevice.sensors)
+                ]
+            , div [ class "mdc-layout-grid__inner" ]
+                [ button
+                    [ class "mdc-button mdc-button--unelevated mdc-layout-grid__cell--span-12"
+                    , attribute "data-mdc-auto-init" "MDCRipple"
+                    , onClick AddSensor
+                    ]
+                    [ i [ class "material-icons" ]
+                        [ text "add" ]
+                    ]
                 ]
             ]
         ]
 
 
-addDeviceShowSensors : WebData (List SensorType) -> WebData (List Conversion) -> Sensor -> Html Msg
-addDeviceShowSensors sensorTypes conversions sensor =
+addDeviceShowSensors : WebData (List SensorType) -> WebData (List Conversion) -> Int -> Sensor -> Html Msg
+addDeviceShowSensors sensorTypes conversions idx sensor =
     div [ class "new-device-sensor mdc-layout-grid__inner" ]
         [ div
-            [ class "mdc-text-field mdc-layout-grid__cell--span-6"
+            [ class "mdc-text-field mdc-layout-grid__cell--span-5"
             , attribute "data-mdc-auto-init" "MDCTextField"
             ]
             [ input
                 [ type_ "text"
                 , id "new_device_new_sensor-name"
                 , class "mdc-text-field__input"
-                , onInput NewDeviceDevice
+                , onInput (SetSensorNameOnDevice idx)
                 ]
                 []
             , label
@@ -390,14 +380,14 @@ addDeviceShowSensors sensorTypes conversions sensor =
             , div [ class "mdc-line-ripple" ] []
             ]
         , div
-            [ class "mdc-text-field mdc-layout-grid__cell--span-6"
+            [ class "mdc-text-field mdc-layout-grid__cell--span-7"
             , attribute "data-mdc-auto-init" "MDCTextField"
             ]
             [ input
                 [ type_ "text"
                 , id "new_device_new_sensor-description"
                 , class "mdc-text-field__input"
-                , onInput NewDeviceDevice
+                , onInput (SetSensorDescrOnDevice idx)
                 ]
                 []
             , label
@@ -408,21 +398,49 @@ addDeviceShowSensors sensorTypes conversions sensor =
             , div [ class "mdc-line-ripple" ] []
             ]
         , div
-            [ class "mdc-select mdc-layout-grid__cell--span-6"
+            [ class "mdc-select mdc-layout-grid__cell--span-5"
             , attribute "data-mdc-auto-init" "MDCSelect"
+            , on "change" (JD.map (SetSensorTypeOnDevice idx) Html.Events.targetValue)
             ]
             [ select [ class "mdc-select__native-control" ]
-                (sensorTypesOptions sensorTypes)
+                ([ option [] [] ]
+                    ++ (sensorTypesOptions sensorTypes)
+                )
             , label [ class "mdc-floating-label" ]
                 [ text "Sensor Type" ]
             , div [ class "mdc-line-ripple" ] []
             ]
         , div
-            [ class "mdc-select mdc-layout-grid__cell--span-6"
+            [ class "mdc-select mdc-layout-grid__cell--span-4"
             , attribute "data-mdc-auto-init" "MDCSelect"
+            , on "change" (JD.map (SetSensorConversionOnDevice idx) Html.Events.targetValue)
             ]
             [ select [ class "mdc-select__native-control" ]
-                (conversionsOptions conversions)
+                ([ option [] [] ]
+                    ++ (conversionsOptions conversions)
+                )
+            , label [ class "mdc-floating-label" ]
+                [ text "Conversion" ]
+            , div [ class "mdc-line-ripple" ] []
+            ]
+        , div
+            [ class "mdc-select mdc-layout-grid__cell--span-3"
+            , attribute "data-mdc-auto-init" "MDCSelect"
+            , on "change" (JD.map (SetSensorFmtChrOnDevice idx) Html.Events.targetValue)
+            ]
+            [ select [ class "mdc-select__native-control" ]
+                [ option [] []
+                , option [ value "b" ] [ text "signed char" ]
+                , option [ value "B" ] [ text "unsigned char" ]
+                , option [ value "h" ] [ text "short" ]
+                , option [ value "H" ] [ text "unsigned short" ]
+                , option [ value "i" ] [ text "int" ]
+                , option [ value "I" ] [ text "unsigned int" ]
+                , option [ value "l" ] [ text "long" ]
+                , option [ value "L" ] [ text "unsigned long" ]
+                , option [ value "q" ] [ text "long long" ]
+                , option [ value "Q" ] [ text "unsigned long long" ]
+                ]
             , label [ class "mdc-floating-label" ]
                 [ text "Conversion" ]
             , div [ class "mdc-line-ripple" ] []

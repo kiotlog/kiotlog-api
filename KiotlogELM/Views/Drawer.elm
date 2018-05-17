@@ -1,7 +1,7 @@
 module Views.Drawer exposing (view)
 
 import Html exposing (..)
-import Html.Attributes exposing (id, class, href)
+import Html.Attributes exposing (id, class, href, attribute)
 import Types exposing (Msg)
 
 
@@ -15,17 +15,29 @@ view model =
                 ]
             , div [ class "mdc-drawer__content mdc-list-group" ]
                 [ nav [ class "mdc-list" ]
-                    [ a [ class "mdc-list-item", href "#/dashboard" ]
+                    [ a
+                        [ class "mdc-list-item"
+                        , href "#/dashboard"
+                        , attribute "data-mdc-auto-init" "MDCRipple"
+                        ]
                         [ i [ class "material-icons mdc-list-item__graphic" ]
                             [ text "dashboard" ]
                         , text "Dashboard"
                         ]
-                    , a [ class "mdc-list-item", href "#/devices" ]
+                    , a
+                        [ class "mdc-list-item"
+                        , href "#/devices"
+                        , attribute "data-mdc-auto-init" "MDCRipple"
+                        ]
                         [ i [ class "material-icons mdc-list-item__graphic" ]
                             [ text "device_hub" ]
                         , text "Devices"
                         ]
-                    , a [ class "mdc-list-item", href "#/sensors" ]
+                    , a
+                        [ class "mdc-list-item"
+                        , href "#/sensors"
+                        , attribute "data-mdc-auto-init" "MDCRipple"
+                        ]
                         [ i [ class "material-icons mdc-list-item__graphic" ]
                             [ text "memory" ]
                         , text "Sensors"

@@ -16,7 +16,10 @@ type alias Device =
 
 
 type alias Sensor =
-    { meta : Meta
+    { sensorTypeId : String
+    , conversionId : String
+    , meta : Meta
+    , fmt : Fmt
     }
 
 
@@ -52,6 +55,12 @@ type alias SensorTypeMeta =
     }
 
 
+type alias Fmt =
+    { index : Int
+    , fmtChr : String
+    }
+
+
 type alias Model =
     { devices : WebData (List Device)
     , devicesTable : Table.State
@@ -78,6 +87,11 @@ type Msg
     | NewDeviceBigendian Bool
     | CreateNewDevice
     | AddSensor
+    | SetSensorNameOnDevice Int String
+    | SetSensorDescrOnDevice Int String
+    | SetSensorTypeOnDevice Int String
+    | SetSensorConversionOnDevice Int String
+    | SetSensorFmtChrOnDevice Int String
     | DeviceCreated (Result Http.Error Device)
     | SensorTypesReceived (WebData (List SensorType))
     | ConversionsReceived (WebData (List Conversion))

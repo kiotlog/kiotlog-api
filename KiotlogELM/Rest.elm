@@ -19,6 +19,31 @@ apiBaseUrl =
     "http://localhost:9999/"
 
 
+get : String -> Decoder a -> (WebData a -> Msg) -> Cmd Msg
+get url decoder msg =
+    decoder
+        |> Http.get (apiBaseUrl ++ url)
+        |> RemoteData.sendRequest
+        |> Cmd.map msg
+
+
+post : a -> String -> (a -> Encode.Value) -> Decoder a -> (Result Error a -> Msg) -> Cmd Msg
+post obj endpoint encoder decoder msg =
+    let
+        request =
+            Http.request
+                { method = "POST"
+                , headers = []
+                , url = apiBaseUrl ++ endpoint
+                , body = Http.jsonBody (encoder obj)
+                , expect = Http.expectJson decoder
+                , timeout = Nothing
+                , withCredentials = False
+                }
+    in
+        request |> Http.send msg
+
+
 metaDecoder : Decoder Meta
 metaDecoder =
     decode Meta
@@ -33,10 +58,20 @@ frameDecoder =
         |> required "Bitfields" bool
 
 
+fmtDecoder : Decoder Fmt
+fmtDecoder =
+    decode Fmt
+        |> required "Index" int
+        |> required "FmtChr" string
+
+
 sensorDecoder : Decoder Sensor
 sensorDecoder =
     decode Sensor
+        |> required "SensorTypeId" string
+        |> required "ConversionId" string
         |> required "Meta" metaDecoder
+        |> required "Fmt" fmtDecoder
 
 
 deviceDecoder : Decoder Device
@@ -72,29 +107,57 @@ conversionsDecoder =
         |> required "Fun" string
 
 
-get : String -> Decoder a -> (WebData a -> Msg) -> Cmd Msg
-get url decoder msg =
-    decoder
-        |> Http.get (apiBaseUrl ++ url)
-        |> RemoteData.sendRequest
-        |> Cmd.map msg
+metaEncoder : Meta -> Encode.Value
+metaEncoder meta =
+    Encode.object
+        [ ( "Name", Encode.string meta.name )
+        , ( "Description", Encode.string meta.description )
+        ]
 
 
-post : a -> String -> (a -> Encode.Value) -> Decoder a -> (Result Error a -> Msg) -> Cmd Msg
-post obj endpoint encoder decoder msg =
-    let
-        request =
-            Http.request
-                { method = "POST"
-                , headers = []
-                , url = apiBaseUrl ++ endpoint
-                , body = Http.jsonBody (encoder obj)
-                , expect = Http.expectJson decoder
-                , timeout = Nothing
-                , withCredentials = False
-                }
-    in
-        request |> Http.send msg
+frameEncoder : Frame -> Encode.Value
+frameEncoder frame =
+    Encode.object
+        [ ( "Bigendian", Encode.bool frame.bigendian )
+        , ( "Bitfields", Encode.bool frame.bitfields )
+        ]
+
+
+fmtEncoder : Fmt -> Encode.Value
+fmtEncoder fmt =
+    Encode.object
+        [ ( "Index", Encode.int fmt.index )
+        , ( "FmtChr", Encode.string fmt.fmtChr )
+        ]
+
+
+sensorEncoder : Sensor -> Encode.Value
+sensorEncoder sensor =
+    Encode.object
+        [ ( "SensorTypeId", Encode.string sensor.sensorTypeId )
+        , ( "ConversionId", Encode.string sensor.conversionId )
+        , ( "Meta", metaEncoder sensor.meta )
+        , ( "Fmt", fmtEncoder sensor.fmt )
+        ]
+
+
+sensorsEncoder : List Sensor -> Encode.Value
+sensorsEncoder sensors =
+    Encode.list
+        (List.map
+            sensorEncoder
+            sensors
+        )
+
+
+newDeviceEncoder : Device -> Encode.Value
+newDeviceEncoder device =
+    Encode.object
+        [ ( "Device", Encode.string device.device )
+        , ( "Meta", metaEncoder device.meta )
+        , ( "Frame", frameEncoder device.frame )
+        , ( "Sensors", sensorsEncoder device.sensors )
+        ]
 
 
 fetchDevicesCommand : Cmd Msg
@@ -136,45 +199,3 @@ createDeviceCommand device =
 --         , timeout = Nothing
 --         , withCredentials = False
 --         }
-
-
-metaEncoder : Meta -> Encode.Value
-metaEncoder meta =
-    Encode.object
-        [ ( "name", Encode.string meta.name )
-        , ( "description", Encode.string meta.description )
-        ]
-
-
-frameEncoder : Frame -> Encode.Value
-frameEncoder frame =
-    Encode.object
-        [ ( "bigendian", Encode.bool frame.bigendian )
-        , ( "bitfields", Encode.bool frame.bitfields )
-        ]
-
-
-sensorEncoder : Sensor -> Encode.Value
-sensorEncoder sensor =
-    Encode.object
-        [ ( "meta", metaEncoder sensor.meta )
-        ]
-
-
-sensorsEncoder : List Sensor -> Encode.Value
-sensorsEncoder sensors =
-    Encode.list
-        (List.map
-            sensorEncoder
-            sensors
-        )
-
-
-newDeviceEncoder : Device -> Encode.Value
-newDeviceEncoder device =
-    Encode.object
-        [ ( "device", Encode.string device.device )
-        , ( "meta", metaEncoder device.meta )
-        , ( "frame", frameEncoder device.frame )
-        , ( "sensors", sensorsEncoder device.sensors )
-        ]

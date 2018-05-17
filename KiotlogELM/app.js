@@ -2,6 +2,7 @@ import mdcAutoInit from '@material/auto-init';
 import { MDCTemporaryDrawer } from '@material/drawer';
 import { MDCTextField } from '@material/textfield';
 import { MDCSelect } from '@material/select';
+import { MDCRipple } from '@material/ripple';
 
 function setupMDCObserver(node) {
     let observer = new MutationObserver(function (mutations) {
@@ -36,6 +37,7 @@ function setupMDCObserver(node) {
 
 mdcAutoInit.register('MDCTextField', MDCTextField);
 mdcAutoInit.register('MDCSelect', MDCSelect);
+mdcAutoInit.register('MDCRipple', MDCRipple);
 
 const mdcObserver = setupMDCObserver(document.getElementById('kiotlog-app'));
 const app = Elm.Main.embed(document.getElementById("kiotlog-app"));

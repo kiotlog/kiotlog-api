@@ -28,9 +28,15 @@ emptyDevice =
 
 emptySensor : Sensor
 emptySensor =
-    { meta =
+    { sensorTypeId = ""
+    , conversionId = ""
+    , meta =
         { name = ""
         , description = ""
+        }
+    , fmt =
+        { index = 0
+        , fmtChr = ""
         }
     }
 
@@ -150,6 +156,12 @@ update msg model =
         DeviceReceived response ->
             ( { model | device = response }, Cmd.none )
 
+        SensorTypesReceived response ->
+            ( { model | sensorTypes = response }, Cmd.none )
+
+        ConversionsReceived response ->
+            ( { model | conversions = response }, Cmd.none )
+
         NewDeviceDevice deviceId ->
             let
                 updatedNewDevice =
@@ -171,15 +183,53 @@ update msg model =
             in
                 ( { model | newDevice = updatedNewDevice }, Cmd.none )
 
-        CreateNewDevice ->
-            ( model, createDeviceCommand model.newDevice )
-
         AddSensor ->
             let
                 newDev =
                     model.newDevice
+
+                sensors =
+                    newDev.sensors ++ [ emptySensor ]
             in
-                ( { model | newDevice = { newDev | sensors = emptySensor :: newDev.sensors } }, Cmd.none )
+                ( { model | newDevice = { newDev | sensors = Debug.log "Sensors" sensors } }, Cmd.none )
+
+        SetSensorNameOnDevice idx name ->
+            let
+                newDevice =
+                    updateSensorOnDevice idx (setSensorName name) model.newDevice
+            in
+                ( { model | newDevice = newDevice }, Cmd.none )
+
+        SetSensorDescrOnDevice idx descr ->
+            let
+                newDevice =
+                    updateSensorOnDevice idx (setSensorDescr descr) model.newDevice
+            in
+                ( { model | newDevice = newDevice }, Cmd.none )
+
+        SetSensorTypeOnDevice idx id ->
+            let
+                newDevice =
+                    updateSensorOnDevice idx (setSensorType id) model.newDevice
+            in
+                ( { model | newDevice = newDevice }, Cmd.none )
+
+        SetSensorConversionOnDevice idx id ->
+            let
+                newDevice =
+                    updateSensorOnDevice idx (setConversion id) model.newDevice
+            in
+                ( { model | newDevice = newDevice }, Cmd.none )
+
+        SetSensorFmtChrOnDevice idx fmtChr ->
+            let
+                newDevice =
+                    updateSensorOnDevice idx (setFmtChr fmtChr) model.newDevice
+            in
+                ( { model | newDevice = newDevice }, Cmd.none )
+
+        CreateNewDevice ->
+            ( model, createDeviceCommand model.newDevice )
 
         DeviceCreated (Ok device) ->
             -- should add new device in device list?
@@ -189,20 +239,14 @@ update msg model =
             -- TODO display error
             ( model, Cmd.none )
 
-        SensorTypesReceived response ->
-            ( { model | sensorTypes = response }, Cmd.none )
-
-        ConversionsReceived response ->
-            ( { model | conversions = response }, Cmd.none )
-
 
 
 -- update/add device helpers
 
 
 updateNewDevice :
-    String
-    -> (String -> Device -> Device)
+    a
+    -> (a -> Device -> Device)
     -> Model
     -> ( Model, Cmd Msg )
 updateNewDevice newValue updateFunction model =
@@ -211,6 +255,59 @@ updateNewDevice newValue updateFunction model =
             updateFunction newValue model.newDevice
     in
         ( { model | newDevice = updatedNewDevice }, Cmd.none )
+
+
+updateSensorOnDevice : Int -> (Sensor -> Sensor) -> Device -> Device
+updateSensorOnDevice idx updateFunc device =
+    let
+        updateSensor i s =
+            let
+                f =
+                    s.fmt
+            in
+                if i == idx then
+                    updateFunc { s | fmt = { f | index = i } }
+                else
+                    { s | fmt = { f | index = i } }
+    in
+        { device | sensors = List.indexedMap updateSensor device.sensors }
+
+
+setSensorName : String -> Sensor -> Sensor
+setSensorName name sensor =
+    let
+        meta =
+            sensor.meta
+    in
+        { sensor | meta = { meta | name = name } }
+
+
+setSensorDescr : String -> Sensor -> Sensor
+setSensorDescr descr sensor =
+    let
+        meta =
+            sensor.meta
+    in
+        { sensor | meta = { meta | description = descr } }
+
+
+setSensorType : String -> Sensor -> Sensor
+setSensorType typeId sensor =
+    { sensor | sensorTypeId = typeId }
+
+
+setConversion : String -> Sensor -> Sensor
+setConversion conversionId sensor =
+    { sensor | conversionId = conversionId }
+
+
+setFmtChr : String -> Sensor -> Sensor
+setFmtChr fmtChr sensor =
+    let
+        fmt =
+            sensor.fmt
+    in
+        { sensor | fmt = { fmt | fmtChr = fmtChr } }
 
 
 setDeviceDevice : String -> Device -> Device
