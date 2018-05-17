@@ -10774,6 +10774,9 @@ var _kiotlog$kiotlogweb$Types$SetSensorNameOnDevice = F2(
 	function (a, b) {
 		return {ctor: 'SetSensorNameOnDevice', _0: a, _1: b};
 	});
+var _kiotlog$kiotlogweb$Types$RemoveSensorOnDevice = function (a) {
+	return {ctor: 'RemoveSensorOnDevice', _0: a};
+};
 var _kiotlog$kiotlogweb$Types$AddSensor = {ctor: 'AddSensor'};
 var _kiotlog$kiotlogweb$Types$CreateNewDevice = {ctor: 'CreateNewDevice'};
 var _kiotlog$kiotlogweb$Types$NewDeviceBigendian = function (a) {
@@ -10821,8 +10824,12 @@ var _kiotlog$kiotlogweb$Views_Toolbar$view = function (model) {
 		_elm_lang$html$Html$header,
 		{
 			ctor: '::',
-			_0: _elm_lang$html$Html_Attributes$class('mdc-top-app-bar mdc-top-app-bar--fixed'),
-			_1: {ctor: '[]'}
+			_0: _elm_lang$html$Html_Attributes$id('kiotlog-top-app-bar'),
+			_1: {
+				ctor: '::',
+				_0: _elm_lang$html$Html_Attributes$class('mdc-top-app-bar mdc-top-app-bar--fixed'),
+				_1: {ctor: '[]'}
+			}
 		},
 		{
 			ctor: '::',
@@ -11135,6 +11142,24 @@ var _kiotlog$kiotlogweb$Views_Drawer$view = function (model) {
 		});
 };
 
+var _kiotlog$kiotlogweb$Utils$charFromInt = function (i) {
+	return (_elm_lang$core$Native_Utils.cmp(i, 10) < 0) ? _elm_lang$core$Char$fromCode(
+		i + _elm_lang$core$Char$toCode(
+			_elm_lang$core$Native_Utils.chr('0'))) : ((_elm_lang$core$Native_Utils.cmp(i, 36) < 0) ? _elm_lang$core$Char$fromCode(
+		(i - 10) + _elm_lang$core$Char$toCode(
+			_elm_lang$core$Native_Utils.chr('A'))) : _elm_lang$core$Native_Utils.crash(
+		'Utils',
+		{
+			start: {line: 13, column: 9},
+			end: {line: 13, column: 20}
+		})(
+		_elm_lang$core$Basics$toString(i)));
+};
+var _kiotlog$kiotlogweb$Utils$stringFromInt = function (i) {
+	return _elm_lang$core$String$fromChar(
+		_kiotlog$kiotlogweb$Utils$charFromInt(i));
+};
+
 var _kiotlog$kiotlogweb$Views_Devices$createErrorMessage = function (httpError) {
 	var _p0 = httpError;
 	switch (_p0.ctor) {
@@ -11150,210 +11175,168 @@ var _kiotlog$kiotlogweb$Views_Devices$createErrorMessage = function (httpError) 
 			return _p0._0;
 	}
 };
-var _kiotlog$kiotlogweb$Views_Devices$sensorTypesOptions = function (st) {
-	var _p1 = st;
-	switch (_p1.ctor) {
-		case 'NotAsked':
-			return {
-				ctor: '::',
-				_0: A2(
-					_elm_lang$html$Html$option,
-					{ctor: '[]'},
-					{
-						ctor: '::',
-						_0: _elm_lang$html$Html$text('...'),
-						_1: {ctor: '[]'}
-					}),
-				_1: {ctor: '[]'}
-			};
-		case 'Loading':
-			return {
-				ctor: '::',
-				_0: A2(
-					_elm_lang$html$Html$option,
-					{ctor: '[]'},
-					{
-						ctor: '::',
-						_0: _elm_lang$html$Html$text('Loading ...'),
-						_1: {ctor: '[]'}
-					}),
-				_1: {ctor: '[]'}
-			};
-		case 'Success':
-			var opt = function (sType) {
-				return A2(
-					_elm_lang$html$Html$option,
-					{
-						ctor: '::',
-						_0: _elm_lang$html$Html_Attributes$value(sType.id),
-						_1: {ctor: '[]'}
-					},
-					{
-						ctor: '::',
-						_0: _elm_lang$html$Html$text(sType.name),
-						_1: {ctor: '[]'}
-					});
-			};
-			return A2(_elm_lang$core$List$map, opt, _p1._0);
-		default:
-			return {
-				ctor: '::',
-				_0: A2(
-					_elm_lang$html$Html$option,
-					{ctor: '[]'},
-					{
-						ctor: '::',
-						_0: _elm_lang$html$Html$text(
-							A2(
-								_elm_lang$core$Basics_ops['++'],
-								'error',
-								_kiotlog$kiotlogweb$Views_Devices$createErrorMessage(_p1._0))),
-						_1: {ctor: '[]'}
-					}),
-				_1: {ctor: '[]'}
-			};
-	}
-};
-var _kiotlog$kiotlogweb$Views_Devices$conversionsOptions = function (conv) {
-	var _p2 = conv;
-	switch (_p2.ctor) {
-		case 'NotAsked':
-			return {
-				ctor: '::',
-				_0: A2(
-					_elm_lang$html$Html$option,
-					{ctor: '[]'},
-					{
-						ctor: '::',
-						_0: _elm_lang$html$Html$text('...'),
-						_1: {ctor: '[]'}
-					}),
-				_1: {ctor: '[]'}
-			};
-		case 'Loading':
-			return {
-				ctor: '::',
-				_0: A2(
-					_elm_lang$html$Html$option,
-					{ctor: '[]'},
-					{
-						ctor: '::',
-						_0: _elm_lang$html$Html$text('Loading ...'),
-						_1: {ctor: '[]'}
-					}),
-				_1: {ctor: '[]'}
-			};
-		case 'Success':
-			var opt = function (sType) {
-				return A2(
-					_elm_lang$html$Html$option,
-					{
-						ctor: '::',
-						_0: _elm_lang$html$Html_Attributes$value(sType.id),
-						_1: {ctor: '[]'}
-					},
-					{
-						ctor: '::',
-						_0: _elm_lang$html$Html$text(sType.fun),
-						_1: {ctor: '[]'}
-					});
-			};
-			return A2(_elm_lang$core$List$map, opt, _p2._0);
-		default:
-			return {
-				ctor: '::',
-				_0: A2(
-					_elm_lang$html$Html$option,
-					{ctor: '[]'},
-					{
-						ctor: '::',
-						_0: _elm_lang$html$Html$text(
-							A2(
-								_elm_lang$core$Basics_ops['++'],
-								'error',
-								_kiotlog$kiotlogweb$Views_Devices$createErrorMessage(_p2._0))),
-						_1: {ctor: '[]'}
-					}),
-				_1: {ctor: '[]'}
-			};
-	}
-};
+var _kiotlog$kiotlogweb$Views_Devices$sensorTypesOptions = F2(
+	function (st, slctd) {
+		var _p1 = st;
+		switch (_p1.ctor) {
+			case 'NotAsked':
+				return {
+					ctor: '::',
+					_0: A2(
+						_elm_lang$html$Html$option,
+						{ctor: '[]'},
+						{
+							ctor: '::',
+							_0: _elm_lang$html$Html$text('...'),
+							_1: {ctor: '[]'}
+						}),
+					_1: {ctor: '[]'}
+				};
+			case 'Loading':
+				return {
+					ctor: '::',
+					_0: A2(
+						_elm_lang$html$Html$option,
+						{ctor: '[]'},
+						{
+							ctor: '::',
+							_0: _elm_lang$html$Html$text('Loading ...'),
+							_1: {ctor: '[]'}
+						}),
+					_1: {ctor: '[]'}
+				};
+			case 'Success':
+				var opt = function (sType) {
+					return A2(
+						_elm_lang$html$Html$option,
+						{
+							ctor: '::',
+							_0: _elm_lang$html$Html_Attributes$value(sType.id),
+							_1: {
+								ctor: '::',
+								_0: _elm_lang$html$Html_Attributes$selected(
+									_elm_lang$core$Native_Utils.eq(sType.id, slctd)),
+								_1: {ctor: '[]'}
+							}
+						},
+						{
+							ctor: '::',
+							_0: _elm_lang$html$Html$text(sType.name),
+							_1: {ctor: '[]'}
+						});
+				};
+				return A2(_elm_lang$core$List$map, opt, _p1._0);
+			default:
+				return {
+					ctor: '::',
+					_0: A2(
+						_elm_lang$html$Html$option,
+						{ctor: '[]'},
+						{
+							ctor: '::',
+							_0: _elm_lang$html$Html$text(
+								A2(
+									_elm_lang$core$Basics_ops['++'],
+									'error',
+									_kiotlog$kiotlogweb$Views_Devices$createErrorMessage(_p1._0))),
+							_1: {ctor: '[]'}
+						}),
+					_1: {ctor: '[]'}
+				};
+		}
+	});
+var _kiotlog$kiotlogweb$Views_Devices$conversionsOptions = F2(
+	function (conv, slctd) {
+		var _p2 = conv;
+		switch (_p2.ctor) {
+			case 'NotAsked':
+				return {
+					ctor: '::',
+					_0: A2(
+						_elm_lang$html$Html$option,
+						{ctor: '[]'},
+						{
+							ctor: '::',
+							_0: _elm_lang$html$Html$text('...'),
+							_1: {ctor: '[]'}
+						}),
+					_1: {ctor: '[]'}
+				};
+			case 'Loading':
+				return {
+					ctor: '::',
+					_0: A2(
+						_elm_lang$html$Html$option,
+						{ctor: '[]'},
+						{
+							ctor: '::',
+							_0: _elm_lang$html$Html$text('Loading ...'),
+							_1: {ctor: '[]'}
+						}),
+					_1: {ctor: '[]'}
+				};
+			case 'Success':
+				var opt = function (sType) {
+					return A2(
+						_elm_lang$html$Html$option,
+						{
+							ctor: '::',
+							_0: _elm_lang$html$Html_Attributes$value(sType.id),
+							_1: {
+								ctor: '::',
+								_0: _elm_lang$html$Html_Attributes$selected(
+									_elm_lang$core$Native_Utils.eq(sType.id, slctd)),
+								_1: {ctor: '[]'}
+							}
+						},
+						{
+							ctor: '::',
+							_0: _elm_lang$html$Html$text(sType.fun),
+							_1: {ctor: '[]'}
+						});
+				};
+				return A2(_elm_lang$core$List$map, opt, _p2._0);
+			default:
+				return {
+					ctor: '::',
+					_0: A2(
+						_elm_lang$html$Html$option,
+						{ctor: '[]'},
+						{
+							ctor: '::',
+							_0: _elm_lang$html$Html$text(
+								A2(
+									_elm_lang$core$Basics_ops['++'],
+									'error',
+									_kiotlog$kiotlogweb$Views_Devices$createErrorMessage(_p2._0))),
+							_1: {ctor: '[]'}
+						}),
+					_1: {ctor: '[]'}
+				};
+		}
+	});
 var _kiotlog$kiotlogweb$Views_Devices$addDeviceShowSensors = F4(
 	function (sensorTypes, conversions, idx, sensor) {
 		return A2(
 			_elm_lang$html$Html$div,
 			{
 				ctor: '::',
-				_0: _elm_lang$html$Html_Attributes$class('new-device-sensor mdc-layout-grid__inner'),
+				_0: _elm_lang$html$Html_Attributes$class('new-device-sensor mdc-card mdc-layout-grid__cell--span-12'),
 				_1: {ctor: '[]'}
 			},
 			{
 				ctor: '::',
 				_0: A2(
 					_elm_lang$html$Html$div,
+					{ctor: '[]'},
 					{
 						ctor: '::',
-						_0: _elm_lang$html$Html_Attributes$class('mdc-text-field mdc-layout-grid__cell--span-5'),
-						_1: {
-							ctor: '::',
-							_0: A2(_elm_lang$html$Html_Attributes$attribute, 'data-mdc-auto-init', 'MDCTextField'),
-							_1: {ctor: '[]'}
-						}
-					},
-					{
-						ctor: '::',
-						_0: A2(
-							_elm_lang$html$Html$input,
-							{
-								ctor: '::',
-								_0: _elm_lang$html$Html_Attributes$type_('text'),
-								_1: {
-									ctor: '::',
-									_0: _elm_lang$html$Html_Attributes$id('new_device_new_sensor-name'),
-									_1: {
-										ctor: '::',
-										_0: _elm_lang$html$Html_Attributes$class('mdc-text-field__input'),
-										_1: {
-											ctor: '::',
-											_0: _elm_lang$html$Html_Events$onInput(
-												_kiotlog$kiotlogweb$Types$SetSensorNameOnDevice(idx)),
-											_1: {ctor: '[]'}
-										}
-									}
-								}
-							},
-							{ctor: '[]'}),
-						_1: {
-							ctor: '::',
-							_0: A2(
-								_elm_lang$html$Html$label,
-								{
-									ctor: '::',
-									_0: _elm_lang$html$Html_Attributes$class('mdc-floating-label'),
-									_1: {
-										ctor: '::',
-										_0: _elm_lang$html$Html_Attributes$for('new_device_new_sensor-name'),
-										_1: {ctor: '[]'}
-									}
-								},
-								{
-									ctor: '::',
-									_0: _elm_lang$html$Html$text('Name'),
-									_1: {ctor: '[]'}
-								}),
-							_1: {
-								ctor: '::',
-								_0: A2(
-									_elm_lang$html$Html$div,
-									{
-										ctor: '::',
-										_0: _elm_lang$html$Html_Attributes$class('mdc-line-ripple'),
-										_1: {ctor: '[]'}
-									},
-									{ctor: '[]'}),
-								_1: {ctor: '[]'}
-							}
-						}
+						_0: _elm_lang$html$Html$text(
+							A2(
+								_elm_lang$core$Basics_ops['++'],
+								'IDX: ',
+								_kiotlog$kiotlogweb$Utils$stringFromInt(idx))),
+						_1: {ctor: '[]'}
 					}),
 				_1: {
 					ctor: '::',
@@ -11361,182 +11344,53 @@ var _kiotlog$kiotlogweb$Views_Devices$addDeviceShowSensors = F4(
 						_elm_lang$html$Html$div,
 						{
 							ctor: '::',
-							_0: _elm_lang$html$Html_Attributes$class('mdc-text-field mdc-layout-grid__cell--span-7'),
-							_1: {
-								ctor: '::',
-								_0: A2(_elm_lang$html$Html_Attributes$attribute, 'data-mdc-auto-init', 'MDCTextField'),
-								_1: {ctor: '[]'}
-							}
+							_0: _elm_lang$html$Html_Attributes$class('mdc-layout-grid__inner padding-gutter'),
+							_1: {ctor: '[]'}
 						},
 						{
-							ctor: '::',
-							_0: A2(
-								_elm_lang$html$Html$input,
-								{
-									ctor: '::',
-									_0: _elm_lang$html$Html_Attributes$type_('text'),
-									_1: {
-										ctor: '::',
-										_0: _elm_lang$html$Html_Attributes$id('new_device_new_sensor-description'),
-										_1: {
-											ctor: '::',
-											_0: _elm_lang$html$Html_Attributes$class('mdc-text-field__input'),
-											_1: {
-												ctor: '::',
-												_0: _elm_lang$html$Html_Events$onInput(
-													_kiotlog$kiotlogweb$Types$SetSensorDescrOnDevice(idx)),
-												_1: {ctor: '[]'}
-											}
-										}
-									}
-								},
-								{ctor: '[]'}),
-							_1: {
-								ctor: '::',
-								_0: A2(
-									_elm_lang$html$Html$label,
-									{
-										ctor: '::',
-										_0: _elm_lang$html$Html_Attributes$class('mdc-floating-label'),
-										_1: {
-											ctor: '::',
-											_0: _elm_lang$html$Html_Attributes$for('new_device_new_sensor-description'),
-											_1: {ctor: '[]'}
-										}
-									},
-									{
-										ctor: '::',
-										_0: _elm_lang$html$Html$text('Description'),
-										_1: {ctor: '[]'}
-									}),
-								_1: {
-									ctor: '::',
-									_0: A2(
-										_elm_lang$html$Html$div,
-										{
-											ctor: '::',
-											_0: _elm_lang$html$Html_Attributes$class('mdc-line-ripple'),
-											_1: {ctor: '[]'}
-										},
-										{ctor: '[]'}),
-									_1: {ctor: '[]'}
-								}
-							}
-						}),
-					_1: {
-						ctor: '::',
-						_0: A2(
-							_elm_lang$html$Html$div,
-							{
-								ctor: '::',
-								_0: _elm_lang$html$Html_Attributes$class('mdc-select mdc-layout-grid__cell--span-5'),
-								_1: {
-									ctor: '::',
-									_0: A2(_elm_lang$html$Html_Attributes$attribute, 'data-mdc-auto-init', 'MDCSelect'),
-									_1: {
-										ctor: '::',
-										_0: A2(
-											_elm_lang$html$Html_Events$on,
-											'change',
-											A2(
-												_elm_lang$core$Json_Decode$map,
-												_kiotlog$kiotlogweb$Types$SetSensorTypeOnDevice(idx),
-												_elm_lang$html$Html_Events$targetValue)),
-										_1: {ctor: '[]'}
-									}
-								}
-							},
-							{
-								ctor: '::',
-								_0: A2(
-									_elm_lang$html$Html$select,
-									{
-										ctor: '::',
-										_0: _elm_lang$html$Html_Attributes$class('mdc-select__native-control'),
-										_1: {ctor: '[]'}
-									},
-									A2(
-										_elm_lang$core$Basics_ops['++'],
-										{
-											ctor: '::',
-											_0: A2(
-												_elm_lang$html$Html$option,
-												{ctor: '[]'},
-												{ctor: '[]'}),
-											_1: {ctor: '[]'}
-										},
-										_kiotlog$kiotlogweb$Views_Devices$sensorTypesOptions(sensorTypes))),
-								_1: {
-									ctor: '::',
-									_0: A2(
-										_elm_lang$html$Html$label,
-										{
-											ctor: '::',
-											_0: _elm_lang$html$Html_Attributes$class('mdc-floating-label'),
-											_1: {ctor: '[]'}
-										},
-										{
-											ctor: '::',
-											_0: _elm_lang$html$Html$text('Sensor Type'),
-											_1: {ctor: '[]'}
-										}),
-									_1: {
-										ctor: '::',
-										_0: A2(
-											_elm_lang$html$Html$div,
-											{
-												ctor: '::',
-												_0: _elm_lang$html$Html_Attributes$class('mdc-line-ripple'),
-												_1: {ctor: '[]'}
-											},
-											{ctor: '[]'}),
-										_1: {ctor: '[]'}
-									}
-								}
-							}),
-						_1: {
 							ctor: '::',
 							_0: A2(
 								_elm_lang$html$Html$div,
 								{
 									ctor: '::',
-									_0: _elm_lang$html$Html_Attributes$class('mdc-select mdc-layout-grid__cell--span-4'),
+									_0: _elm_lang$html$Html_Attributes$class('mdc-text-field mdc-layout-grid__cell--span-5'),
 									_1: {
 										ctor: '::',
-										_0: A2(_elm_lang$html$Html_Attributes$attribute, 'data-mdc-auto-init', 'MDCSelect'),
-										_1: {
-											ctor: '::',
-											_0: A2(
-												_elm_lang$html$Html_Events$on,
-												'change',
-												A2(
-													_elm_lang$core$Json_Decode$map,
-													_kiotlog$kiotlogweb$Types$SetSensorConversionOnDevice(idx),
-													_elm_lang$html$Html_Events$targetValue)),
-											_1: {ctor: '[]'}
-										}
+										_0: A2(_elm_lang$html$Html_Attributes$attribute, 'data-mdc-auto-init', 'MDCTextField'),
+										_1: {ctor: '[]'}
 									}
 								},
 								{
 									ctor: '::',
 									_0: A2(
-										_elm_lang$html$Html$select,
+										_elm_lang$html$Html$input,
 										{
 											ctor: '::',
-											_0: _elm_lang$html$Html_Attributes$class('mdc-select__native-control'),
-											_1: {ctor: '[]'}
-										},
-										A2(
-											_elm_lang$core$Basics_ops['++'],
-											{
+											_0: _elm_lang$html$Html_Attributes$type_('text'),
+											_1: {
 												ctor: '::',
-												_0: A2(
-													_elm_lang$html$Html$option,
-													{ctor: '[]'},
-													{ctor: '[]'}),
-												_1: {ctor: '[]'}
-											},
-											_kiotlog$kiotlogweb$Views_Devices$conversionsOptions(conversions))),
+												_0: _elm_lang$html$Html_Attributes$id(
+													A2(
+														_elm_lang$core$Basics_ops['++'],
+														'new_device_new_sensor-name',
+														_kiotlog$kiotlogweb$Utils$stringFromInt(idx))),
+												_1: {
+													ctor: '::',
+													_0: _elm_lang$html$Html_Attributes$class('mdc-text-field__input'),
+													_1: {
+														ctor: '::',
+														_0: _elm_lang$html$Html_Events$onInput(
+															_kiotlog$kiotlogweb$Types$SetSensorNameOnDevice(idx)),
+														_1: {
+															ctor: '::',
+															_0: _elm_lang$html$Html_Attributes$value(sensor.meta.name),
+															_1: {ctor: '[]'}
+														}
+													}
+												}
+											}
+										},
+										{ctor: '[]'}),
 									_1: {
 										ctor: '::',
 										_0: A2(
@@ -11544,11 +11398,19 @@ var _kiotlog$kiotlogweb$Views_Devices$addDeviceShowSensors = F4(
 											{
 												ctor: '::',
 												_0: _elm_lang$html$Html_Attributes$class('mdc-floating-label'),
-												_1: {ctor: '[]'}
+												_1: {
+													ctor: '::',
+													_0: _elm_lang$html$Html_Attributes$for(
+														A2(
+															_elm_lang$core$Basics_ops['++'],
+															'new_device_new_sensor-name',
+															_kiotlog$kiotlogweb$Utils$stringFromInt(idx))),
+													_1: {ctor: '[]'}
+												}
 											},
 											{
 												ctor: '::',
-												_0: _elm_lang$html$Html$text('Conversion'),
+												_0: _elm_lang$html$Html$text('Name'),
 												_1: {ctor: '[]'}
 											}),
 										_1: {
@@ -11571,190 +11433,44 @@ var _kiotlog$kiotlogweb$Views_Devices$addDeviceShowSensors = F4(
 									_elm_lang$html$Html$div,
 									{
 										ctor: '::',
-										_0: _elm_lang$html$Html_Attributes$class('mdc-select mdc-layout-grid__cell--span-3'),
+										_0: _elm_lang$html$Html_Attributes$class('mdc-text-field mdc-layout-grid__cell--span-7'),
 										_1: {
 											ctor: '::',
-											_0: A2(_elm_lang$html$Html_Attributes$attribute, 'data-mdc-auto-init', 'MDCSelect'),
-											_1: {
-												ctor: '::',
-												_0: A2(
-													_elm_lang$html$Html_Events$on,
-													'change',
-													A2(
-														_elm_lang$core$Json_Decode$map,
-														_kiotlog$kiotlogweb$Types$SetSensorFmtChrOnDevice(idx),
-														_elm_lang$html$Html_Events$targetValue)),
-												_1: {ctor: '[]'}
-											}
+											_0: A2(_elm_lang$html$Html_Attributes$attribute, 'data-mdc-auto-init', 'MDCTextField'),
+											_1: {ctor: '[]'}
 										}
 									},
 									{
 										ctor: '::',
 										_0: A2(
-											_elm_lang$html$Html$select,
+											_elm_lang$html$Html$input,
 											{
 												ctor: '::',
-												_0: _elm_lang$html$Html_Attributes$class('mdc-select__native-control'),
-												_1: {ctor: '[]'}
-											},
-											{
-												ctor: '::',
-												_0: A2(
-													_elm_lang$html$Html$option,
-													{ctor: '[]'},
-													{ctor: '[]'}),
+												_0: _elm_lang$html$Html_Attributes$type_('text'),
 												_1: {
 													ctor: '::',
-													_0: A2(
-														_elm_lang$html$Html$option,
-														{
-															ctor: '::',
-															_0: _elm_lang$html$Html_Attributes$value('b'),
-															_1: {ctor: '[]'}
-														},
-														{
-															ctor: '::',
-															_0: _elm_lang$html$Html$text('signed char'),
-															_1: {ctor: '[]'}
-														}),
+													_0: _elm_lang$html$Html_Attributes$id(
+														A2(
+															_elm_lang$core$Basics_ops['++'],
+															'new_device_new_sensor-description',
+															_kiotlog$kiotlogweb$Utils$stringFromInt(idx))),
 													_1: {
 														ctor: '::',
-														_0: A2(
-															_elm_lang$html$Html$option,
-															{
-																ctor: '::',
-																_0: _elm_lang$html$Html_Attributes$value('B'),
-																_1: {ctor: '[]'}
-															},
-															{
-																ctor: '::',
-																_0: _elm_lang$html$Html$text('unsigned char'),
-																_1: {ctor: '[]'}
-															}),
+														_0: _elm_lang$html$Html_Attributes$class('mdc-text-field__input'),
 														_1: {
 															ctor: '::',
-															_0: A2(
-																_elm_lang$html$Html$option,
-																{
-																	ctor: '::',
-																	_0: _elm_lang$html$Html_Attributes$value('h'),
-																	_1: {ctor: '[]'}
-																},
-																{
-																	ctor: '::',
-																	_0: _elm_lang$html$Html$text('short'),
-																	_1: {ctor: '[]'}
-																}),
+															_0: _elm_lang$html$Html_Events$onInput(
+																_kiotlog$kiotlogweb$Types$SetSensorDescrOnDevice(idx)),
 															_1: {
 																ctor: '::',
-																_0: A2(
-																	_elm_lang$html$Html$option,
-																	{
-																		ctor: '::',
-																		_0: _elm_lang$html$Html_Attributes$value('H'),
-																		_1: {ctor: '[]'}
-																	},
-																	{
-																		ctor: '::',
-																		_0: _elm_lang$html$Html$text('unsigned short'),
-																		_1: {ctor: '[]'}
-																	}),
-																_1: {
-																	ctor: '::',
-																	_0: A2(
-																		_elm_lang$html$Html$option,
-																		{
-																			ctor: '::',
-																			_0: _elm_lang$html$Html_Attributes$value('i'),
-																			_1: {ctor: '[]'}
-																		},
-																		{
-																			ctor: '::',
-																			_0: _elm_lang$html$Html$text('int'),
-																			_1: {ctor: '[]'}
-																		}),
-																	_1: {
-																		ctor: '::',
-																		_0: A2(
-																			_elm_lang$html$Html$option,
-																			{
-																				ctor: '::',
-																				_0: _elm_lang$html$Html_Attributes$value('I'),
-																				_1: {ctor: '[]'}
-																			},
-																			{
-																				ctor: '::',
-																				_0: _elm_lang$html$Html$text('unsigned int'),
-																				_1: {ctor: '[]'}
-																			}),
-																		_1: {
-																			ctor: '::',
-																			_0: A2(
-																				_elm_lang$html$Html$option,
-																				{
-																					ctor: '::',
-																					_0: _elm_lang$html$Html_Attributes$value('l'),
-																					_1: {ctor: '[]'}
-																				},
-																				{
-																					ctor: '::',
-																					_0: _elm_lang$html$Html$text('long'),
-																					_1: {ctor: '[]'}
-																				}),
-																			_1: {
-																				ctor: '::',
-																				_0: A2(
-																					_elm_lang$html$Html$option,
-																					{
-																						ctor: '::',
-																						_0: _elm_lang$html$Html_Attributes$value('L'),
-																						_1: {ctor: '[]'}
-																					},
-																					{
-																						ctor: '::',
-																						_0: _elm_lang$html$Html$text('unsigned long'),
-																						_1: {ctor: '[]'}
-																					}),
-																				_1: {
-																					ctor: '::',
-																					_0: A2(
-																						_elm_lang$html$Html$option,
-																						{
-																							ctor: '::',
-																							_0: _elm_lang$html$Html_Attributes$value('q'),
-																							_1: {ctor: '[]'}
-																						},
-																						{
-																							ctor: '::',
-																							_0: _elm_lang$html$Html$text('long long'),
-																							_1: {ctor: '[]'}
-																						}),
-																					_1: {
-																						ctor: '::',
-																						_0: A2(
-																							_elm_lang$html$Html$option,
-																							{
-																								ctor: '::',
-																								_0: _elm_lang$html$Html_Attributes$value('Q'),
-																								_1: {ctor: '[]'}
-																							},
-																							{
-																								ctor: '::',
-																								_0: _elm_lang$html$Html$text('unsigned long long'),
-																								_1: {ctor: '[]'}
-																							}),
-																						_1: {ctor: '[]'}
-																					}
-																				}
-																			}
-																		}
-																	}
-																}
+																_0: _elm_lang$html$Html_Attributes$value(sensor.meta.description),
+																_1: {ctor: '[]'}
 															}
 														}
 													}
 												}
-											}),
+											},
+											{ctor: '[]'}),
 										_1: {
 											ctor: '::',
 											_0: A2(
@@ -11762,11 +11478,19 @@ var _kiotlog$kiotlogweb$Views_Devices$addDeviceShowSensors = F4(
 												{
 													ctor: '::',
 													_0: _elm_lang$html$Html_Attributes$class('mdc-floating-label'),
-													_1: {ctor: '[]'}
+													_1: {
+														ctor: '::',
+														_0: _elm_lang$html$Html_Attributes$for(
+															A2(
+																_elm_lang$core$Basics_ops['++'],
+																'new_device_new_sensor-description',
+																_kiotlog$kiotlogweb$Utils$stringFromInt(idx))),
+														_1: {ctor: '[]'}
+													}
 												},
 												{
 													ctor: '::',
-													_0: _elm_lang$html$Html$text('Format'),
+													_0: _elm_lang$html$Html$text('Description'),
 													_1: {ctor: '[]'}
 												}),
 											_1: {
@@ -11783,9 +11507,484 @@ var _kiotlog$kiotlogweb$Views_Devices$addDeviceShowSensors = F4(
 											}
 										}
 									}),
-								_1: {ctor: '[]'}
+								_1: {
+									ctor: '::',
+									_0: A2(
+										_elm_lang$html$Html$div,
+										{
+											ctor: '::',
+											_0: _elm_lang$html$Html_Attributes$class('mdc-select mdc-layout-grid__cell--span-5'),
+											_1: {
+												ctor: '::',
+												_0: A2(_elm_lang$html$Html_Attributes$attribute, 'data-mdc-auto-init', 'MDCSelect'),
+												_1: {
+													ctor: '::',
+													_0: A2(
+														_elm_lang$html$Html_Events$on,
+														'change',
+														A2(
+															_elm_lang$core$Json_Decode$map,
+															_kiotlog$kiotlogweb$Types$SetSensorTypeOnDevice(idx),
+															_elm_lang$html$Html_Events$targetValue)),
+													_1: {ctor: '[]'}
+												}
+											}
+										},
+										{
+											ctor: '::',
+											_0: A2(
+												_elm_lang$html$Html$select,
+												{
+													ctor: '::',
+													_0: _elm_lang$html$Html_Attributes$class('mdc-select__native-control'),
+													_1: {ctor: '[]'}
+												},
+												A2(
+													_elm_lang$core$Basics_ops['++'],
+													{
+														ctor: '::',
+														_0: A2(
+															_elm_lang$html$Html$option,
+															{ctor: '[]'},
+															{ctor: '[]'}),
+														_1: {ctor: '[]'}
+													},
+													A2(_kiotlog$kiotlogweb$Views_Devices$sensorTypesOptions, sensorTypes, sensor.sensorTypeId))),
+											_1: {
+												ctor: '::',
+												_0: A2(
+													_elm_lang$html$Html$label,
+													{
+														ctor: '::',
+														_0: _elm_lang$html$Html_Attributes$class('mdc-floating-label'),
+														_1: {ctor: '[]'}
+													},
+													{
+														ctor: '::',
+														_0: _elm_lang$html$Html$text('Sensor Type'),
+														_1: {ctor: '[]'}
+													}),
+												_1: {
+													ctor: '::',
+													_0: A2(
+														_elm_lang$html$Html$div,
+														{
+															ctor: '::',
+															_0: _elm_lang$html$Html_Attributes$class('mdc-line-ripple'),
+															_1: {ctor: '[]'}
+														},
+														{ctor: '[]'}),
+													_1: {ctor: '[]'}
+												}
+											}
+										}),
+									_1: {
+										ctor: '::',
+										_0: A2(
+											_elm_lang$html$Html$div,
+											{
+												ctor: '::',
+												_0: _elm_lang$html$Html_Attributes$class('mdc-select mdc-layout-grid__cell--span-4'),
+												_1: {
+													ctor: '::',
+													_0: A2(_elm_lang$html$Html_Attributes$attribute, 'data-mdc-auto-init', 'MDCSelect'),
+													_1: {
+														ctor: '::',
+														_0: A2(
+															_elm_lang$html$Html_Events$on,
+															'change',
+															A2(
+																_elm_lang$core$Json_Decode$map,
+																_kiotlog$kiotlogweb$Types$SetSensorConversionOnDevice(idx),
+																_elm_lang$html$Html_Events$targetValue)),
+														_1: {ctor: '[]'}
+													}
+												}
+											},
+											{
+												ctor: '::',
+												_0: A2(
+													_elm_lang$html$Html$select,
+													{
+														ctor: '::',
+														_0: _elm_lang$html$Html_Attributes$class('mdc-select__native-control'),
+														_1: {ctor: '[]'}
+													},
+													A2(
+														_elm_lang$core$Basics_ops['++'],
+														{
+															ctor: '::',
+															_0: A2(
+																_elm_lang$html$Html$option,
+																{ctor: '[]'},
+																{ctor: '[]'}),
+															_1: {ctor: '[]'}
+														},
+														A2(_kiotlog$kiotlogweb$Views_Devices$conversionsOptions, conversions, sensor.conversionId))),
+												_1: {
+													ctor: '::',
+													_0: A2(
+														_elm_lang$html$Html$label,
+														{
+															ctor: '::',
+															_0: _elm_lang$html$Html_Attributes$class('mdc-floating-label'),
+															_1: {ctor: '[]'}
+														},
+														{
+															ctor: '::',
+															_0: _elm_lang$html$Html$text('Conversion'),
+															_1: {ctor: '[]'}
+														}),
+													_1: {
+														ctor: '::',
+														_0: A2(
+															_elm_lang$html$Html$div,
+															{
+																ctor: '::',
+																_0: _elm_lang$html$Html_Attributes$class('mdc-line-ripple'),
+																_1: {ctor: '[]'}
+															},
+															{ctor: '[]'}),
+														_1: {ctor: '[]'}
+													}
+												}
+											}),
+										_1: {
+											ctor: '::',
+											_0: A2(
+												_elm_lang$html$Html$div,
+												{
+													ctor: '::',
+													_0: _elm_lang$html$Html_Attributes$class('mdc-select mdc-layout-grid__cell--span-3'),
+													_1: {
+														ctor: '::',
+														_0: A2(_elm_lang$html$Html_Attributes$attribute, 'data-mdc-auto-init', 'MDCSelect'),
+														_1: {
+															ctor: '::',
+															_0: A2(
+																_elm_lang$html$Html_Events$on,
+																'change',
+																A2(
+																	_elm_lang$core$Json_Decode$map,
+																	_kiotlog$kiotlogweb$Types$SetSensorFmtChrOnDevice(idx),
+																	_elm_lang$html$Html_Events$targetValue)),
+															_1: {ctor: '[]'}
+														}
+													}
+												},
+												{
+													ctor: '::',
+													_0: A2(
+														_elm_lang$html$Html$select,
+														{
+															ctor: '::',
+															_0: _elm_lang$html$Html_Attributes$class('mdc-select__native-control'),
+															_1: {ctor: '[]'}
+														},
+														{
+															ctor: '::',
+															_0: A2(
+																_elm_lang$html$Html$option,
+																{
+																	ctor: '::',
+																	_0: _elm_lang$html$Html_Attributes$selected(
+																		_elm_lang$core$Native_Utils.eq(sensor.fmt.fmtChr, '')),
+																	_1: {ctor: '[]'}
+																},
+																{ctor: '[]'}),
+															_1: {
+																ctor: '::',
+																_0: A2(
+																	_elm_lang$html$Html$option,
+																	{
+																		ctor: '::',
+																		_0: _elm_lang$html$Html_Attributes$value('b'),
+																		_1: {
+																			ctor: '::',
+																			_0: _elm_lang$html$Html_Attributes$selected(
+																				_elm_lang$core$Native_Utils.eq(sensor.fmt.fmtChr, 'b')),
+																			_1: {ctor: '[]'}
+																		}
+																	},
+																	{
+																		ctor: '::',
+																		_0: _elm_lang$html$Html$text('signed char'),
+																		_1: {ctor: '[]'}
+																	}),
+																_1: {
+																	ctor: '::',
+																	_0: A2(
+																		_elm_lang$html$Html$option,
+																		{
+																			ctor: '::',
+																			_0: _elm_lang$html$Html_Attributes$value('B'),
+																			_1: {
+																				ctor: '::',
+																				_0: _elm_lang$html$Html_Attributes$selected(
+																					_elm_lang$core$Native_Utils.eq(sensor.fmt.fmtChr, 'B')),
+																				_1: {ctor: '[]'}
+																			}
+																		},
+																		{
+																			ctor: '::',
+																			_0: _elm_lang$html$Html$text('unsigned char'),
+																			_1: {ctor: '[]'}
+																		}),
+																	_1: {
+																		ctor: '::',
+																		_0: A2(
+																			_elm_lang$html$Html$option,
+																			{
+																				ctor: '::',
+																				_0: _elm_lang$html$Html_Attributes$value('h'),
+																				_1: {
+																					ctor: '::',
+																					_0: _elm_lang$html$Html_Attributes$selected(
+																						_elm_lang$core$Native_Utils.eq(sensor.fmt.fmtChr, 'h')),
+																					_1: {ctor: '[]'}
+																				}
+																			},
+																			{
+																				ctor: '::',
+																				_0: _elm_lang$html$Html$text('short'),
+																				_1: {ctor: '[]'}
+																			}),
+																		_1: {
+																			ctor: '::',
+																			_0: A2(
+																				_elm_lang$html$Html$option,
+																				{
+																					ctor: '::',
+																					_0: _elm_lang$html$Html_Attributes$value('H'),
+																					_1: {
+																						ctor: '::',
+																						_0: _elm_lang$html$Html_Attributes$selected(
+																							_elm_lang$core$Native_Utils.eq(sensor.fmt.fmtChr, 'H')),
+																						_1: {ctor: '[]'}
+																					}
+																				},
+																				{
+																					ctor: '::',
+																					_0: _elm_lang$html$Html$text('unsigned short'),
+																					_1: {ctor: '[]'}
+																				}),
+																			_1: {
+																				ctor: '::',
+																				_0: A2(
+																					_elm_lang$html$Html$option,
+																					{
+																						ctor: '::',
+																						_0: _elm_lang$html$Html_Attributes$value('i'),
+																						_1: {
+																							ctor: '::',
+																							_0: _elm_lang$html$Html_Attributes$selected(
+																								_elm_lang$core$Native_Utils.eq(sensor.fmt.fmtChr, 'i')),
+																							_1: {ctor: '[]'}
+																						}
+																					},
+																					{
+																						ctor: '::',
+																						_0: _elm_lang$html$Html$text('int'),
+																						_1: {ctor: '[]'}
+																					}),
+																				_1: {
+																					ctor: '::',
+																					_0: A2(
+																						_elm_lang$html$Html$option,
+																						{
+																							ctor: '::',
+																							_0: _elm_lang$html$Html_Attributes$value('I'),
+																							_1: {
+																								ctor: '::',
+																								_0: _elm_lang$html$Html_Attributes$selected(
+																									_elm_lang$core$Native_Utils.eq(sensor.fmt.fmtChr, 'I')),
+																								_1: {ctor: '[]'}
+																							}
+																						},
+																						{
+																							ctor: '::',
+																							_0: _elm_lang$html$Html$text('unsigned int'),
+																							_1: {ctor: '[]'}
+																						}),
+																					_1: {
+																						ctor: '::',
+																						_0: A2(
+																							_elm_lang$html$Html$option,
+																							{
+																								ctor: '::',
+																								_0: _elm_lang$html$Html_Attributes$value('l'),
+																								_1: {
+																									ctor: '::',
+																									_0: _elm_lang$html$Html_Attributes$selected(
+																										_elm_lang$core$Native_Utils.eq(sensor.fmt.fmtChr, 'l')),
+																									_1: {ctor: '[]'}
+																								}
+																							},
+																							{
+																								ctor: '::',
+																								_0: _elm_lang$html$Html$text('long'),
+																								_1: {ctor: '[]'}
+																							}),
+																						_1: {
+																							ctor: '::',
+																							_0: A2(
+																								_elm_lang$html$Html$option,
+																								{
+																									ctor: '::',
+																									_0: _elm_lang$html$Html_Attributes$value('L'),
+																									_1: {
+																										ctor: '::',
+																										_0: _elm_lang$html$Html_Attributes$selected(
+																											_elm_lang$core$Native_Utils.eq(sensor.fmt.fmtChr, 'L')),
+																										_1: {ctor: '[]'}
+																									}
+																								},
+																								{
+																									ctor: '::',
+																									_0: _elm_lang$html$Html$text('unsigned long'),
+																									_1: {ctor: '[]'}
+																								}),
+																							_1: {
+																								ctor: '::',
+																								_0: A2(
+																									_elm_lang$html$Html$option,
+																									{
+																										ctor: '::',
+																										_0: _elm_lang$html$Html_Attributes$value('q'),
+																										_1: {
+																											ctor: '::',
+																											_0: _elm_lang$html$Html_Attributes$selected(
+																												_elm_lang$core$Native_Utils.eq(sensor.fmt.fmtChr, 'q')),
+																											_1: {ctor: '[]'}
+																										}
+																									},
+																									{
+																										ctor: '::',
+																										_0: _elm_lang$html$Html$text('long long'),
+																										_1: {ctor: '[]'}
+																									}),
+																								_1: {
+																									ctor: '::',
+																									_0: A2(
+																										_elm_lang$html$Html$option,
+																										{
+																											ctor: '::',
+																											_0: _elm_lang$html$Html_Attributes$value('Q'),
+																											_1: {
+																												ctor: '::',
+																												_0: _elm_lang$html$Html_Attributes$selected(
+																													_elm_lang$core$Native_Utils.eq(sensor.fmt.fmtChr, 'Q')),
+																												_1: {ctor: '[]'}
+																											}
+																										},
+																										{
+																											ctor: '::',
+																											_0: _elm_lang$html$Html$text('unsigned long long'),
+																											_1: {ctor: '[]'}
+																										}),
+																									_1: {ctor: '[]'}
+																								}
+																							}
+																						}
+																					}
+																				}
+																			}
+																		}
+																	}
+																}
+															}
+														}),
+													_1: {
+														ctor: '::',
+														_0: A2(
+															_elm_lang$html$Html$label,
+															{
+																ctor: '::',
+																_0: _elm_lang$html$Html_Attributes$class('mdc-floating-label'),
+																_1: {ctor: '[]'}
+															},
+															{
+																ctor: '::',
+																_0: _elm_lang$html$Html$text('Format'),
+																_1: {ctor: '[]'}
+															}),
+														_1: {
+															ctor: '::',
+															_0: A2(
+																_elm_lang$html$Html$div,
+																{
+																	ctor: '::',
+																	_0: _elm_lang$html$Html_Attributes$class('mdc-line-ripple'),
+																	_1: {ctor: '[]'}
+																},
+																{ctor: '[]'}),
+															_1: {ctor: '[]'}
+														}
+													}
+												}),
+											_1: {ctor: '[]'}
+										}
+									}
+								}
 							}
-						}
+						}),
+					_1: {
+						ctor: '::',
+						_0: A2(
+							_elm_lang$html$Html$div,
+							{
+								ctor: '::',
+								_0: _elm_lang$html$Html_Attributes$class('mdc-card__actions'),
+								_1: {ctor: '[]'}
+							},
+							{
+								ctor: '::',
+								_0: A2(
+									_elm_lang$html$Html$div,
+									{
+										ctor: '::',
+										_0: _elm_lang$html$Html_Attributes$class('mdc-card__action-icons'),
+										_1: {ctor: '[]'}
+									},
+									{
+										ctor: '::',
+										_0: A2(
+											_elm_lang$html$Html$button,
+											{
+												ctor: '::',
+												_0: _elm_lang$html$Html_Attributes$class('mdc-button mdc-card__action mdc-card__action--button'),
+												_1: {
+													ctor: '::',
+													_0: _elm_lang$html$Html_Events$onClick(
+														_kiotlog$kiotlogweb$Types$RemoveSensorOnDevice(idx)),
+													_1: {ctor: '[]'}
+												}
+											},
+											{
+												ctor: '::',
+												_0: A2(
+													_elm_lang$html$Html$i,
+													{
+														ctor: '::',
+														_0: _elm_lang$html$Html_Attributes$class('material-icons'),
+														_1: {ctor: '[]'}
+													},
+													{
+														ctor: '::',
+														_0: _elm_lang$html$Html$text('delete'),
+														_1: {ctor: '[]'}
+													}),
+												_1: {
+													ctor: '::',
+													_0: _elm_lang$html$Html$text('Remove'),
+													_1: {ctor: '[]'}
+												}
+											}),
+										_1: {ctor: '[]'}
+									}),
+								_1: {ctor: '[]'}
+							}),
+						_1: {ctor: '[]'}
 					}
 				}
 			});
@@ -12197,36 +12396,28 @@ var _kiotlog$kiotlogweb$Views_Devices$addDevice = function (model) {
 									_0: _elm_lang$html$Html_Attributes$class('mdc-layout-grid__inner'),
 									_1: {ctor: '[]'}
 								},
-								{
-									ctor: '::',
-									_0: A2(
-										_elm_lang$html$Html$h2,
-										{
-											ctor: '::',
-											_0: _elm_lang$html$Html_Attributes$class('mdc-layout-grid__cell--span-12 text-center'),
-											_1: {ctor: '[]'}
-										},
-										{
-											ctor: '::',
-											_0: _elm_lang$html$Html$text('Sensors'),
-											_1: {ctor: '[]'}
-										}),
-									_1: {
+								A2(
+									_elm_lang$core$Basics_ops['++'],
+									{
 										ctor: '::',
 										_0: A2(
-											_elm_lang$html$Html$div,
+											_elm_lang$html$Html$h2,
 											{
 												ctor: '::',
-												_0: _elm_lang$html$Html_Attributes$class('mdc-layout-grid__cell--span-12'),
+												_0: _elm_lang$html$Html_Attributes$class('mdc-layout-grid__cell--span-12 text-center'),
 												_1: {ctor: '[]'}
 											},
-											A2(
-												_elm_lang$core$List$indexedMap,
-												A2(_kiotlog$kiotlogweb$Views_Devices$addDeviceShowSensors, model.sensorTypes, model.conversions),
-												model.newDevice.sensors)),
+											{
+												ctor: '::',
+												_0: _elm_lang$html$Html$text('Sensors'),
+												_1: {ctor: '[]'}
+											}),
 										_1: {ctor: '[]'}
-									}
-								}),
+									},
+									A2(
+										_elm_lang$core$List$indexedMap,
+										A2(_kiotlog$kiotlogweb$Views_Devices$addDeviceShowSensors, model.sensorTypes, model.conversions),
+										model.newDevice.sensors))),
 							_1: {
 								ctor: '::',
 								_0: A2(
@@ -12800,22 +12991,68 @@ var _kiotlog$kiotlogweb$View$mainPage = function (model) {
 				{
 					ctor: '::',
 					_0: _elm_lang$html$Html_Attributes$class('kiotlog-page'),
-					_1: {ctor: '[]'}
+					_1: {
+						ctor: '::',
+						_0: _elm_lang$html$Html_Attributes$style(
+							{
+								ctor: '::',
+								_0: {ctor: '_Tuple2', _0: 'position', _1: 'fixed'},
+								_1: {
+									ctor: '::',
+									_0: {ctor: '_Tuple2', _0: 'top', _1: '0'},
+									_1: {
+										ctor: '::',
+										_0: {ctor: '_Tuple2', _0: 'bottom', _1: '0'},
+										_1: {
+											ctor: '::',
+											_0: {ctor: '_Tuple2', _0: 'left', _1: '0'},
+											_1: {
+												ctor: '::',
+												_0: {ctor: '_Tuple2', _0: 'right', _1: '0'},
+												_1: {
+													ctor: '::',
+													_0: {ctor: '_Tuple2', _0: 'display', _1: 'flex'},
+													_1: {
+														ctor: '::',
+														_0: {ctor: '_Tuple2', _0: 'align-content', _1: 'center'},
+														_1: {
+															ctor: '::',
+															_0: {ctor: '_Tuple2', _0: 'justify-conten', _1: 'center'},
+															_1: {
+																ctor: '::',
+																_0: {ctor: '_Tuple2', _0: 'justify-content', _1: 'center'},
+																_1: {ctor: '[]'}
+															}
+														}
+													}
+												}
+											}
+										}
+									}
+								}
+							}),
+						_1: {ctor: '[]'}
+					}
 				},
 				{
 					ctor: '::',
 					_0: A2(
-						_elm_lang$html$Html$h1,
+						_elm_lang$html$Html$img,
 						{
 							ctor: '::',
-							_0: _elm_lang$html$Html_Attributes$class('text-right'),
-							_1: {ctor: '[]'}
+							_0: _elm_lang$html$Html_Attributes$src('/img/transparent.svg'),
+							_1: {
+								ctor: '::',
+								_0: _elm_lang$html$Html_Attributes$style(
+									{
+										ctor: '::',
+										_0: {ctor: '_Tuple2', _0: 'width', _1: '640px'},
+										_1: {ctor: '[]'}
+									}),
+								_1: {ctor: '[]'}
+							}
 						},
-						{
-							ctor: '::',
-							_0: _elm_lang$html$Html$text('Dashboard'),
-							_1: {ctor: '[]'}
-						}),
+						{ctor: '[]'}),
 					_1: {ctor: '[]'}
 				});
 		case 'DevicesPage':
@@ -13633,6 +13870,24 @@ var _kiotlog$kiotlogweb$State$update = F2(
 								{
 									sensors: A2(_elm_lang$core$Debug$log, 'Sensors', sensors)
 								})
+						}),
+					_1: _elm_lang$core$Platform_Cmd$none
+				};
+			case 'RemoveSensorOnDevice':
+				var _p8 = _p7._0;
+				var newDev = model.newDevice;
+				var sensorsLeft = A2(
+					_elm_lang$core$Basics_ops['++'],
+					A2(_elm_lang$core$List$take, _p8, newDev.sensors),
+					A2(_elm_lang$core$List$drop, _p8 + 1, newDev.sensors));
+				return {
+					ctor: '_Tuple2',
+					_0: _elm_lang$core$Native_Utils.update(
+						model,
+						{
+							newDevice: _elm_lang$core$Native_Utils.update(
+								newDev,
+								{sensors: sensorsLeft})
 						}),
 					_1: _elm_lang$core$Platform_Cmd$none
 				};

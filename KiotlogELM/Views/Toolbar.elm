@@ -8,7 +8,10 @@ import Types exposing (Msg(OpenDrawer))
 
 view : a -> Html Msg
 view model =
-    header [ class "mdc-top-app-bar mdc-top-app-bar--fixed" ]
+    header
+        [ id "kiotlog-top-app-bar"
+        , class "mdc-top-app-bar mdc-top-app-bar--fixed"
+        ]
         [ div [ class "mdc-top-app-bar__row" ]
             [ section [ class "mdc-top-app-bar__section mdc-top-app-bar__section--align-start" ]
                 [ button

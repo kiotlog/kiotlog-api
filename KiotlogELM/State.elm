@@ -193,6 +193,17 @@ update msg model =
             in
                 ( { model | newDevice = { newDev | sensors = Debug.log "Sensors" sensors } }, Cmd.none )
 
+        RemoveSensorOnDevice idx ->
+            let
+                newDev =
+                    model.newDevice
+
+                sensorsLeft =
+                    (List.take (idx) newDev.sensors)
+                        ++ (List.drop (idx + 1) newDev.sensors)
+            in
+                ( { model | newDevice = { newDev | sensors = sensorsLeft } }, Cmd.none )
+
         SetSensorNameOnDevice idx name ->
             let
                 newDevice =

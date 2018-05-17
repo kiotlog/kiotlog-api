@@ -39,6 +39,10 @@ body {
     display: flex;
 }
 
+.mdc-top-app-bar--fixed {
+    z-index: 4;
+}
+
 .kiotlog-wrap {
     width: 100%;
 }

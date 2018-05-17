@@ -87,6 +87,7 @@ type Msg
     | NewDeviceBigendian Bool
     | CreateNewDevice
     | AddSensor
+    | RemoveSensorOnDevice Int
     | SetSensorNameOnDevice Int String
     | SetSensorDescrOnDevice Int String
     | SetSensorTypeOnDevice Int String

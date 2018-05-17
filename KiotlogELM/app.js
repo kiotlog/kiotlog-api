@@ -1,4 +1,5 @@
 import mdcAutoInit from '@material/auto-init';
+import { MDCTopAppBar } from '@material/top-app-bar/index';
 import { MDCTemporaryDrawer } from '@material/drawer';
 import { MDCTextField } from '@material/textfield';
 import { MDCSelect } from '@material/select';
@@ -44,11 +45,13 @@ const app = Elm.Main.embed(document.getElementById("kiotlog-app"));
 
 
 var drawer;
+var toolbar
 
 app.ports.initMDC.subscribe(function () {
     // window.mdc.autoInit();
     // mdcAutoInit();
     drawer = new MDCTemporaryDrawer(document.getElementById('kiotlog-actions-menu'));
+    toolbar = new MDCTopAppBar(document.getElementById('kiotlog-top-app-bar'));
 });
 
 app.ports.openDrawer.subscribe(function () {
