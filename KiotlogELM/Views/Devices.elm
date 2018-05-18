@@ -8,7 +8,6 @@ import Types exposing (..)
 import RemoteData exposing (WebData)
 import Table exposing (Config, stringColumn, intColumn, defaultCustomizations, Status(..), HtmlDetails, customConfig, veryCustomColumn)
 import Json.Decode as JD
-import Utils exposing (stringFromInt)
 
 
 viewDevices : Model -> Html Msg
@@ -361,15 +360,14 @@ addDevice model =
 addDeviceShowSensors : WebData (List SensorType) -> WebData (List Conversion) -> Int -> Sensor -> Html Msg
 addDeviceShowSensors sensorTypes conversions idx sensor =
     div [ class "new-device-sensor mdc-card mdc-layout-grid__cell--span-12" ]
-        [ div [] [ text ("IDX: " ++ (stringFromInt idx)) ]
-        , div [ class "mdc-layout-grid__inner padding-gutter" ]
+        [ div [ class "mdc-layout-grid__inner padding-gutter" ]
             [ div
                 [ class "mdc-text-field mdc-layout-grid__cell--span-5"
                 , attribute "data-mdc-auto-init" "MDCTextField"
                 ]
                 [ input
                     [ type_ "text"
-                    , id ("new_device_new_sensor-name" ++ (stringFromInt idx))
+                    , id ("new_device_new_sensor-name-" ++ (toString idx))
                     , class "mdc-text-field__input"
                     , onInput (SetSensorNameOnDevice idx)
                     , value (sensor.meta.name)
@@ -377,7 +375,7 @@ addDeviceShowSensors sensorTypes conversions idx sensor =
                     []
                 , label
                     [ class "mdc-floating-label"
-                    , for ("new_device_new_sensor-name" ++ (stringFromInt idx))
+                    , for ("new_device_new_sensor-name-" ++ (toString idx))
                     ]
                     [ text "Name" ]
                 , div [ class "mdc-line-ripple" ] []
@@ -388,7 +386,7 @@ addDeviceShowSensors sensorTypes conversions idx sensor =
                 ]
                 [ input
                     [ type_ "text"
-                    , id ("new_device_new_sensor-description" ++ (stringFromInt idx))
+                    , id ("new_device_new_sensor-description-" ++ (toString idx))
                     , class "mdc-text-field__input"
                     , onInput (SetSensorDescrOnDevice idx)
                     , value (sensor.meta.description)
@@ -396,7 +394,7 @@ addDeviceShowSensors sensorTypes conversions idx sensor =
                     []
                 , label
                     [ class "mdc-floating-label"
-                    , for ("new_device_new_sensor-description" ++ (stringFromInt idx))
+                    , for ("new_device_new_sensor-description-" ++ (toString idx))
                     ]
                     [ text "Description" ]
                 , div [ class "mdc-line-ripple" ] []
