@@ -48,7 +48,6 @@ initialModel =
     , device = RemoteData.NotAsked
     , sensorTypes = RemoteData.NotAsked
     , conversions = RemoteData.NotAsked
-    , newDevice = emptyDevice
     , currentRoute = NotFoundRoute
     , pageState = BlankPage
     }
@@ -114,7 +113,7 @@ setRoute route model =
                     ( newModel, pageCmd ) =
                         page AddDevicePage
                 in
-                    { newModel | newDevice = emptyDevice } ! [ pageCmd, fetchSensorTypesCommand, fetchConversionsCommand ]
+                    { newModel | device = RemoteData.Success emptyDevice } ! [ pageCmd, fetchSensorTypesCommand, fetchConversionsCommand ]
 
             _ ->
                 page NotFoundPage
@@ -163,84 +162,117 @@ update msg model =
             ( { model | conversions = response }, Cmd.none )
 
         NewDeviceDevice deviceId ->
+            ( editDevice model (setDeviceDevice deviceId), Cmd.none )
+
+        {--
             let
                 updatedNewDevice =
                     setDeviceDevice deviceId model.newDevice
             in
                 ( { model | newDevice = updatedNewDevice }, Cmd.none )
-
+        --}
         NewDeviceName name ->
+            ( editDevice model (setDeviceName name), Cmd.none )
+
+        {--
             let
                 updatedNewDevice =
                     setDeviceName name model.newDevice
             in
                 ( { model | newDevice = updatedNewDevice }, Cmd.none )
-
+        --}
         NewDeviceBigendian on ->
+            ( editDevice model (setDeviceBigendian on), Cmd.none )
+
+        {--
             let
                 updatedNewDevice =
                     setDeviceBigendian on model.newDevice
             in
                 ( { model | newDevice = updatedNewDevice }, Cmd.none )
-
+            --}
         AddSensor ->
-            let
-                newDev =
-                    model.newDevice
+            case model.device of
+                RemoteData.Success device ->
+                    let
+                        sensors =
+                            device.sensors ++ [ emptySensor ]
+                    in
+                        ( { model | device = RemoteData.Success { device | sensors = Debug.log "Sensors" sensors } }, Cmd.none )
 
-                sensors =
-                    newDev.sensors ++ [ emptySensor ]
-            in
-                ( { model | newDevice = { newDev | sensors = Debug.log "Sensors" sensors } }, Cmd.none )
+                _ ->
+                    ( model, Cmd.none )
 
         RemoveSensorOnDevice idx ->
-            let
-                newDev =
-                    model.newDevice
+            case model.device of
+                RemoteData.Success device ->
+                    let
+                        sensorsLeft =
+                            (List.take (idx) device.sensors)
+                                ++ (List.drop (idx + 1) device.sensors)
+                    in
+                        ( { model | device = RemoteData.Success { device | sensors = sensorsLeft } }, Cmd.none )
 
-                sensorsLeft =
-                    (List.take (idx) newDev.sensors)
-                        ++ (List.drop (idx + 1) newDev.sensors)
-            in
-                ( { model | newDevice = { newDev | sensors = sensorsLeft } }, Cmd.none )
+                _ ->
+                    ( model, Cmd.none )
 
         SetSensorNameOnDevice idx name ->
+            ( editDevice model (updateSensorOnDevice idx (setSensorName name)), Cmd.none )
+
+        {--
             let
                 newDevice =
                     updateSensorOnDevice idx (setSensorName name) model.newDevice
             in
                 ( { model | newDevice = newDevice }, Cmd.none )
-
+            --}
         SetSensorDescrOnDevice idx descr ->
+            ( editDevice model (updateSensorOnDevice idx (setSensorDescr descr)), Cmd.none )
+
+        {--
             let
                 newDevice =
                     updateSensorOnDevice idx (setSensorDescr descr) model.newDevice
             in
                 ( { model | newDevice = newDevice }, Cmd.none )
-
+            --}
         SetSensorTypeOnDevice idx id ->
+            ( editDevice model (updateSensorOnDevice idx (setSensorType id)), Cmd.none )
+
+        {--
             let
                 newDevice =
                     updateSensorOnDevice idx (setSensorType id) model.newDevice
             in
                 ( { model | newDevice = newDevice }, Cmd.none )
-
+            --}
         SetSensorConversionOnDevice idx id ->
+            ( editDevice model (updateSensorOnDevice idx (setConversion id)), Cmd.none )
+
+        {--
             let
                 newDevice =
                     updateSensorOnDevice idx (setConversion id) model.newDevice
             in
                 ( { model | newDevice = newDevice }, Cmd.none )
-
+            --}
         SetSensorFmtChrOnDevice idx fmtChr ->
+            ( editDevice model (updateSensorOnDevice idx (setFmtChr fmtChr)), Cmd.none )
+
+        {--
             let
                 newDevice =
                     updateSensorOnDevice idx (setFmtChr fmtChr) model.newDevice
             in
                 ( { model | newDevice = newDevice }, Cmd.none )
-
+            --}
         CreateNewDevice ->
-            ( model, createDeviceCommand model.newDevice )
+            case model.device of
+                RemoteData.Success device ->
+                    ( model, createDeviceCommand device )
+
+                _ ->
+                    ( model, Cmd.none )
 
         DeviceCreated (Ok device) ->
             -- should add new device in device list?
@@ -253,8 +285,7 @@ update msg model =
 
 
 -- update/add device helpers
-
-
+{--
 updateNewDevice :
     a
     -> (a -> Device -> Device)
@@ -266,20 +297,26 @@ updateNewDevice newValue updateFunction model =
             updateFunction newValue model.newDevice
     in
         ( { model | newDevice = updatedNewDevice }, Cmd.none )
+--}
+
+
+setSensorIndex : Int -> Sensor -> Sensor
+setSensorIndex i s =
+    let
+        f =
+            s.fmt
+    in
+        { s | fmt = { f | index = i } }
 
 
 updateSensorOnDevice : Int -> (Sensor -> Sensor) -> Device -> Device
 updateSensorOnDevice idx updateFunc device =
     let
         updateSensor i s =
-            let
-                f =
-                    s.fmt
-            in
-                if i == idx then
-                    updateFunc { s | fmt = { f | index = i } }
-                else
-                    { s | fmt = { f | index = i } }
+            if i == idx then
+                updateFunc (setSensorIndex i s)
+            else
+                setSensorIndex i s
     in
         { device | sensors = List.indexedMap updateSensor device.sensors }
 
@@ -360,3 +397,17 @@ setDeviceBitfields newBitfields device =
             device.frame
     in
         { device | frame = { frame | bitfields = newBitfields } }
+
+
+editDevice : Model -> (Device -> Device) -> Model
+editDevice model updateFunc =
+    case model.device of
+        RemoteData.Success device ->
+            let
+                updatedDevice =
+                    updateFunc device
+            in
+                { model | device = RemoteData.Success updatedDevice }
+
+        _ ->
+            model

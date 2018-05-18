@@ -67,7 +67,6 @@ type alias Model =
     , device : WebData Device
     , sensorTypes : WebData (List SensorType)
     , conversions : WebData (List Conversion)
-    , newDevice : Device
     , currentRoute : Route
     , pageState : Page
     }

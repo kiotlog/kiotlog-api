@@ -1,7 +1,7 @@
 module Views.Devices exposing (viewDevices, viewDevice, addDevice)
 
 import Html exposing (..)
-import Html.Attributes exposing (id, href, class, type_, style, for, attribute, value, selected)
+import Html.Attributes exposing (id, href, class, type_, style, for, attribute, value, selected, checked)
 import Html.Events exposing (onClick, onInput, on)
 import Http
 import Types exposing (..)
@@ -247,6 +247,16 @@ createErrorMessage httpError =
 
 addDevice : Model -> Html Msg
 addDevice model =
+    case model.device of
+        RemoteData.Success device ->
+            editDevice device model.sensorTypes model.conversions
+
+        _ ->
+            h3 [] [ text "Some Error Occurred" ]
+
+
+editDevice : Device -> WebData (List SensorType) -> WebData (List Conversion) -> Html Msg
+editDevice device sensorTypes conversions =
     div [ class "kiotlog-page" ]
         [ div [ class "mdc-layout-grid padding-0" ]
             [ div [ class "mdc-layout-grid__inner" ]
@@ -286,6 +296,7 @@ addDevice model =
                             [ type_ "text"
                             , id "new_device_device_id"
                             , class "mdc-text-field__input"
+                            , value device.device
                             , onInput NewDeviceDevice
                             ]
                             []
@@ -304,6 +315,7 @@ addDevice model =
                             [ type_ "text"
                             , id "new_device_name"
                             , class "mdc-text-field__input"
+                            , value device.meta.name
                             , onInput NewDeviceName
                             ]
                             []
@@ -324,7 +336,8 @@ addDevice model =
                                 , id "new_device_bigendian"
                                 , class "mdc-switch__native-control"
                                 , attribute "role" "switch"
-                                , onClick (NewDeviceBigendian (not model.newDevice.frame.bigendian))
+                                , checked device.frame.bigendian
+                                , onClick (NewDeviceBigendian (not device.frame.bigendian))
                                 ]
                                 []
                             , div [ class "mdc-switch__background" ]
@@ -343,7 +356,7 @@ addDevice model =
                 ([ h2 [ class "mdc-layout-grid__cell--span-12 text-center" ]
                     [ text "Sensors" ]
                  ]
-                    ++ (List.indexedMap (addDeviceShowSensors model.sensorTypes model.conversions) model.newDevice.sensors)
+                    ++ (List.indexedMap (addDeviceShowSensors sensorTypes conversions) device.sensors)
                 )
             , div [ class "mdc-layout-grid__inner padding-vertical-gutter" ]
                 [ button
