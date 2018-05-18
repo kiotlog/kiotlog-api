@@ -13395,7 +13395,7 @@ var _kiotlog$kiotlogweb$Rest$deviceDecoder = A4(
 					'Id',
 					_elm_lang$core$Json_Decode$string,
 					_NoRedInk$elm_decode_pipeline$Json_Decode_Pipeline$decode(_kiotlog$kiotlogweb$Types$Device))))));
-var _kiotlog$kiotlogweb$Rest$apiBaseUrl = 'http://localhost:9999/';
+var _kiotlog$kiotlogweb$Rest$apiBaseUrl = 'http://localhost:8888/';
 var _kiotlog$kiotlogweb$Rest$get = F3(
 	function (url, decoder, msg) {
 		return A2(
