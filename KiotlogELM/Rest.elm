@@ -15,8 +15,9 @@ import Json.Decode.Pipeline exposing (decode, required, optional)
 import Json.Encode as Encode
 
 
+apiBaseUrl : String
 apiBaseUrl =
-    "http://localhost:9999/"
+    "http://localhost:8888/"
 
 
 get : String -> Decoder a -> (WebData a -> Msg) -> Cmd Msg
