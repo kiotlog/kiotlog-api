@@ -1,6 +1,6 @@
 module State exposing (init, update)
 
-import Navigation exposing (Location)
+import Navigation exposing (Location, newUrl)
 import Routing exposing (extractRoute)
 import RemoteData exposing (WebData, fromMaybe)
 import Types exposing (Msg(..), Model, Route(..), Page(..), Device, Sensor)
@@ -276,7 +276,7 @@ update msg model =
 
         DeviceCreated (Ok device) ->
             -- should add new device in device list?
-            ( model, Cmd.none )
+            ( model, newUrl "#/devices" )
 
         DeviceCreated (Err _) ->
             -- TODO display error
