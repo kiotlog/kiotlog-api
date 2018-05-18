@@ -12106,7 +12106,7 @@ var _kiotlog$kiotlogweb$Views_Devices$addDevice = function (model) {
 							_elm_lang$html$Html$div,
 							{
 								ctor: '::',
-								_0: _elm_lang$html$Html_Attributes$class('mdc-layout-grid__inner'),
+								_0: _elm_lang$html$Html_Attributes$class('mdc-card'),
 								_1: {ctor: '[]'}
 							},
 							{
@@ -12115,52 +12115,142 @@ var _kiotlog$kiotlogweb$Views_Devices$addDevice = function (model) {
 									_elm_lang$html$Html$div,
 									{
 										ctor: '::',
-										_0: _elm_lang$html$Html_Attributes$class('mdc-text-field mdc-layout-grid__cell--span-12'),
-										_1: {
-											ctor: '::',
-											_0: A2(_elm_lang$html$Html_Attributes$attribute, 'data-mdc-auto-init', 'MDCTextField'),
-											_1: {ctor: '[]'}
-										}
+										_0: _elm_lang$html$Html_Attributes$class('mdc-layout-grid__inner padding-gutter'),
+										_1: {ctor: '[]'}
 									},
 									{
 										ctor: '::',
 										_0: A2(
-											_elm_lang$html$Html$input,
+											_elm_lang$html$Html$div,
 											{
 												ctor: '::',
-												_0: _elm_lang$html$Html_Attributes$type_('text'),
+												_0: _elm_lang$html$Html_Attributes$class('mdc-text-field mdc-layout-grid__cell--span-12'),
 												_1: {
 													ctor: '::',
-													_0: _elm_lang$html$Html_Attributes$id('new_device_device_id'),
-													_1: {
-														ctor: '::',
-														_0: _elm_lang$html$Html_Attributes$class('mdc-text-field__input'),
-														_1: {
-															ctor: '::',
-															_0: _elm_lang$html$Html_Events$onInput(_kiotlog$kiotlogweb$Types$NewDeviceDevice),
-															_1: {ctor: '[]'}
-														}
-													}
+													_0: A2(_elm_lang$html$Html_Attributes$attribute, 'data-mdc-auto-init', 'MDCTextField'),
+													_1: {ctor: '[]'}
 												}
 											},
-											{ctor: '[]'}),
+											{
+												ctor: '::',
+												_0: A2(
+													_elm_lang$html$Html$input,
+													{
+														ctor: '::',
+														_0: _elm_lang$html$Html_Attributes$type_('text'),
+														_1: {
+															ctor: '::',
+															_0: _elm_lang$html$Html_Attributes$id('new_device_device_id'),
+															_1: {
+																ctor: '::',
+																_0: _elm_lang$html$Html_Attributes$class('mdc-text-field__input'),
+																_1: {
+																	ctor: '::',
+																	_0: _elm_lang$html$Html_Events$onInput(_kiotlog$kiotlogweb$Types$NewDeviceDevice),
+																	_1: {ctor: '[]'}
+																}
+															}
+														}
+													},
+													{ctor: '[]'}),
+												_1: {
+													ctor: '::',
+													_0: A2(
+														_elm_lang$html$Html$label,
+														{
+															ctor: '::',
+															_0: _elm_lang$html$Html_Attributes$class('mdc-floating-label'),
+															_1: {
+																ctor: '::',
+																_0: _elm_lang$html$Html_Attributes$for('new_device_device_id'),
+																_1: {ctor: '[]'}
+															}
+														},
+														{
+															ctor: '::',
+															_0: _elm_lang$html$Html$text('Device Id'),
+															_1: {ctor: '[]'}
+														}),
+													_1: {
+														ctor: '::',
+														_0: A2(
+															_elm_lang$html$Html$div,
+															{
+																ctor: '::',
+																_0: _elm_lang$html$Html_Attributes$class('mdc-line-ripple'),
+																_1: {ctor: '[]'}
+															},
+															{ctor: '[]'}),
+														_1: {ctor: '[]'}
+													}
+												}
+											}),
 										_1: {
 											ctor: '::',
 											_0: A2(
-												_elm_lang$html$Html$label,
+												_elm_lang$html$Html$div,
 												{
 													ctor: '::',
-													_0: _elm_lang$html$Html_Attributes$class('mdc-floating-label'),
+													_0: _elm_lang$html$Html_Attributes$class('mdc-text-field mdc-layout-grid__cell--span-12'),
 													_1: {
 														ctor: '::',
-														_0: _elm_lang$html$Html_Attributes$for('new_device_device_id'),
+														_0: A2(_elm_lang$html$Html_Attributes$attribute, 'data-mdc-auto-init', 'MDCTextField'),
 														_1: {ctor: '[]'}
 													}
 												},
 												{
 													ctor: '::',
-													_0: _elm_lang$html$Html$text('Device Id'),
-													_1: {ctor: '[]'}
+													_0: A2(
+														_elm_lang$html$Html$input,
+														{
+															ctor: '::',
+															_0: _elm_lang$html$Html_Attributes$type_('text'),
+															_1: {
+																ctor: '::',
+																_0: _elm_lang$html$Html_Attributes$id('new_device_name'),
+																_1: {
+																	ctor: '::',
+																	_0: _elm_lang$html$Html_Attributes$class('mdc-text-field__input'),
+																	_1: {
+																		ctor: '::',
+																		_0: _elm_lang$html$Html_Events$onInput(_kiotlog$kiotlogweb$Types$NewDeviceName),
+																		_1: {ctor: '[]'}
+																	}
+																}
+															}
+														},
+														{ctor: '[]'}),
+													_1: {
+														ctor: '::',
+														_0: A2(
+															_elm_lang$html$Html$label,
+															{
+																ctor: '::',
+																_0: _elm_lang$html$Html_Attributes$class('mdc-floating-label'),
+																_1: {
+																	ctor: '::',
+																	_0: _elm_lang$html$Html_Attributes$for('new_device_name'),
+																	_1: {ctor: '[]'}
+																}
+															},
+															{
+																ctor: '::',
+																_0: _elm_lang$html$Html$text('Name'),
+																_1: {ctor: '[]'}
+															}),
+														_1: {
+															ctor: '::',
+															_0: A2(
+																_elm_lang$html$Html$div,
+																{
+																	ctor: '::',
+																	_0: _elm_lang$html$Html_Attributes$class('mdc-line-ripple'),
+																	_1: {ctor: '[]'}
+																},
+																{ctor: '[]'}),
+															_1: {ctor: '[]'}
+														}
+													}
 												}),
 											_1: {
 												ctor: '::',
@@ -12168,191 +12258,112 @@ var _kiotlog$kiotlogweb$Views_Devices$addDevice = function (model) {
 													_elm_lang$html$Html$div,
 													{
 														ctor: '::',
-														_0: _elm_lang$html$Html_Attributes$class('mdc-line-ripple'),
-														_1: {ctor: '[]'}
-													},
-													{ctor: '[]'}),
-												_1: {ctor: '[]'}
-											}
-										}
-									}),
-								_1: {
-									ctor: '::',
-									_0: A2(
-										_elm_lang$html$Html$div,
-										{
-											ctor: '::',
-											_0: _elm_lang$html$Html_Attributes$class('mdc-text-field mdc-layout-grid__cell--span-12'),
-											_1: {
-												ctor: '::',
-												_0: A2(_elm_lang$html$Html_Attributes$attribute, 'data-mdc-auto-init', 'MDCTextField'),
-												_1: {ctor: '[]'}
-											}
-										},
-										{
-											ctor: '::',
-											_0: A2(
-												_elm_lang$html$Html$input,
-												{
-													ctor: '::',
-													_0: _elm_lang$html$Html_Attributes$type_('text'),
-													_1: {
-														ctor: '::',
-														_0: _elm_lang$html$Html_Attributes$id('new_device_name'),
+														_0: _elm_lang$html$Html_Attributes$class('mdc-layout-grid__cell--span-12'),
 														_1: {
 															ctor: '::',
-															_0: _elm_lang$html$Html_Attributes$class('mdc-text-field__input'),
-															_1: {
-																ctor: '::',
-																_0: _elm_lang$html$Html_Events$onInput(_kiotlog$kiotlogweb$Types$NewDeviceName),
-																_1: {ctor: '[]'}
-															}
-														}
-													}
-												},
-												{ctor: '[]'}),
-											_1: {
-												ctor: '::',
-												_0: A2(
-													_elm_lang$html$Html$label,
-													{
-														ctor: '::',
-														_0: _elm_lang$html$Html_Attributes$class('mdc-floating-label'),
-														_1: {
-															ctor: '::',
-															_0: _elm_lang$html$Html_Attributes$for('new_device_name'),
-															_1: {ctor: '[]'}
-														}
-													},
-													{
-														ctor: '::',
-														_0: _elm_lang$html$Html$text('Name'),
-														_1: {ctor: '[]'}
-													}),
-												_1: {
-													ctor: '::',
-													_0: A2(
-														_elm_lang$html$Html$div,
-														{
-															ctor: '::',
-															_0: _elm_lang$html$Html_Attributes$class('mdc-line-ripple'),
-															_1: {ctor: '[]'}
-														},
-														{ctor: '[]'}),
-													_1: {ctor: '[]'}
-												}
-											}
-										}),
-									_1: {
-										ctor: '::',
-										_0: A2(
-											_elm_lang$html$Html$div,
-											{
-												ctor: '::',
-												_0: _elm_lang$html$Html_Attributes$class('mdc-layout-grid__cell--span-12'),
-												_1: {
-													ctor: '::',
-													_0: _elm_lang$html$Html_Attributes$style(
-														{
-															ctor: '::',
-															_0: {ctor: '_Tuple2', _0: 'display', _1: 'flex'},
-															_1: {
-																ctor: '::',
-																_0: {ctor: '_Tuple2', _0: 'flex-direction', _1: 'row'},
-																_1: {
+															_0: _elm_lang$html$Html_Attributes$style(
+																{
 																	ctor: '::',
-																	_0: {ctor: '_Tuple2', _0: 'align-items', _1: 'center'},
-																	_1: {ctor: '[]'}
-																}
-															}
-														}),
-													_1: {ctor: '[]'}
-												}
-											},
-											{
-												ctor: '::',
-												_0: A2(
-													_elm_lang$html$Html$div,
-													{
-														ctor: '::',
-														_0: _elm_lang$html$Html_Attributes$class('mdc-switch'),
-														_1: {ctor: '[]'}
+																	_0: {ctor: '_Tuple2', _0: 'display', _1: 'flex'},
+																	_1: {
+																		ctor: '::',
+																		_0: {ctor: '_Tuple2', _0: 'flex-direction', _1: 'row'},
+																		_1: {
+																			ctor: '::',
+																			_0: {ctor: '_Tuple2', _0: 'align-items', _1: 'center'},
+																			_1: {ctor: '[]'}
+																		}
+																	}
+																}),
+															_1: {ctor: '[]'}
+														}
 													},
 													{
 														ctor: '::',
 														_0: A2(
-															_elm_lang$html$Html$input,
+															_elm_lang$html$Html$div,
 															{
 																ctor: '::',
-																_0: _elm_lang$html$Html_Attributes$type_('checkbox'),
-																_1: {
-																	ctor: '::',
-																	_0: _elm_lang$html$Html_Attributes$id('new_device_bigendian'),
-																	_1: {
+																_0: _elm_lang$html$Html_Attributes$class('mdc-switch'),
+																_1: {ctor: '[]'}
+															},
+															{
+																ctor: '::',
+																_0: A2(
+																	_elm_lang$html$Html$input,
+																	{
 																		ctor: '::',
-																		_0: _elm_lang$html$Html_Attributes$class('mdc-switch__native-control'),
+																		_0: _elm_lang$html$Html_Attributes$type_('checkbox'),
 																		_1: {
 																			ctor: '::',
-																			_0: A2(_elm_lang$html$Html_Attributes$attribute, 'role', 'switch'),
+																			_0: _elm_lang$html$Html_Attributes$id('new_device_bigendian'),
 																			_1: {
 																				ctor: '::',
-																				_0: _elm_lang$html$Html_Events$onClick(
-																					_kiotlog$kiotlogweb$Types$NewDeviceBigendian(!model.newDevice.frame.bigendian)),
-																				_1: {ctor: '[]'}
+																				_0: _elm_lang$html$Html_Attributes$class('mdc-switch__native-control'),
+																				_1: {
+																					ctor: '::',
+																					_0: A2(_elm_lang$html$Html_Attributes$attribute, 'role', 'switch'),
+																					_1: {
+																						ctor: '::',
+																						_0: _elm_lang$html$Html_Events$onClick(
+																							_kiotlog$kiotlogweb$Types$NewDeviceBigendian(!model.newDevice.frame.bigendian)),
+																						_1: {ctor: '[]'}
+																					}
+																				}
 																			}
 																		}
-																	}
-																}
-															},
-															{ctor: '[]'}),
-														_1: {
-															ctor: '::',
-															_0: A2(
-																_elm_lang$html$Html$div,
-																{
-																	ctor: '::',
-																	_0: _elm_lang$html$Html_Attributes$class('mdc-switch__background'),
-																	_1: {ctor: '[]'}
-																},
-																{
+																	},
+																	{ctor: '[]'}),
+																_1: {
 																	ctor: '::',
 																	_0: A2(
 																		_elm_lang$html$Html$div,
 																		{
 																			ctor: '::',
-																			_0: _elm_lang$html$Html_Attributes$class('mdc-switch__knob'),
+																			_0: _elm_lang$html$Html_Attributes$class('mdc-switch__background'),
 																			_1: {ctor: '[]'}
 																		},
-																		{ctor: '[]'}),
+																		{
+																			ctor: '::',
+																			_0: A2(
+																				_elm_lang$html$Html$div,
+																				{
+																					ctor: '::',
+																					_0: _elm_lang$html$Html_Attributes$class('mdc-switch__knob'),
+																					_1: {ctor: '[]'}
+																				},
+																				{ctor: '[]'}),
+																			_1: {ctor: '[]'}
+																		}),
+																	_1: {ctor: '[]'}
+																}
+															}),
+														_1: {
+															ctor: '::',
+															_0: A2(
+																_elm_lang$html$Html$label,
+																{
+																	ctor: '::',
+																	_0: _elm_lang$html$Html_Attributes$for('new_device_bigendian'),
+																	_1: {
+																		ctor: '::',
+																		_0: _elm_lang$html$Html_Attributes$class('mdc-switch-label'),
+																		_1: {ctor: '[]'}
+																	}
+																},
+																{
+																	ctor: '::',
+																	_0: _elm_lang$html$Html$text('Bigendian'),
 																	_1: {ctor: '[]'}
 																}),
 															_1: {ctor: '[]'}
 														}
 													}),
-												_1: {
-													ctor: '::',
-													_0: A2(
-														_elm_lang$html$Html$label,
-														{
-															ctor: '::',
-															_0: _elm_lang$html$Html_Attributes$for('new_device_bigendian'),
-															_1: {
-																ctor: '::',
-																_0: _elm_lang$html$Html_Attributes$class('mdc-switch-label'),
-																_1: {ctor: '[]'}
-															}
-														},
-														{
-															ctor: '::',
-															_0: _elm_lang$html$Html$text('Bigendian'),
-															_1: {ctor: '[]'}
-														}),
-													_1: {ctor: '[]'}
-												}
-											}),
-										_1: {ctor: '[]'}
-									}
-								}
+												_1: {ctor: '[]'}
+											}
+										}
+									}),
+								_1: {ctor: '[]'}
 							}),
 						_1: {
 							ctor: '::',

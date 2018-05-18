@@ -276,65 +276,67 @@ addDevice model =
                 ]
             ]
         , div [ class "mdc-layout-grid kiotlog-container-small" ]
-            [ div [ class "mdc-layout-grid__inner" ]
-                [ div
-                    [ class "mdc-text-field mdc-layout-grid__cell--span-12"
-                    , attribute "data-mdc-auto-init" "MDCTextField"
-                    ]
-                    [ input
-                        [ type_ "text"
-                        , id "new_device_device_id"
-                        , class "mdc-text-field__input"
-                        , onInput NewDeviceDevice
+            [ div [ class "mdc-card" ]
+                [ div [ class "mdc-layout-grid__inner padding-gutter" ]
+                    [ div
+                        [ class "mdc-text-field mdc-layout-grid__cell--span-12"
+                        , attribute "data-mdc-auto-init" "MDCTextField"
                         ]
-                        []
-                    , label
-                        [ class "mdc-floating-label"
-                        , for "new_device_device_id"
-                        ]
-                        [ text "Device Id" ]
-                    , div [ class "mdc-line-ripple" ] []
-                    ]
-                , div
-                    [ class "mdc-text-field mdc-layout-grid__cell--span-12"
-                    , attribute "data-mdc-auto-init" "MDCTextField"
-                    ]
-                    [ input
-                        [ type_ "text"
-                        , id "new_device_name"
-                        , class "mdc-text-field__input"
-                        , onInput NewDeviceName
-                        ]
-                        []
-                    , label
-                        [ class "mdc-floating-label"
-                        , for "new_device_name"
-                        ]
-                        [ text "Name" ]
-                    , div [ class "mdc-line-ripple" ] []
-                    ]
-                , div
-                    [ class "mdc-layout-grid__cell--span-12"
-                    , style [ ( "display", "flex" ), ( "flex-direction", "row" ), ( "align-items", "center" ) ]
-                    ]
-                    [ div [ class "mdc-switch" ]
                         [ input
-                            [ type_ "checkbox"
-                            , id "new_device_bigendian"
-                            , class "mdc-switch__native-control"
-                            , attribute "role" "switch"
-                            , onClick (NewDeviceBigendian (not model.newDevice.frame.bigendian))
+                            [ type_ "text"
+                            , id "new_device_device_id"
+                            , class "mdc-text-field__input"
+                            , onInput NewDeviceDevice
                             ]
                             []
-                        , div [ class "mdc-switch__background" ]
-                            [ div [ class "mdc-switch__knob" ] []
+                        , label
+                            [ class "mdc-floating-label"
+                            , for "new_device_device_id"
                             ]
+                            [ text "Device Id" ]
+                        , div [ class "mdc-line-ripple" ] []
                         ]
-                    , label
-                        [ for "new_device_bigendian"
-                        , class "mdc-switch-label"
+                    , div
+                        [ class "mdc-text-field mdc-layout-grid__cell--span-12"
+                        , attribute "data-mdc-auto-init" "MDCTextField"
                         ]
-                        [ text "Bigendian" ]
+                        [ input
+                            [ type_ "text"
+                            , id "new_device_name"
+                            , class "mdc-text-field__input"
+                            , onInput NewDeviceName
+                            ]
+                            []
+                        , label
+                            [ class "mdc-floating-label"
+                            , for "new_device_name"
+                            ]
+                            [ text "Name" ]
+                        , div [ class "mdc-line-ripple" ] []
+                        ]
+                    , div
+                        [ class "mdc-layout-grid__cell--span-12"
+                        , style [ ( "display", "flex" ), ( "flex-direction", "row" ), ( "align-items", "center" ) ]
+                        ]
+                        [ div [ class "mdc-switch" ]
+                            [ input
+                                [ type_ "checkbox"
+                                , id "new_device_bigendian"
+                                , class "mdc-switch__native-control"
+                                , attribute "role" "switch"
+                                , onClick (NewDeviceBigendian (not model.newDevice.frame.bigendian))
+                                ]
+                                []
+                            , div [ class "mdc-switch__background" ]
+                                [ div [ class "mdc-switch__knob" ] []
+                                ]
+                            ]
+                        , label
+                            [ for "new_device_bigendian"
+                            , class "mdc-switch-label"
+                            ]
+                            [ text "Bigendian" ]
+                        ]
                     ]
                 ]
             , div [ class "mdc-layout-grid__inner" ]
