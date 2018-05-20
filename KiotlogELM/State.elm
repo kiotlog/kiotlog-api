@@ -38,6 +38,7 @@ emptySensor =
         { index = 0
         , fmtChr = ""
         }
+    , sensorType = Nothing
     }
 
 
@@ -276,11 +277,15 @@ update msg model =
 
         DeviceCreated (Ok device) ->
             -- should add new device in device list?
-            ( model, newUrl "#/devices" )
+            ( model, newUrl (Debug.log "redirecting to: " "#/devices") )
 
-        DeviceCreated (Err _) ->
+        DeviceCreated (Err e) ->
             -- TODO display error
-            ( model, Cmd.none )
+            let
+                err =
+                    Debug.log "error: " e
+            in
+                ( model, Cmd.none )
 
 
 

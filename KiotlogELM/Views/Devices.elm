@@ -85,32 +85,85 @@ devicesTable devices tableState =
         ]
 
 
-mapSensors : Sensor -> Html Msg
-mapSensors sensor =
-    div []
-        [ text sensor.meta.name ]
-
-
 deviceCards : Device -> Html Msg
 deviceCards device =
-    div [ class "kiotlog-page mdc-layout-grid" ]
-        [ div [ class "mdc-layout-grid__inner" ]
-            [ div [ class "mdc-card padding-20 mdc-layout-grid__cell--span-6" ]
-                [ h3 []
-                    [ text ("Device Id: " ++ device.device) ]
-                , p []
-                    [ text ("Name: " ++ device.meta.name) ]
+    div [ class "kiotlog-page" ]
+        [ div [ class "mdc-layout-grid padding-0" ]
+            [ div [ class "mdc-layout-grid__inner" ]
+                [ h1 [ class "mdc-layout-grid__cell--span-6 margin-0" ]
+                    [ text device.meta.name ]
+                , h1 [ class "mdc-layout-grid__cell--span-6 margin-0 text-right" ]
+                    [ a
+                        [ href "#/devices"
+                        , class "mdc-button"
+                        , attribute "data-mdc-auto-init" "MDCRipple"
+                        ]
+                        [ i [ class "material-icons mdc-button__icon" ]
+                            [ text "arrow_back" ]
+                        , text "Back"
+                        ]
+                    ]
                 ]
-            , div
-                [ class "mdc-card padding-20 mdc-layout-grid__cell--span-6" ]
-                [ h3 []
-                    [ text "Sensors" ]
-                , div []
-                    (List.map
-                        mapSensors
-                        device.sensors
-                    )
-                ]
+            ]
+        , div [ class "mdc-layout-grid kiotlog-container-small" ]
+            [ div [ class "mdc-layout-grid__inner" ]
+                ([ div [ class "mdc-card mdc-layout-grid__cell--span-12" ]
+                    [ div [ class "mdc-layout-grid__inner padding-gutter" ]
+                        [ h3 [ class "mdc-layout-grid__cell--span-12" ]
+                            [ text ("Device Id: " ++ device.device) ]
+                        , p [ class "mdc-layout-grid__cell--span-12" ]
+                            [ text ("Name: " ++ device.meta.description) ]
+                        , p [ class "mdc-layout-grid__cell--span-12" ]
+                            [ text
+                                ((if device.frame.bigendian then
+                                    "Big"
+                                  else
+                                    "Little"
+                                 )
+                                    ++ " endian"
+                                )
+                            ]
+                        ]
+                    ]
+                 ]
+                    ++ [ h3 [ class "mdc-layout-grid__cell--span-12 text-center" ]
+                            [ text "Sensors" ]
+                       ]
+                    ++ (List.map
+                            mapSensors
+                            device.sensors
+                       )
+                )
+            ]
+        ]
+
+
+mapSensors : Sensor -> Html Msg
+mapSensors sensor =
+    div [ class "device-sensor mdc-card mdc-layout-grid__cell--span-12" ]
+        [ div [ class "mdc-layout-grid__inner padding-gutter" ]
+            [ div
+                []
+                ([ text sensor.meta.name
+                 , br [] []
+                 , text sensor.fmt.fmtChr
+                 ]
+                    ++ (case sensor.sensorType of
+                            Just st ->
+                                [ br [] []
+                                , text st.name
+                                , br [] []
+                                , text st.type_
+                                , br [] []
+                                , text (toString st.meta.min)
+                                , br [] []
+                                , text (toString st.meta.max)
+                                ]
+
+                            Nothing ->
+                                []
+                       )
+                )
             ]
         ]
 

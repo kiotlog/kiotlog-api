@@ -10,7 +10,7 @@ module Rest
 import Types exposing (..)
 import Http exposing (..)
 import RemoteData exposing (WebData)
-import Json.Decode exposing (string, int, list, bool, Decoder)
+import Json.Decode exposing (string, int, list, bool, Decoder, maybe)
 import Json.Decode.Pipeline exposing (decode, required, optional)
 import Json.Encode as Encode
 
@@ -73,6 +73,7 @@ sensorDecoder =
         |> required "ConversionId" string
         |> required "Meta" metaDecoder
         |> required "Fmt" fmtDecoder
+        |> optional "SensorType" (maybe sensorTypeDecoder) Nothing
 
 
 deviceDecoder : Decoder Device

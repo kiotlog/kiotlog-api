@@ -20,6 +20,7 @@ type alias Sensor =
     , conversionId : String
     , meta : Meta
     , fmt : Fmt
+    , sensorType : Maybe SensorType
     }
 
 
