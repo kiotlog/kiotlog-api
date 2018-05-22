@@ -16,7 +16,8 @@ type alias Device =
 
 
 type alias Sensor =
-    { sensorTypeId : String
+    { id : String
+    , sensorTypeId : String
     , conversionId : String
     , meta : Meta
     , fmt : Fmt
@@ -66,10 +67,13 @@ type alias Model =
     { devices : WebData (List Device)
     , devicesTable : Table.State
     , device : WebData Device
+    , sensor : WebData Sensor
     , sensorTypes : WebData (List SensorType)
+    , sensorType : WebData SensorType
     , conversions : WebData (List Conversion)
     , currentRoute : Route
     , pageState : Page
+    , editingId : Maybe String
     }
 
 
@@ -94,8 +98,15 @@ type Msg
     | SetSensorConversionOnDevice Int String
     | SetSensorFmtChrOnDevice Int String
     | DeviceCreated (Result Http.Error Device)
+    | FetchSensorTypes
     | SensorTypesReceived (WebData (List SensorType))
+    | SensorTypeReceived (WebData SensorType)
     | ConversionsReceived (WebData (List Conversion))
+    | StartEditing String
+    | CancelEditing
+    | EditSensor Sensor
+    | PutSensor Sensor
+    | SensorUpdated (Result Http.Error Sensor)
 
 
 type Route
@@ -103,6 +114,8 @@ type Route
     | DevicesRoute
     | NewDeviceRoute
     | DeviceRoute String
+    | SensorTypesRoute
+    | SensorTypeRoute String
     | NotFoundRoute
 
 
@@ -113,4 +126,5 @@ type Page
     | DevicesPage
     | DevicePage
     | AddDevicePage
-    | SensorsPage
+    | SensorTypesPage
+    | SensorTypePage

@@ -5,7 +5,8 @@ import Html.Attributes exposing (class, src, style)
 import Types exposing (Model, Msg, Route(..), Page(..))
 import Views.Toolbar as Toolbar exposing (view)
 import Views.Drawer as Drawer exposing (view)
-import Views.Devices as Devices exposing (viewDevices)
+import Views.Devices as Devices exposing (viewDevices, viewDevice, addDevice)
+import Views.SensorTypes as SensorTypes exposing (viewSensorTypes, viewSensorType)
 
 
 mainPage : Model -> Html Msg
@@ -45,8 +46,11 @@ mainPage model =
         AddDevicePage ->
             Devices.addDevice model
 
-        SensorsPage ->
-            div [] [ text "Sensors" ]
+        SensorTypesPage ->
+            SensorTypes.viewSensorTypes model
+
+        SensorTypePage ->
+            SensorTypes.viewSensorType model
 
         NotFoundPage ->
             notFoundView

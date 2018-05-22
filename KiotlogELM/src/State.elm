@@ -4,7 +4,16 @@ import Navigation exposing (Location, newUrl)
 import Routing exposing (extractRoute)
 import RemoteData exposing (WebData, fromMaybe)
 import Types exposing (Msg(..), Model, Route(..), Page(..), Device, Sensor)
-import Rest exposing (fetchDevicesCommand, fetchDeviceCommand, createDeviceCommand, fetchSensorTypesCommand, fetchConversionsCommand)
+import Rest
+    exposing
+        ( fetchDevicesCommand
+        , fetchDeviceCommand
+        , createDeviceCommand
+        , fetchSensorTypesCommand
+        , fetchSensorTypeCommand
+        , fetchConversionsCommand
+        , updateSensorCommand
+        )
 import Ports exposing (initMDC, openDrawer, closeDrawer)
 import Table exposing (initialSort)
 import Http exposing (Error(..))
@@ -28,7 +37,8 @@ emptyDevice =
 
 emptySensor : Sensor
 emptySensor =
-    { sensorTypeId = ""
+    { id = ""
+    , sensorTypeId = ""
     , conversionId = ""
     , meta =
         { name = ""
@@ -47,10 +57,13 @@ initialModel =
     { devices = RemoteData.NotAsked
     , devicesTable = (Table.initialSort "Id")
     , device = RemoteData.NotAsked
+    , sensor = RemoteData.NotAsked
     , sensorTypes = RemoteData.NotAsked
+    , sensorType = RemoteData.NotAsked
     , conversions = RemoteData.NotAsked
     , currentRoute = NotFoundRoute
     , pageState = BlankPage
+    , editingId = Nothing
     }
 
 
@@ -116,11 +129,39 @@ setRoute route model =
                 in
                     { newModel | device = RemoteData.Success emptyDevice } ! [ pageCmd, fetchSensorTypesCommand, fetchConversionsCommand ]
 
+            SensorTypesRoute ->
+                let
+                    ( newModel, pageCmd ) =
+                        page SensorTypesPage
+                in
+                    { newModel | sensorTypes = RemoteData.Loading } ! [ pageCmd, fetchSensorTypesCommand ]
+
+            SensorTypeRoute id ->
+                let
+                    dev =
+                        case model.sensorTypes of
+                            RemoteData.Success devices ->
+                                findDeviceById id devices |> fromMaybe (BadUrl id)
+
+                            RemoteData.Failure httpError ->
+                                RemoteData.Failure httpError
+
+                            RemoteData.NotAsked ->
+                                RemoteData.NotAsked
+
+                            RemoteData.Loading ->
+                                RemoteData.Loading
+
+                    ( newModel, pageCmd ) =
+                        page SensorTypePage
+                in
+                    { newModel | sensorType = dev } ! [ pageCmd, (fetchSensorTypeCommand id) ]
+
             _ ->
                 page NotFoundPage
 
 
-findDeviceById : String -> List Device -> Maybe Device
+findDeviceById : String -> List { a | id : String } -> Maybe { a | id : String }
 findDeviceById devId devices =
     devices
         |> List.filter (\device -> device.id == devId)
@@ -156,8 +197,14 @@ update msg model =
         DeviceReceived response ->
             ( { model | device = response }, Cmd.none )
 
+        FetchSensorTypes ->
+            ( { model | sensorTypes = RemoteData.Loading }, fetchSensorTypesCommand )
+
         SensorTypesReceived response ->
             ( { model | sensorTypes = response }, Cmd.none )
+
+        SensorTypeReceived response ->
+            ( { model | sensorType = response }, Cmd.none )
 
         ConversionsReceived response ->
             ( { model | conversions = response }, Cmd.none )
@@ -280,6 +327,30 @@ update msg model =
             ( model, newUrl (Debug.log "redirecting to: " "#/devices") )
 
         DeviceCreated (Err e) ->
+            -- TODO display error
+            let
+                err =
+                    Debug.log "error: " e
+            in
+                ( model, Cmd.none )
+
+        StartEditing id ->
+            ( { model | editingId = Just id }, Cmd.none )
+
+        CancelEditing ->
+            ( { model | editingId = Nothing }, Cmd.none )
+
+        EditSensor sensor ->
+            ( { model | editingId = Just sensor.id, sensor = RemoteData.Success emptySensor }, Cmd.none )
+
+        PutSensor sensor ->
+            ( { model | editingId = Nothing }, updateSensorCommand sensor )
+
+        SensorUpdated (Ok sensor) ->
+            -- TODO update sensor in device's list
+            ( model, Cmd.none )
+
+        SensorUpdated (Err e) ->
             -- TODO display error
             let
                 err =

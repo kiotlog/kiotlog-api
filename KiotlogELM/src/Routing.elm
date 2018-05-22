@@ -23,4 +23,6 @@ matchRoute =
         , map DevicesRoute (s "devices")
         , map NewDeviceRoute (s "devices" </> s "new")
         , map DeviceRoute (s "devices" </> string)
+        , map SensorTypesRoute (s "sensors")
+        , map SensorTypeRoute (s "sensors" </> string)
         ]

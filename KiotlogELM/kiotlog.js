@@ -11054,9 +11054,9 @@ var _kiotlog$kiotlogweb$Types$Device = F5(
 	function (a, b, c, d, e) {
 		return {id: a, device: b, meta: c, frame: d, sensors: e};
 	});
-var _kiotlog$kiotlogweb$Types$Sensor = F5(
-	function (a, b, c, d, e) {
-		return {sensorTypeId: a, conversionId: b, meta: c, fmt: d, sensorType: e};
+var _kiotlog$kiotlogweb$Types$Sensor = F6(
+	function (a, b, c, d, e, f) {
+		return {id: a, sensorTypeId: b, conversionId: c, meta: d, fmt: e, sensorType: f};
 	});
 var _kiotlog$kiotlogweb$Types$SensorType = F4(
 	function (a, b, c, d) {
@@ -11082,16 +11082,50 @@ var _kiotlog$kiotlogweb$Types$Fmt = F2(
 	function (a, b) {
 		return {index: a, fmtChr: b};
 	});
-var _kiotlog$kiotlogweb$Types$Model = F7(
-	function (a, b, c, d, e, f, g) {
-		return {devices: a, devicesTable: b, device: c, sensorTypes: d, conversions: e, currentRoute: f, pageState: g};
-	});
+var _kiotlog$kiotlogweb$Types$Model = function (a) {
+	return function (b) {
+		return function (c) {
+			return function (d) {
+				return function (e) {
+					return function (f) {
+						return function (g) {
+							return function (h) {
+								return function (i) {
+									return function (j) {
+										return {devices: a, devicesTable: b, device: c, sensor: d, sensorTypes: e, sensorType: f, conversions: g, currentRoute: h, pageState: i, editingId: j};
+									};
+								};
+							};
+						};
+					};
+				};
+			};
+		};
+	};
+};
+var _kiotlog$kiotlogweb$Types$SensorUpdated = function (a) {
+	return {ctor: 'SensorUpdated', _0: a};
+};
+var _kiotlog$kiotlogweb$Types$PutSensor = function (a) {
+	return {ctor: 'PutSensor', _0: a};
+};
+var _kiotlog$kiotlogweb$Types$EditSensor = function (a) {
+	return {ctor: 'EditSensor', _0: a};
+};
+var _kiotlog$kiotlogweb$Types$CancelEditing = {ctor: 'CancelEditing'};
+var _kiotlog$kiotlogweb$Types$StartEditing = function (a) {
+	return {ctor: 'StartEditing', _0: a};
+};
 var _kiotlog$kiotlogweb$Types$ConversionsReceived = function (a) {
 	return {ctor: 'ConversionsReceived', _0: a};
+};
+var _kiotlog$kiotlogweb$Types$SensorTypeReceived = function (a) {
+	return {ctor: 'SensorTypeReceived', _0: a};
 };
 var _kiotlog$kiotlogweb$Types$SensorTypesReceived = function (a) {
 	return {ctor: 'SensorTypesReceived', _0: a};
 };
+var _kiotlog$kiotlogweb$Types$FetchSensorTypes = {ctor: 'FetchSensorTypes'};
 var _kiotlog$kiotlogweb$Types$DeviceCreated = function (a) {
 	return {ctor: 'DeviceCreated', _0: a};
 };
@@ -11146,13 +11180,18 @@ var _kiotlog$kiotlogweb$Types$LocationChanged = function (a) {
 };
 var _kiotlog$kiotlogweb$Types$NoOp = {ctor: 'NoOp'};
 var _kiotlog$kiotlogweb$Types$NotFoundRoute = {ctor: 'NotFoundRoute'};
+var _kiotlog$kiotlogweb$Types$SensorTypeRoute = function (a) {
+	return {ctor: 'SensorTypeRoute', _0: a};
+};
+var _kiotlog$kiotlogweb$Types$SensorTypesRoute = {ctor: 'SensorTypesRoute'};
 var _kiotlog$kiotlogweb$Types$DeviceRoute = function (a) {
 	return {ctor: 'DeviceRoute', _0: a};
 };
 var _kiotlog$kiotlogweb$Types$NewDeviceRoute = {ctor: 'NewDeviceRoute'};
 var _kiotlog$kiotlogweb$Types$DevicesRoute = {ctor: 'DevicesRoute'};
 var _kiotlog$kiotlogweb$Types$DashboardRoute = {ctor: 'DashboardRoute'};
-var _kiotlog$kiotlogweb$Types$SensorsPage = {ctor: 'SensorsPage'};
+var _kiotlog$kiotlogweb$Types$SensorTypePage = {ctor: 'SensorTypePage'};
+var _kiotlog$kiotlogweb$Types$SensorTypesPage = {ctor: 'SensorTypesPage'};
 var _kiotlog$kiotlogweb$Types$AddDevicePage = {ctor: 'AddDevicePage'};
 var _kiotlog$kiotlogweb$Types$DevicePage = {ctor: 'DevicePage'};
 var _kiotlog$kiotlogweb$Types$DevicesPage = {ctor: 'DevicesPage'};
@@ -12848,7 +12887,11 @@ var _kiotlog$kiotlogweb$Views_Devices$editDevice = F3(
 															_0: _elm_lang$html$Html$text('add'),
 															_1: {ctor: '[]'}
 														}),
-													_1: {ctor: '[]'}
+													_1: {
+														ctor: '::',
+														_0: _elm_lang$html$Html$text('Add Sensor'),
+														_1: {ctor: '[]'}
+													}
 												}),
 											_1: {ctor: '[]'}
 										}),
@@ -12987,7 +13030,11 @@ var _kiotlog$kiotlogweb$Views_Devices$showDeviceLink = function (_p8) {
 	var _p9 = _p8;
 	return A2(
 		_evancz$elm_sortable_table$Table$HtmlDetails,
-		{ctor: '[]'},
+		{
+			ctor: '::',
+			_0: _elm_lang$html$Html_Attributes$class('action-btns'),
+			_1: {ctor: '[]'}
+		},
 		{
 			ctor: '::',
 			_0: A2(
@@ -13056,34 +13103,325 @@ var _kiotlog$kiotlogweb$Views_Devices$config = _evancz$elm_sortable_table$Table$
 				thead: _kiotlog$kiotlogweb$Views_Devices$simpleThead
 			})
 	});
-var _kiotlog$kiotlogweb$Views_Devices$mapSensors = function (sensor) {
-	return A2(
-		_elm_lang$html$Html$div,
-		{
-			ctor: '::',
-			_0: _elm_lang$html$Html_Attributes$class('device-sensor mdc-card mdc-layout-grid__cell--span-12'),
-			_1: {ctor: '[]'}
-		},
-		{
-			ctor: '::',
-			_0: A2(
-				_elm_lang$html$Html$div,
-				{
-					ctor: '::',
-					_0: _elm_lang$html$Html_Attributes$class('mdc-layout-grid__inner padding-gutter'),
-					_1: {ctor: '[]'}
-				},
-				{
-					ctor: '::',
-					_0: A2(
-						_elm_lang$html$Html$div,
-						{ctor: '[]'},
-						A2(
-							_elm_lang$core$Basics_ops['++'],
+var _kiotlog$kiotlogweb$Views_Devices$isEditing = F2(
+	function (editing, obj) {
+		var _p10 = editing;
+		if (_p10.ctor === 'Just') {
+			return _elm_lang$core$Native_Utils.eq(_p10._0, obj.id);
+		} else {
+			return false;
+		}
+	});
+var _kiotlog$kiotlogweb$Views_Devices$sensorCardActions = F2(
+	function (editing, sensor) {
+		return A2(
+			_elm_lang$html$Html$div,
+			{
+				ctor: '::',
+				_0: _elm_lang$html$Html_Attributes$class('mdc-card__actions'),
+				_1: {ctor: '[]'}
+			},
+			{
+				ctor: '::',
+				_0: A2(
+					_elm_lang$html$Html$div,
+					{
+						ctor: '::',
+						_0: _elm_lang$html$Html_Attributes$class('mdc-card__action-icons'),
+						_1: {ctor: '[]'}
+					},
+					A2(_kiotlog$kiotlogweb$Views_Devices$isEditing, editing, sensor) ? {
+						ctor: '::',
+						_0: A2(
+							_elm_lang$html$Html$button,
 							{
 								ctor: '::',
-								_0: _elm_lang$html$Html$text(sensor.meta.name),
+								_0: _elm_lang$html$Html_Attributes$class('mdc-button mdc-card__action mdc-card__action--button'),
 								_1: {
+									ctor: '::',
+									_0: _elm_lang$html$Html_Events$onClick(_kiotlog$kiotlogweb$Types$CancelEditing),
+									_1: {ctor: '[]'}
+								}
+							},
+							{
+								ctor: '::',
+								_0: A2(
+									_elm_lang$html$Html$i,
+									{
+										ctor: '::',
+										_0: _elm_lang$html$Html_Attributes$class('material-icons'),
+										_1: {ctor: '[]'}
+									},
+									{
+										ctor: '::',
+										_0: _elm_lang$html$Html$text('cancel'),
+										_1: {ctor: '[]'}
+									}),
+								_1: {
+									ctor: '::',
+									_0: _elm_lang$html$Html$text('Cancel'),
+									_1: {ctor: '[]'}
+								}
+							}),
+						_1: {
+							ctor: '::',
+							_0: A2(
+								_elm_lang$html$Html$button,
+								{
+									ctor: '::',
+									_0: _elm_lang$html$Html_Attributes$class('mdc-button mdc-card__action mdc-card__action--button'),
+									_1: {
+										ctor: '::',
+										_0: _elm_lang$html$Html_Events$onClick(
+											_kiotlog$kiotlogweb$Types$PutSensor(sensor)),
+										_1: {ctor: '[]'}
+									}
+								},
+								{
+									ctor: '::',
+									_0: A2(
+										_elm_lang$html$Html$i,
+										{
+											ctor: '::',
+											_0: _elm_lang$html$Html_Attributes$class('material-icons'),
+											_1: {ctor: '[]'}
+										},
+										{
+											ctor: '::',
+											_0: _elm_lang$html$Html$text('done'),
+											_1: {ctor: '[]'}
+										}),
+									_1: {
+										ctor: '::',
+										_0: _elm_lang$html$Html$text('Done'),
+										_1: {ctor: '[]'}
+									}
+								}),
+							_1: {ctor: '[]'}
+						}
+					} : {
+						ctor: '::',
+						_0: A2(
+							_elm_lang$html$Html$button,
+							{
+								ctor: '::',
+								_0: _elm_lang$html$Html_Attributes$class('mdc-button mdc-card__action mdc-card__action--button'),
+								_1: {
+									ctor: '::',
+									_0: _elm_lang$html$Html_Events$onClick(
+										_kiotlog$kiotlogweb$Types$EditSensor(sensor)),
+									_1: {ctor: '[]'}
+								}
+							},
+							{
+								ctor: '::',
+								_0: A2(
+									_elm_lang$html$Html$i,
+									{
+										ctor: '::',
+										_0: _elm_lang$html$Html_Attributes$class('material-icons'),
+										_1: {ctor: '[]'}
+									},
+									{
+										ctor: '::',
+										_0: _elm_lang$html$Html$text('edit'),
+										_1: {ctor: '[]'}
+									}),
+								_1: {
+									ctor: '::',
+									_0: _elm_lang$html$Html$text('Edit'),
+									_1: {ctor: '[]'}
+								}
+							}),
+						_1: {ctor: '[]'}
+					}),
+				_1: {ctor: '[]'}
+			});
+	});
+var _kiotlog$kiotlogweb$Views_Devices$mapSensors = F2(
+	function (editing, sensor) {
+		return A2(
+			_elm_lang$html$Html$div,
+			{
+				ctor: '::',
+				_0: _elm_lang$html$Html_Attributes$class(
+					A2(
+						_elm_lang$core$Basics_ops['++'],
+						'device-sensor mdc-card mdc-layout-grid__cell--span-12',
+						A2(_kiotlog$kiotlogweb$Views_Devices$isEditing, editing, sensor) ? ' editing' : '')),
+				_1: {ctor: '[]'}
+			},
+			{
+				ctor: '::',
+				_0: A2(
+					_elm_lang$html$Html$div,
+					{
+						ctor: '::',
+						_0: _elm_lang$html$Html_Attributes$class('mdc-layout-grid__inner padding-gutter'),
+						_1: {ctor: '[]'}
+					},
+					A2(
+						_elm_lang$core$Basics_ops['++'],
+						{
+							ctor: '::',
+							_0: A2(
+								_elm_lang$html$Html$div,
+								{
+									ctor: '::',
+									_0: _elm_lang$html$Html_Attributes$class('mdc-text-field mdc-layout-grid__cell--span-12 mdc-text-field--upgraded'),
+									_1: {
+										ctor: '::',
+										_0: A2(_elm_lang$html$Html_Attributes$attribute, 'data-mdc-auto-init', 'MDCTextField'),
+										_1: {ctor: '[]'}
+									}
+								},
+								{
+									ctor: '::',
+									_0: A2(
+										_elm_lang$html$Html$input,
+										{
+											ctor: '::',
+											_0: _elm_lang$html$Html_Attributes$type_('text'),
+											_1: {
+												ctor: '::',
+												_0: _elm_lang$html$Html_Attributes$class('mdc-text-field__input'),
+												_1: {
+													ctor: '::',
+													_0: _elm_lang$html$Html_Attributes$value(sensor.meta.name),
+													_1: {
+														ctor: '::',
+														_0: _elm_lang$html$Html_Attributes$id(
+															A2(_elm_lang$core$Basics_ops['++'], 'name-', sensor.id)),
+														_1: {
+															ctor: '::',
+															_0: _elm_lang$html$Html_Attributes$disabled(
+																!A2(_kiotlog$kiotlogweb$Views_Devices$isEditing, editing, sensor)),
+															_1: {ctor: '[]'}
+														}
+													}
+												}
+											}
+										},
+										{ctor: '[]'}),
+									_1: {
+										ctor: '::',
+										_0: A2(
+											_elm_lang$html$Html$label,
+											{
+												ctor: '::',
+												_0: _elm_lang$html$Html_Attributes$class('mdc-floating-label mdc-floating-label--float-above'),
+												_1: {
+													ctor: '::',
+													_0: _elm_lang$html$Html_Attributes$for(
+														A2(_elm_lang$core$Basics_ops['++'], 'name-', sensor.id)),
+													_1: {ctor: '[]'}
+												}
+											},
+											{
+												ctor: '::',
+												_0: _elm_lang$html$Html$text('Name'),
+												_1: {ctor: '[]'}
+											}),
+										_1: {
+											ctor: '::',
+											_0: A2(
+												_elm_lang$html$Html$div,
+												{
+													ctor: '::',
+													_0: _elm_lang$html$Html_Attributes$class('mdc-line-ripple'),
+													_1: {ctor: '[]'}
+												},
+												{ctor: '[]'}),
+											_1: {ctor: '[]'}
+										}
+									}
+								}),
+							_1: {
+								ctor: '::',
+								_0: A2(
+									_elm_lang$html$Html$div,
+									{
+										ctor: '::',
+										_0: _elm_lang$html$Html_Attributes$class('mdc-text-field mdc-layout-grid__cell--span-12 mdc-text-field--upgraded'),
+										_1: {
+											ctor: '::',
+											_0: A2(_elm_lang$html$Html_Attributes$attribute, 'data-mdc-auto-init', 'MDCTextField'),
+											_1: {ctor: '[]'}
+										}
+									},
+									{
+										ctor: '::',
+										_0: A2(
+											_elm_lang$html$Html$input,
+											{
+												ctor: '::',
+												_0: _elm_lang$html$Html_Attributes$type_('text'),
+												_1: {
+													ctor: '::',
+													_0: _elm_lang$html$Html_Attributes$class('mdc-text-field__input'),
+													_1: {
+														ctor: '::',
+														_0: _elm_lang$html$Html_Attributes$value(sensor.meta.description),
+														_1: {
+															ctor: '::',
+															_0: _elm_lang$html$Html_Attributes$id(
+																A2(_elm_lang$core$Basics_ops['++'], 'description-', sensor.id)),
+															_1: {
+																ctor: '::',
+																_0: _elm_lang$html$Html_Attributes$disabled(
+																	!A2(_kiotlog$kiotlogweb$Views_Devices$isEditing, editing, sensor)),
+																_1: {ctor: '[]'}
+															}
+														}
+													}
+												}
+											},
+											{ctor: '[]'}),
+										_1: {
+											ctor: '::',
+											_0: A2(
+												_elm_lang$html$Html$label,
+												{
+													ctor: '::',
+													_0: _elm_lang$html$Html_Attributes$class('mdc-floating-label mdc-floating-label--float-above'),
+													_1: {
+														ctor: '::',
+														_0: _elm_lang$html$Html_Attributes$for(
+															A2(_elm_lang$core$Basics_ops['++'], 'description-', sensor.id)),
+														_1: {ctor: '[]'}
+													}
+												},
+												{
+													ctor: '::',
+													_0: _elm_lang$html$Html$text('Description'),
+													_1: {ctor: '[]'}
+												}),
+											_1: {
+												ctor: '::',
+												_0: A2(
+													_elm_lang$html$Html$div,
+													{
+														ctor: '::',
+														_0: _elm_lang$html$Html_Attributes$class('mdc-line-ripple'),
+														_1: {ctor: '[]'}
+													},
+													{ctor: '[]'}),
+												_1: {ctor: '[]'}
+											}
+										}
+									}),
+								_1: {
+									ctor: '::',
+									_0: _elm_lang$html$Html$text(sensor.fmt.fmtChr),
+									_1: {ctor: '[]'}
+								}
+							}
+						},
+						function () {
+							var _p11 = sensor.sensorType;
+							if (_p11.ctor === 'Just') {
+								var _p12 = _p11._0;
+								return {
 									ctor: '::',
 									_0: A2(
 										_elm_lang$html$Html$br,
@@ -13091,171 +13429,72 @@ var _kiotlog$kiotlogweb$Views_Devices$mapSensors = function (sensor) {
 										{ctor: '[]'}),
 									_1: {
 										ctor: '::',
-										_0: _elm_lang$html$Html$text(sensor.fmt.fmtChr),
-										_1: {ctor: '[]'}
-									}
-								}
-							},
-							function () {
-								var _p10 = sensor.sensorType;
-								if (_p10.ctor === 'Just') {
-									var _p11 = _p10._0;
-									return {
-										ctor: '::',
-										_0: A2(
-											_elm_lang$html$Html$br,
-											{ctor: '[]'},
-											{ctor: '[]'}),
+										_0: _elm_lang$html$Html$text(_p12.name),
 										_1: {
 											ctor: '::',
-											_0: _elm_lang$html$Html$text(_p11.name),
+											_0: A2(
+												_elm_lang$html$Html$br,
+												{ctor: '[]'},
+												{ctor: '[]'}),
 											_1: {
 												ctor: '::',
-												_0: A2(
-													_elm_lang$html$Html$br,
-													{ctor: '[]'},
-													{ctor: '[]'}),
+												_0: _elm_lang$html$Html$text(_p12.type_),
 												_1: {
 													ctor: '::',
-													_0: _elm_lang$html$Html$text(_p11.type_),
+													_0: A2(
+														_elm_lang$html$Html$br,
+														{ctor: '[]'},
+														{ctor: '[]'}),
 													_1: {
 														ctor: '::',
-														_0: A2(
-															_elm_lang$html$Html$br,
-															{ctor: '[]'},
-															{ctor: '[]'}),
+														_0: _elm_lang$html$Html$text(
+															_elm_lang$core$Basics$toString(_p12.meta.min)),
 														_1: {
 															ctor: '::',
-															_0: _elm_lang$html$Html$text(
-																_elm_lang$core$Basics$toString(_p11.meta.min)),
+															_0: A2(
+																_elm_lang$html$Html$br,
+																{ctor: '[]'},
+																{ctor: '[]'}),
 															_1: {
 																ctor: '::',
-																_0: A2(
-																	_elm_lang$html$Html$br,
-																	{ctor: '[]'},
-																	{ctor: '[]'}),
-																_1: {
-																	ctor: '::',
-																	_0: _elm_lang$html$Html$text(
-																		_elm_lang$core$Basics$toString(_p11.meta.max)),
-																	_1: {ctor: '[]'}
-																}
+																_0: _elm_lang$html$Html$text(
+																	_elm_lang$core$Basics$toString(_p12.meta.max)),
+																_1: {ctor: '[]'}
 															}
 														}
 													}
 												}
 											}
 										}
-									};
-								} else {
-									return {ctor: '[]'};
-								}
-							}())),
-					_1: {ctor: '[]'}
-				}),
-			_1: {ctor: '[]'}
-		});
-};
-var _kiotlog$kiotlogweb$Views_Devices$deviceCards = function (device) {
-	return A2(
-		_elm_lang$html$Html$div,
-		{
-			ctor: '::',
-			_0: _elm_lang$html$Html_Attributes$class('kiotlog-page'),
-			_1: {ctor: '[]'}
-		},
-		{
-			ctor: '::',
-			_0: A2(
-				_elm_lang$html$Html$div,
-				{
-					ctor: '::',
-					_0: _elm_lang$html$Html_Attributes$class('mdc-layout-grid padding-0'),
-					_1: {ctor: '[]'}
-				},
-				{
-					ctor: '::',
-					_0: A2(
-						_elm_lang$html$Html$div,
-						{
-							ctor: '::',
-							_0: _elm_lang$html$Html_Attributes$class('mdc-layout-grid__inner'),
-							_1: {ctor: '[]'}
-						},
-						{
-							ctor: '::',
-							_0: A2(
-								_elm_lang$html$Html$h1,
-								{
-									ctor: '::',
-									_0: _elm_lang$html$Html_Attributes$class('mdc-layout-grid__cell--span-6 margin-0'),
-									_1: {ctor: '[]'}
-								},
-								{
-									ctor: '::',
-									_0: _elm_lang$html$Html$text(device.meta.name),
-									_1: {ctor: '[]'}
-								}),
-							_1: {
-								ctor: '::',
-								_0: A2(
-									_elm_lang$html$Html$h1,
-									{
-										ctor: '::',
-										_0: _elm_lang$html$Html_Attributes$class('mdc-layout-grid__cell--span-6 margin-0 text-right'),
-										_1: {ctor: '[]'}
-									},
-									{
-										ctor: '::',
-										_0: A2(
-											_elm_lang$html$Html$a,
-											{
-												ctor: '::',
-												_0: _elm_lang$html$Html_Attributes$href('#/devices'),
-												_1: {
-													ctor: '::',
-													_0: _elm_lang$html$Html_Attributes$class('mdc-button'),
-													_1: {
-														ctor: '::',
-														_0: A2(_elm_lang$html$Html_Attributes$attribute, 'data-mdc-auto-init', 'MDCRipple'),
-														_1: {ctor: '[]'}
-													}
-												}
-											},
-											{
-												ctor: '::',
-												_0: A2(
-													_elm_lang$html$Html$i,
-													{
-														ctor: '::',
-														_0: _elm_lang$html$Html_Attributes$class('material-icons mdc-button__icon'),
-														_1: {ctor: '[]'}
-													},
-													{
-														ctor: '::',
-														_0: _elm_lang$html$Html$text('arrow_back'),
-														_1: {ctor: '[]'}
-													}),
-												_1: {
-													ctor: '::',
-													_0: _elm_lang$html$Html$text('Back'),
-													_1: {ctor: '[]'}
-												}
-											}),
-										_1: {ctor: '[]'}
-									}),
-								_1: {ctor: '[]'}
+									}
+								};
+							} else {
+								return {ctor: '[]'};
 							}
-						}),
+						}())),
+				_1: {
+					ctor: '::',
+					_0: A2(_kiotlog$kiotlogweb$Views_Devices$sensorCardActions, editing, sensor),
 					_1: {ctor: '[]'}
-				}),
-			_1: {
+				}
+			});
+	});
+var _kiotlog$kiotlogweb$Views_Devices$deviceCards = F2(
+	function (device, editing) {
+		return A2(
+			_elm_lang$html$Html$div,
+			{
+				ctor: '::',
+				_0: _elm_lang$html$Html_Attributes$class('kiotlog-page padding-0'),
+				_1: {ctor: '[]'}
+			},
+			{
 				ctor: '::',
 				_0: A2(
 					_elm_lang$html$Html$div,
 					{
 						ctor: '::',
-						_0: _elm_lang$html$Html_Attributes$class('mdc-layout-grid kiotlog-container-small'),
+						_0: _elm_lang$html$Html_Attributes$class('mdc-layout-grid'),
 						_1: {ctor: '[]'}
 					},
 					{
@@ -13267,80 +13506,89 @@ var _kiotlog$kiotlogweb$Views_Devices$deviceCards = function (device) {
 								_0: _elm_lang$html$Html_Attributes$class('mdc-layout-grid__inner'),
 								_1: {ctor: '[]'}
 							},
-							A2(
-								_elm_lang$core$Basics_ops['++'],
-								{
+							{
+								ctor: '::',
+								_0: A2(
+									_elm_lang$html$Html$h1,
+									{
+										ctor: '::',
+										_0: _elm_lang$html$Html_Attributes$class('mdc-layout-grid__cell--span-6 margin-0'),
+										_1: {ctor: '[]'}
+									},
+									{
+										ctor: '::',
+										_0: _elm_lang$html$Html$text(device.meta.name),
+										_1: {ctor: '[]'}
+									}),
+								_1: {
 									ctor: '::',
 									_0: A2(
-										_elm_lang$html$Html$div,
+										_elm_lang$html$Html$h1,
 										{
 											ctor: '::',
-											_0: _elm_lang$html$Html_Attributes$class('mdc-card mdc-layout-grid__cell--span-12'),
+											_0: _elm_lang$html$Html_Attributes$class('mdc-layout-grid__cell--span-6 margin-0 text-right'),
 											_1: {ctor: '[]'}
 										},
 										{
 											ctor: '::',
 											_0: A2(
-												_elm_lang$html$Html$div,
+												_elm_lang$html$Html$a,
 												{
 													ctor: '::',
-													_0: _elm_lang$html$Html_Attributes$class('mdc-layout-grid__inner padding-gutter'),
-													_1: {ctor: '[]'}
+													_0: _elm_lang$html$Html_Attributes$href('#/devices'),
+													_1: {
+														ctor: '::',
+														_0: _elm_lang$html$Html_Attributes$class('mdc-button'),
+														_1: {
+															ctor: '::',
+															_0: A2(_elm_lang$html$Html_Attributes$attribute, 'data-mdc-auto-init', 'MDCRipple'),
+															_1: {ctor: '[]'}
+														}
+													}
 												},
 												{
 													ctor: '::',
 													_0: A2(
-														_elm_lang$html$Html$h3,
+														_elm_lang$html$Html$i,
 														{
 															ctor: '::',
-															_0: _elm_lang$html$Html_Attributes$class('mdc-layout-grid__cell--span-12'),
+															_0: _elm_lang$html$Html_Attributes$class('material-icons mdc-button__icon'),
 															_1: {ctor: '[]'}
 														},
 														{
 															ctor: '::',
-															_0: _elm_lang$html$Html$text(
-																A2(_elm_lang$core$Basics_ops['++'], 'Device Id: ', device.device)),
+															_0: _elm_lang$html$Html$text('arrow_back'),
 															_1: {ctor: '[]'}
 														}),
 													_1: {
 														ctor: '::',
-														_0: A2(
-															_elm_lang$html$Html$p,
-															{
-																ctor: '::',
-																_0: _elm_lang$html$Html_Attributes$class('mdc-layout-grid__cell--span-12'),
-																_1: {ctor: '[]'}
-															},
-															{
-																ctor: '::',
-																_0: _elm_lang$html$Html$text(
-																	A2(_elm_lang$core$Basics_ops['++'], 'Name: ', device.meta.description)),
-																_1: {ctor: '[]'}
-															}),
-														_1: {
-															ctor: '::',
-															_0: A2(
-																_elm_lang$html$Html$p,
-																{
-																	ctor: '::',
-																	_0: _elm_lang$html$Html_Attributes$class('mdc-layout-grid__cell--span-12'),
-																	_1: {ctor: '[]'}
-																},
-																{
-																	ctor: '::',
-																	_0: _elm_lang$html$Html$text(
-																		A2(
-																			_elm_lang$core$Basics_ops['++'],
-																			device.frame.bigendian ? 'Big' : 'Little',
-																			' endian')),
-																	_1: {ctor: '[]'}
-																}),
-															_1: {ctor: '[]'}
-														}
+														_0: _elm_lang$html$Html$text('Back'),
+														_1: {ctor: '[]'}
 													}
 												}),
 											_1: {ctor: '[]'}
 										}),
+									_1: {ctor: '[]'}
+								}
+							}),
+						_1: {ctor: '[]'}
+					}),
+				_1: {
+					ctor: '::',
+					_0: A2(
+						_elm_lang$html$Html$div,
+						{
+							ctor: '::',
+							_0: _elm_lang$html$Html_Attributes$class('mdc-layout-grid kiotlog-container-small'),
+							_1: {ctor: '[]'}
+						},
+						{
+							ctor: '::',
+							_0: A2(
+								_elm_lang$html$Html$div,
+								{
+									ctor: '::',
+									_0: _elm_lang$html$Html_Attributes$class('mdc-layout-grid__inner'),
 									_1: {ctor: '[]'}
 								},
 								A2(
@@ -13348,26 +13596,155 @@ var _kiotlog$kiotlogweb$Views_Devices$deviceCards = function (device) {
 									{
 										ctor: '::',
 										_0: A2(
-											_elm_lang$html$Html$h3,
+											_elm_lang$html$Html$div,
 											{
 												ctor: '::',
-												_0: _elm_lang$html$Html_Attributes$class('mdc-layout-grid__cell--span-12 text-center'),
+												_0: _elm_lang$html$Html_Attributes$class('mdc-card mdc-layout-grid__cell--span-12 padding-gutter'),
 												_1: {ctor: '[]'}
 											},
 											{
 												ctor: '::',
-												_0: _elm_lang$html$Html$text('Sensors'),
-												_1: {ctor: '[]'}
+												_0: A2(
+													_elm_lang$html$Html$div,
+													{
+														ctor: '::',
+														_0: _elm_lang$html$Html_Attributes$class('mdc-layout-grid__inner align-center'),
+														_1: {ctor: '[]'}
+													},
+													{
+														ctor: '::',
+														_0: A2(
+															_elm_lang$html$Html$span,
+															{
+																ctor: '::',
+																_0: _elm_lang$html$Html_Attributes$class('mdc-layout-grid__cell--span-6'),
+																_1: {ctor: '[]'}
+															},
+															{
+																ctor: '::',
+																_0: _elm_lang$html$Html$text('Device Id:'),
+																_1: {ctor: '[]'}
+															}),
+														_1: {
+															ctor: '::',
+															_0: A2(
+																_elm_lang$html$Html$h3,
+																{
+																	ctor: '::',
+																	_0: _elm_lang$html$Html_Attributes$class('mdc-layout-grid__cell--span-6'),
+																	_1: {ctor: '[]'}
+																},
+																{
+																	ctor: '::',
+																	_0: _elm_lang$html$Html$text(device.device),
+																	_1: {ctor: '[]'}
+																}),
+															_1: {ctor: '[]'}
+														}
+													}),
+												_1: {
+													ctor: '::',
+													_0: A2(
+														_elm_lang$html$Html$div,
+														{
+															ctor: '::',
+															_0: _elm_lang$html$Html_Attributes$class('mdc-layout-grid__inner align-center'),
+															_1: {ctor: '[]'}
+														},
+														{
+															ctor: '::',
+															_0: A2(
+																_elm_lang$html$Html$span,
+																{
+																	ctor: '::',
+																	_0: _elm_lang$html$Html_Attributes$class('mdc-layout-grid__cell--span-6'),
+																	_1: {ctor: '[]'}
+																},
+																{
+																	ctor: '::',
+																	_0: _elm_lang$html$Html$text('Name:'),
+																	_1: {ctor: '[]'}
+																}),
+															_1: {
+																ctor: '::',
+																_0: A2(
+																	_elm_lang$html$Html$h3,
+																	{
+																		ctor: '::',
+																		_0: _elm_lang$html$Html_Attributes$class('mdc-layout-grid__cell--span-6'),
+																		_1: {ctor: '[]'}
+																	},
+																	{
+																		ctor: '::',
+																		_0: _elm_lang$html$Html$text(device.meta.description),
+																		_1: {ctor: '[]'}
+																	}),
+																_1: {ctor: '[]'}
+															}
+														}),
+													_1: {
+														ctor: '::',
+														_0: A2(
+															_elm_lang$html$Html$div,
+															{
+																ctor: '::',
+																_0: _elm_lang$html$Html_Attributes$class('mdc-layout-grid__inner align-center'),
+																_1: {ctor: '[]'}
+															},
+															{
+																ctor: '::',
+																_0: A2(
+																	_elm_lang$html$Html$p,
+																	{
+																		ctor: '::',
+																		_0: _elm_lang$html$Html_Attributes$class('mdc-layout-grid__cell--span-12'),
+																		_1: {ctor: '[]'}
+																	},
+																	{
+																		ctor: '::',
+																		_0: _elm_lang$html$Html$text(
+																			A2(
+																				_elm_lang$core$Basics_ops['++'],
+																				device.frame.bigendian ? 'Big' : 'Little',
+																				' endian')),
+																		_1: {ctor: '[]'}
+																	}),
+																_1: {ctor: '[]'}
+															}),
+														_1: {ctor: '[]'}
+													}
+												}
 											}),
 										_1: {ctor: '[]'}
 									},
-									A2(_elm_lang$core$List$map, _kiotlog$kiotlogweb$Views_Devices$mapSensors, device.sensors)))),
-						_1: {ctor: '[]'}
-					}),
-				_1: {ctor: '[]'}
-			}
-		});
-};
+									A2(
+										_elm_lang$core$Basics_ops['++'],
+										{
+											ctor: '::',
+											_0: A2(
+												_elm_lang$html$Html$h3,
+												{
+													ctor: '::',
+													_0: _elm_lang$html$Html_Attributes$class('mdc-layout-grid__cell--span-12 text-center'),
+													_1: {ctor: '[]'}
+												},
+												{
+													ctor: '::',
+													_0: _elm_lang$html$Html$text('Sensors'),
+													_1: {ctor: '[]'}
+												}),
+											_1: {ctor: '[]'}
+										},
+										A2(
+											_elm_lang$core$List$map,
+											_kiotlog$kiotlogweb$Views_Devices$mapSensors(editing),
+											device.sensors)))),
+							_1: {ctor: '[]'}
+						}),
+					_1: {ctor: '[]'}
+				}
+			});
+	});
 var _kiotlog$kiotlogweb$Views_Devices$devicesTable = F2(
 	function (devices, tableState) {
 		return A2(
@@ -13530,8 +13907,8 @@ var _kiotlog$kiotlogweb$Views_Devices$viewError = F2(
 			});
 	});
 var _kiotlog$kiotlogweb$Views_Devices$viewDevice = function (model) {
-	var _p12 = model.device;
-	switch (_p12.ctor) {
+	var _p13 = model.device;
+	switch (_p13.ctor) {
 		case 'NotAsked':
 			return _elm_lang$html$Html$text('');
 		case 'Loading':
@@ -13544,17 +13921,17 @@ var _kiotlog$kiotlogweb$Views_Devices$viewDevice = function (model) {
 					_1: {ctor: '[]'}
 				});
 		case 'Success':
-			return _kiotlog$kiotlogweb$Views_Devices$deviceCards(_p12._0);
+			return A2(_kiotlog$kiotlogweb$Views_Devices$deviceCards, _p13._0, model.editingId);
 		default:
 			return A2(
 				_kiotlog$kiotlogweb$Views_Devices$viewError,
 				'Couldn\'t fetch device.',
-				_kiotlog$kiotlogweb$Views_Devices$createErrorMessage(_p12._0));
+				_kiotlog$kiotlogweb$Views_Devices$createErrorMessage(_p13._0));
 	}
 };
 var _kiotlog$kiotlogweb$Views_Devices$viewDevices = function (model) {
-	var _p13 = model.devices;
-	switch (_p13.ctor) {
+	var _p14 = model.devices;
+	switch (_p14.ctor) {
 		case 'NotAsked':
 			return _elm_lang$html$Html$text('');
 		case 'Loading':
@@ -13578,12 +13955,685 @@ var _kiotlog$kiotlogweb$Views_Devices$viewDevices = function (model) {
 					_1: {ctor: '[]'}
 				});
 		case 'Success':
-			return A2(_kiotlog$kiotlogweb$Views_Devices$devicesTable, _p13._0, model.devicesTable);
+			return A2(_kiotlog$kiotlogweb$Views_Devices$devicesTable, _p14._0, model.devicesTable);
 		default:
 			return A2(
 				_kiotlog$kiotlogweb$Views_Devices$viewError,
 				'Couldn\'t fetch devices at this time.',
-				_kiotlog$kiotlogweb$Views_Devices$createErrorMessage(_p13._0));
+				_kiotlog$kiotlogweb$Views_Devices$createErrorMessage(_p14._0));
+	}
+};
+
+var _kiotlog$kiotlogweb$Views_SensorTypes$sensorTypeCards = function (sensorType) {
+	return A2(
+		_elm_lang$html$Html$div,
+		{
+			ctor: '::',
+			_0: _elm_lang$html$Html_Attributes$class('kiotlog-page padding-0'),
+			_1: {ctor: '[]'}
+		},
+		{
+			ctor: '::',
+			_0: A2(
+				_elm_lang$html$Html$div,
+				{
+					ctor: '::',
+					_0: _elm_lang$html$Html_Attributes$class('mdc-layout-grid'),
+					_1: {ctor: '[]'}
+				},
+				{
+					ctor: '::',
+					_0: A2(
+						_elm_lang$html$Html$div,
+						{
+							ctor: '::',
+							_0: _elm_lang$html$Html_Attributes$class('mdc-layout-grid__inner'),
+							_1: {ctor: '[]'}
+						},
+						{
+							ctor: '::',
+							_0: A2(
+								_elm_lang$html$Html$h1,
+								{
+									ctor: '::',
+									_0: _elm_lang$html$Html_Attributes$class('mdc-layout-grid__cell--span-6 margin-0'),
+									_1: {ctor: '[]'}
+								},
+								{
+									ctor: '::',
+									_0: _elm_lang$html$Html$text(sensorType.name),
+									_1: {ctor: '[]'}
+								}),
+							_1: {
+								ctor: '::',
+								_0: A2(
+									_elm_lang$html$Html$h1,
+									{
+										ctor: '::',
+										_0: _elm_lang$html$Html_Attributes$class('mdc-layout-grid__cell--span-6 margin-0 text-right'),
+										_1: {ctor: '[]'}
+									},
+									{
+										ctor: '::',
+										_0: A2(
+											_elm_lang$html$Html$a,
+											{
+												ctor: '::',
+												_0: _elm_lang$html$Html_Attributes$href('#/sensors'),
+												_1: {
+													ctor: '::',
+													_0: _elm_lang$html$Html_Attributes$class('mdc-button'),
+													_1: {
+														ctor: '::',
+														_0: A2(_elm_lang$html$Html_Attributes$attribute, 'data-mdc-auto-init', 'MDCRipple'),
+														_1: {ctor: '[]'}
+													}
+												}
+											},
+											{
+												ctor: '::',
+												_0: A2(
+													_elm_lang$html$Html$i,
+													{
+														ctor: '::',
+														_0: _elm_lang$html$Html_Attributes$class('material-icons mdc-button__icon'),
+														_1: {ctor: '[]'}
+													},
+													{
+														ctor: '::',
+														_0: _elm_lang$html$Html$text('arrow_back'),
+														_1: {ctor: '[]'}
+													}),
+												_1: {
+													ctor: '::',
+													_0: _elm_lang$html$Html$text('Back'),
+													_1: {ctor: '[]'}
+												}
+											}),
+										_1: {ctor: '[]'}
+									}),
+								_1: {ctor: '[]'}
+							}
+						}),
+					_1: {ctor: '[]'}
+				}),
+			_1: {
+				ctor: '::',
+				_0: A2(
+					_elm_lang$html$Html$div,
+					{
+						ctor: '::',
+						_0: _elm_lang$html$Html_Attributes$class('mdc-layout-grid kiotlog-container-small'),
+						_1: {ctor: '[]'}
+					},
+					{
+						ctor: '::',
+						_0: A2(
+							_elm_lang$html$Html$div,
+							{
+								ctor: '::',
+								_0: _elm_lang$html$Html_Attributes$class('mdc-layout-grid__inner'),
+								_1: {ctor: '[]'}
+							},
+							{
+								ctor: '::',
+								_0: A2(
+									_elm_lang$html$Html$div,
+									{
+										ctor: '::',
+										_0: _elm_lang$html$Html_Attributes$class('mdc-card mdc-layout-grid__cell--span-12 padding-gutter'),
+										_1: {ctor: '[]'}
+									},
+									{
+										ctor: '::',
+										_0: A2(
+											_elm_lang$html$Html$div,
+											{
+												ctor: '::',
+												_0: _elm_lang$html$Html_Attributes$class('mdc-layout-grid__inner align-center'),
+												_1: {ctor: '[]'}
+											},
+											{
+												ctor: '::',
+												_0: A2(
+													_elm_lang$html$Html$span,
+													{
+														ctor: '::',
+														_0: _elm_lang$html$Html_Attributes$class('mdc-layout-grid__cell--span-6'),
+														_1: {ctor: '[]'}
+													},
+													{
+														ctor: '::',
+														_0: _elm_lang$html$Html$text('Type:'),
+														_1: {ctor: '[]'}
+													}),
+												_1: {
+													ctor: '::',
+													_0: A2(
+														_elm_lang$html$Html$h3,
+														{
+															ctor: '::',
+															_0: _elm_lang$html$Html_Attributes$class('mdc-layout-grid__cell--span-6'),
+															_1: {ctor: '[]'}
+														},
+														{
+															ctor: '::',
+															_0: _elm_lang$html$Html$text(sensorType.type_),
+															_1: {ctor: '[]'}
+														}),
+													_1: {ctor: '[]'}
+												}
+											}),
+										_1: {
+											ctor: '::',
+											_0: A2(
+												_elm_lang$html$Html$div,
+												{
+													ctor: '::',
+													_0: _elm_lang$html$Html_Attributes$class('mdc-layout-grid__inner align-center'),
+													_1: {ctor: '[]'}
+												},
+												{
+													ctor: '::',
+													_0: A2(
+														_elm_lang$html$Html$span,
+														{
+															ctor: '::',
+															_0: _elm_lang$html$Html_Attributes$class('mdc-layout-grid__cell--span-6'),
+															_1: {ctor: '[]'}
+														},
+														{
+															ctor: '::',
+															_0: _elm_lang$html$Html$text('Min:'),
+															_1: {ctor: '[]'}
+														}),
+													_1: {
+														ctor: '::',
+														_0: A2(
+															_elm_lang$html$Html$h3,
+															{
+																ctor: '::',
+																_0: _elm_lang$html$Html_Attributes$class('mdc-layout-grid__cell--span-6'),
+																_1: {ctor: '[]'}
+															},
+															{
+																ctor: '::',
+																_0: _elm_lang$html$Html$text(
+																	_elm_lang$core$Basics$toString(sensorType.meta.min)),
+																_1: {ctor: '[]'}
+															}),
+														_1: {ctor: '[]'}
+													}
+												}),
+											_1: {
+												ctor: '::',
+												_0: A2(
+													_elm_lang$html$Html$div,
+													{
+														ctor: '::',
+														_0: _elm_lang$html$Html_Attributes$class('mdc-layout-grid__inner align-center'),
+														_1: {ctor: '[]'}
+													},
+													{
+														ctor: '::',
+														_0: A2(
+															_elm_lang$html$Html$span,
+															{
+																ctor: '::',
+																_0: _elm_lang$html$Html_Attributes$class('mdc-layout-grid__cell--span-6'),
+																_1: {ctor: '[]'}
+															},
+															{
+																ctor: '::',
+																_0: _elm_lang$html$Html$text('Max:'),
+																_1: {ctor: '[]'}
+															}),
+														_1: {
+															ctor: '::',
+															_0: A2(
+																_elm_lang$html$Html$h3,
+																{
+																	ctor: '::',
+																	_0: _elm_lang$html$Html_Attributes$class('mdc-layout-grid__cell--span-6'),
+																	_1: {ctor: '[]'}
+																},
+																{
+																	ctor: '::',
+																	_0: _elm_lang$html$Html$text(
+																		_elm_lang$core$Basics$toString(sensorType.meta.max)),
+																	_1: {ctor: '[]'}
+																}),
+															_1: {ctor: '[]'}
+														}
+													}),
+												_1: {ctor: '[]'}
+											}
+										}
+									}),
+								_1: {ctor: '[]'}
+							}),
+						_1: {ctor: '[]'}
+					}),
+				_1: {ctor: '[]'}
+			}
+		});
+};
+var _kiotlog$kiotlogweb$Views_SensorTypes$lightGrey = function (symbol) {
+	return A2(
+		_elm_lang$html$Html$i,
+		{
+			ctor: '::',
+			_0: _elm_lang$html$Html_Attributes$style(
+				{
+					ctor: '::',
+					_0: {ctor: '_Tuple2', _0: 'color', _1: '#ccc'},
+					_1: {ctor: '[]'}
+				}),
+			_1: {
+				ctor: '::',
+				_0: _elm_lang$html$Html_Attributes$class('material-icons'),
+				_1: {ctor: '[]'}
+			}
+		},
+		{
+			ctor: '::',
+			_0: _elm_lang$html$Html$text(symbol),
+			_1: {ctor: '[]'}
+		});
+};
+var _kiotlog$kiotlogweb$Views_SensorTypes$darkGrey = function (symbol) {
+	return A2(
+		_elm_lang$html$Html$i,
+		{
+			ctor: '::',
+			_0: _elm_lang$html$Html_Attributes$style(
+				{
+					ctor: '::',
+					_0: {ctor: '_Tuple2', _0: 'color', _1: '#555'},
+					_1: {ctor: '[]'}
+				}),
+			_1: {
+				ctor: '::',
+				_0: _elm_lang$html$Html_Attributes$class('material-icons'),
+				_1: {ctor: '[]'}
+			}
+		},
+		{
+			ctor: '::',
+			_0: _elm_lang$html$Html$text(symbol),
+			_1: {ctor: '[]'}
+		});
+};
+var _kiotlog$kiotlogweb$Views_SensorTypes$simpleTheadHelp = function (_p0) {
+	var _p1 = _p0;
+	var _p3 = _p1._0;
+	var content = function () {
+		var _p2 = _p1._1;
+		switch (_p2.ctor) {
+			case 'Unsortable':
+				return {
+					ctor: '::',
+					_0: _elm_lang$html$Html$text(_p3),
+					_1: {ctor: '[]'}
+				};
+			case 'Sortable':
+				return {
+					ctor: '::',
+					_0: _p2._0 ? _kiotlog$kiotlogweb$Views_SensorTypes$darkGrey('arrow_downward') : _kiotlog$kiotlogweb$Views_SensorTypes$lightGrey('arrow_downward'),
+					_1: {
+						ctor: '::',
+						_0: _elm_lang$html$Html$text(_p3),
+						_1: {ctor: '[]'}
+					}
+				};
+			default:
+				if (_p2._0.ctor === 'Nothing') {
+					return {
+						ctor: '::',
+						_0: _kiotlog$kiotlogweb$Views_SensorTypes$lightGrey('sort'),
+						_1: {
+							ctor: '::',
+							_0: _elm_lang$html$Html$text(_p3),
+							_1: {ctor: '[]'}
+						}
+					};
+				} else {
+					return {
+						ctor: '::',
+						_0: _kiotlog$kiotlogweb$Views_SensorTypes$darkGrey(
+							_p2._0._0 ? 'arrow_upward' : 'arrow_downward'),
+						_1: {
+							ctor: '::',
+							_0: _elm_lang$html$Html$text(_p3),
+							_1: {ctor: '[]'}
+						}
+					};
+				}
+		}
+	}();
+	return A2(
+		_elm_lang$html$Html$th,
+		{
+			ctor: '::',
+			_0: _p1._2,
+			_1: {ctor: '[]'}
+		},
+		content);
+};
+var _kiotlog$kiotlogweb$Views_SensorTypes$simpleThead = function (headers) {
+	return A2(
+		_evancz$elm_sortable_table$Table$HtmlDetails,
+		{ctor: '[]'},
+		A2(_elm_lang$core$List$map, _kiotlog$kiotlogweb$Views_SensorTypes$simpleTheadHelp, headers));
+};
+var _kiotlog$kiotlogweb$Views_SensorTypes$showDeviceLink = function (_p4) {
+	var _p5 = _p4;
+	return A2(
+		_evancz$elm_sortable_table$Table$HtmlDetails,
+		{
+			ctor: '::',
+			_0: _elm_lang$html$Html_Attributes$class('action-btns'),
+			_1: {ctor: '[]'}
+		},
+		{
+			ctor: '::',
+			_0: A2(
+				_elm_lang$html$Html$a,
+				{
+					ctor: '::',
+					_0: _elm_lang$html$Html_Attributes$href(
+						A2(_elm_lang$core$Basics_ops['++'], '#/sensors/', _p5.id)),
+					_1: {
+						ctor: '::',
+						_0: _elm_lang$html$Html_Attributes$class('mdc-button'),
+						_1: {
+							ctor: '::',
+							_0: A2(_elm_lang$html$Html_Attributes$attribute, 'data-mdc-auto-init', 'MDCRipple'),
+							_1: {ctor: '[]'}
+						}
+					}
+				},
+				{
+					ctor: '::',
+					_0: _elm_lang$html$Html$text('show'),
+					_1: {ctor: '[]'}
+				}),
+			_1: {ctor: '[]'}
+		});
+};
+var _kiotlog$kiotlogweb$Views_SensorTypes$detailsColumn = _evancz$elm_sortable_table$Table$veryCustomColumn(
+	{name: '', viewData: _kiotlog$kiotlogweb$Views_SensorTypes$showDeviceLink, sorter: _evancz$elm_sortable_table$Table$unsortable});
+var _kiotlog$kiotlogweb$Views_SensorTypes$config = _evancz$elm_sortable_table$Table$customConfig(
+	{
+		toId: function (_) {
+			return _.id;
+		},
+		toMsg: _kiotlog$kiotlogweb$Types$SetDevicesTableState,
+		columns: {
+			ctor: '::',
+			_0: A2(
+				_evancz$elm_sortable_table$Table$stringColumn,
+				'Name',
+				function (_) {
+					return _.name;
+				}),
+			_1: {
+				ctor: '::',
+				_0: A2(
+					_evancz$elm_sortable_table$Table$stringColumn,
+					'Type',
+					function (_) {
+						return _.type_;
+					}),
+				_1: {
+					ctor: '::',
+					_0: _kiotlog$kiotlogweb$Views_SensorTypes$detailsColumn,
+					_1: {ctor: '[]'}
+				}
+			}
+		},
+		customizations: _elm_lang$core$Native_Utils.update(
+			_evancz$elm_sortable_table$Table$defaultCustomizations,
+			{
+				tableAttrs: {
+					ctor: '::',
+					_0: _elm_lang$html$Html_Attributes$class('sensor-types-list'),
+					_1: {ctor: '[]'}
+				},
+				thead: _kiotlog$kiotlogweb$Views_SensorTypes$simpleThead
+			})
+	});
+var _kiotlog$kiotlogweb$Views_SensorTypes$devicesTable = F2(
+	function (sensorTypes, tableState) {
+		return A2(
+			_elm_lang$html$Html$div,
+			{
+				ctor: '::',
+				_0: _elm_lang$html$Html_Attributes$class('kiotlog-page'),
+				_1: {ctor: '[]'}
+			},
+			{
+				ctor: '::',
+				_0: A2(
+					_elm_lang$html$Html$div,
+					{
+						ctor: '::',
+						_0: _elm_lang$html$Html_Attributes$class('mdc-layout-grid padding-0'),
+						_1: {ctor: '[]'}
+					},
+					{
+						ctor: '::',
+						_0: A2(
+							_elm_lang$html$Html$div,
+							{
+								ctor: '::',
+								_0: _elm_lang$html$Html_Attributes$class('mdc-layout-grid__inner'),
+								_1: {ctor: '[]'}
+							},
+							{
+								ctor: '::',
+								_0: A2(
+									_elm_lang$html$Html$h1,
+									{
+										ctor: '::',
+										_0: _elm_lang$html$Html_Attributes$class('mdc-layout-grid__cell--span-6 margin-0'),
+										_1: {ctor: '[]'}
+									},
+									{
+										ctor: '::',
+										_0: _elm_lang$html$Html$text('Sensor Types'),
+										_1: {ctor: '[]'}
+									}),
+								_1: {
+									ctor: '::',
+									_0: A2(
+										_elm_lang$html$Html$h1,
+										{
+											ctor: '::',
+											_0: _elm_lang$html$Html_Attributes$class('text-right mdc-layout-grid__cell--span-6 margin-0'),
+											_1: {ctor: '[]'}
+										},
+										{
+											ctor: '::',
+											_0: A2(
+												_elm_lang$html$Html$button,
+												{
+													ctor: '::',
+													_0: _elm_lang$html$Html_Attributes$type_('button'),
+													_1: {
+														ctor: '::',
+														_0: _elm_lang$html$Html_Events$onClick(_kiotlog$kiotlogweb$Types$FetchSensorTypes),
+														_1: {
+															ctor: '::',
+															_0: A2(_elm_lang$html$Html_Attributes$attribute, 'data-mdc-auto-init', 'MDCRipple'),
+															_1: {
+																ctor: '::',
+																_0: _elm_lang$html$Html_Attributes$class('mdc-button'),
+																_1: {ctor: '[]'}
+															}
+														}
+													}
+												},
+												{
+													ctor: '::',
+													_0: A2(
+														_elm_lang$html$Html$i,
+														{
+															ctor: '::',
+															_0: _elm_lang$html$Html_Attributes$class('material-icons'),
+															_1: {ctor: '[]'}
+														},
+														{
+															ctor: '::',
+															_0: _elm_lang$html$Html$text('refresh'),
+															_1: {ctor: '[]'}
+														}),
+													_1: {ctor: '[]'}
+												}),
+											_1: {
+												ctor: '::',
+												_0: A2(
+													_elm_lang$html$Html$a,
+													{
+														ctor: '::',
+														_0: _elm_lang$html$Html_Attributes$href('#/devices/new'),
+														_1: {
+															ctor: '::',
+															_0: A2(_elm_lang$html$Html_Attributes$attribute, 'data-mdc-auto-init', 'MDCRipple'),
+															_1: {
+																ctor: '::',
+																_0: _elm_lang$html$Html_Attributes$class('mdc-button mdc-button--unelevated'),
+																_1: {ctor: '[]'}
+															}
+														}
+													},
+													{
+														ctor: '::',
+														_0: A2(
+															_elm_lang$html$Html$i,
+															{
+																ctor: '::',
+																_0: _elm_lang$html$Html_Attributes$class('material-icons'),
+																_1: {ctor: '[]'}
+															},
+															{
+																ctor: '::',
+																_0: _elm_lang$html$Html$text('add'),
+																_1: {ctor: '[]'}
+															}),
+														_1: {ctor: '[]'}
+													}),
+												_1: {ctor: '[]'}
+											}
+										}),
+									_1: {ctor: '[]'}
+								}
+							}),
+						_1: {ctor: '[]'}
+					}),
+				_1: {
+					ctor: '::',
+					_0: A3(_evancz$elm_sortable_table$Table$view, _kiotlog$kiotlogweb$Views_SensorTypes$config, tableState, sensorTypes),
+					_1: {ctor: '[]'}
+				}
+			});
+	});
+var _kiotlog$kiotlogweb$Views_SensorTypes$createErrorMessage = function (httpError) {
+	var _p6 = httpError;
+	switch (_p6.ctor) {
+		case 'BadUrl':
+			return _p6._0;
+		case 'Timeout':
+			return 'Server is taking too long to respond. Please try again later.';
+		case 'NetworkError':
+			return 'It appears you don\'t have an Internet connection right now.';
+		case 'BadStatus':
+			return _p6._0.status.message;
+		default:
+			return _p6._0;
+	}
+};
+var _kiotlog$kiotlogweb$Views_SensorTypes$viewError = F2(
+	function (errorHeading, errorMessage) {
+		return A2(
+			_elm_lang$html$Html$div,
+			{
+				ctor: '::',
+				_0: _elm_lang$html$Html_Attributes$class('kiotlog-page text-center'),
+				_1: {ctor: '[]'}
+			},
+			{
+				ctor: '::',
+				_0: A2(
+					_elm_lang$html$Html$h3,
+					{ctor: '[]'},
+					{
+						ctor: '::',
+						_0: _elm_lang$html$Html$text(errorHeading),
+						_1: {ctor: '[]'}
+					}),
+				_1: {
+					ctor: '::',
+					_0: _elm_lang$html$Html$text(errorMessage),
+					_1: {ctor: '[]'}
+				}
+			});
+	});
+var _kiotlog$kiotlogweb$Views_SensorTypes$viewSensorType = function (model) {
+	var _p7 = model.sensorType;
+	switch (_p7.ctor) {
+		case 'NotAsked':
+			return _elm_lang$html$Html$text('');
+		case 'Loading':
+			return A2(
+				_elm_lang$html$Html$h3,
+				{ctor: '[]'},
+				{
+					ctor: '::',
+					_0: _elm_lang$html$Html$text('Loading...'),
+					_1: {ctor: '[]'}
+				});
+		case 'Success':
+			return _kiotlog$kiotlogweb$Views_SensorTypes$sensorTypeCards(_p7._0);
+		default:
+			return A2(
+				_kiotlog$kiotlogweb$Views_SensorTypes$viewError,
+				'Couldn\'t fetch sensor type.',
+				_kiotlog$kiotlogweb$Views_SensorTypes$createErrorMessage(_p7._0));
+	}
+};
+var _kiotlog$kiotlogweb$Views_SensorTypes$viewSensorTypes = function (model) {
+	var _p8 = model.sensorTypes;
+	switch (_p8.ctor) {
+		case 'NotAsked':
+			return _elm_lang$html$Html$text('');
+		case 'Loading':
+			return A2(
+				_elm_lang$html$Html$div,
+				{
+					ctor: '::',
+					_0: _elm_lang$html$Html_Attributes$class('kiotlog-page text-center'),
+					_1: {ctor: '[]'}
+				},
+				{
+					ctor: '::',
+					_0: A2(
+						_elm_lang$html$Html$h1,
+						{ctor: '[]'},
+						{
+							ctor: '::',
+							_0: _elm_lang$html$Html$text('Loading...'),
+							_1: {ctor: '[]'}
+						}),
+					_1: {ctor: '[]'}
+				});
+		case 'Success':
+			return A2(_kiotlog$kiotlogweb$Views_SensorTypes$devicesTable, _p8._0, model.devicesTable);
+		default:
+			return A2(
+				_kiotlog$kiotlogweb$Views_SensorTypes$viewError,
+				'Couldn\'t fetch sensor types at this time.',
+				_kiotlog$kiotlogweb$Views_SensorTypes$createErrorMessage(_p8._0));
 	}
 };
 
@@ -13683,15 +14733,10 @@ var _kiotlog$kiotlogweb$View$mainPage = function (model) {
 			return _kiotlog$kiotlogweb$Views_Devices$viewDevice(model);
 		case 'AddDevicePage':
 			return _kiotlog$kiotlogweb$Views_Devices$addDevice(model);
-		case 'SensorsPage':
-			return A2(
-				_elm_lang$html$Html$div,
-				{ctor: '[]'},
-				{
-					ctor: '::',
-					_0: _elm_lang$html$Html$text('Sensors'),
-					_1: {ctor: '[]'}
-				});
+		case 'SensorTypesPage':
+			return _kiotlog$kiotlogweb$Views_SensorTypes$viewSensorTypes(model);
+		case 'SensorTypePage':
+			return _kiotlog$kiotlogweb$Views_SensorTypes$viewSensorType(model);
 		default:
 			return _kiotlog$kiotlogweb$View$notFoundView;
 	}
@@ -13762,7 +14807,24 @@ var _kiotlog$kiotlogweb$Routing$matchRoute = _evancz$url_parser$UrlParser$oneOf(
 								_evancz$url_parser$UrlParser_ops['</>'],
 								_evancz$url_parser$UrlParser$s('devices'),
 								_evancz$url_parser$UrlParser$string)),
-						_1: {ctor: '[]'}
+						_1: {
+							ctor: '::',
+							_0: A2(
+								_evancz$url_parser$UrlParser$map,
+								_kiotlog$kiotlogweb$Types$SensorTypesRoute,
+								_evancz$url_parser$UrlParser$s('sensors')),
+							_1: {
+								ctor: '::',
+								_0: A2(
+									_evancz$url_parser$UrlParser$map,
+									_kiotlog$kiotlogweb$Types$SensorTypeRoute,
+									A2(
+										_evancz$url_parser$UrlParser_ops['</>'],
+										_evancz$url_parser$UrlParser$s('sensors'),
+										_evancz$url_parser$UrlParser$string)),
+								_1: {ctor: '[]'}
+							}
+						}
 					}
 				}
 			}
@@ -13997,7 +15059,11 @@ var _kiotlog$kiotlogweb$Rest$sensorDecoder = A4(
 					_NoRedInk$elm_decode_pipeline$Json_Decode_Pipeline$required,
 					'SensorTypeId',
 					_elm_lang$core$Json_Decode$string,
-					_NoRedInk$elm_decode_pipeline$Json_Decode_Pipeline$decode(_kiotlog$kiotlogweb$Types$Sensor))))));
+					A3(
+						_NoRedInk$elm_decode_pipeline$Json_Decode_Pipeline$required,
+						'Id',
+						_elm_lang$core$Json_Decode$string,
+						_NoRedInk$elm_decode_pipeline$Json_Decode_Pipeline$decode(_kiotlog$kiotlogweb$Types$Sensor)))))));
 var _kiotlog$kiotlogweb$Rest$deviceDecoder = A4(
 	_NoRedInk$elm_decode_pipeline$Json_Decode_Pipeline$optional,
 	'Sensors',
@@ -14051,6 +15117,13 @@ var _kiotlog$kiotlogweb$Rest$fetchSensorTypesCommand = A3(
 	'sensortypes',
 	_elm_lang$core$Json_Decode$list(_kiotlog$kiotlogweb$Rest$sensorTypeDecoder),
 	_kiotlog$kiotlogweb$Types$SensorTypesReceived);
+var _kiotlog$kiotlogweb$Rest$fetchSensorTypeCommand = function (id) {
+	return A3(
+		_kiotlog$kiotlogweb$Rest$get,
+		A2(_elm_lang$core$Basics_ops['++'], 'sensortypes/', id),
+		_kiotlog$kiotlogweb$Rest$sensorTypeDecoder,
+		_kiotlog$kiotlogweb$Types$SensorTypeReceived);
+};
 var _kiotlog$kiotlogweb$Rest$fetchConversionsCommand = A3(
 	_kiotlog$kiotlogweb$Rest$get,
 	'conversions',
@@ -14073,6 +15146,30 @@ var _kiotlog$kiotlogweb$Rest$post = F5(
 	});
 var _kiotlog$kiotlogweb$Rest$createDeviceCommand = function (device) {
 	return A5(_kiotlog$kiotlogweb$Rest$post, device, 'devices', _kiotlog$kiotlogweb$Rest$newDeviceEncoder, _kiotlog$kiotlogweb$Rest$deviceDecoder, _kiotlog$kiotlogweb$Types$DeviceCreated);
+};
+var _kiotlog$kiotlogweb$Rest$patch = F5(
+	function (obj, endpoint, encoder, decoder, msg) {
+		var request = _elm_lang$http$Http$request(
+			{
+				method: 'PATCH',
+				headers: {ctor: '[]'},
+				url: A2(_elm_lang$core$Basics_ops['++'], _kiotlog$kiotlogweb$Rest$apiBaseUrl, endpoint),
+				body: _elm_lang$http$Http$jsonBody(
+					encoder(obj)),
+				expect: _elm_lang$http$Http$expectJson(decoder),
+				timeout: _elm_lang$core$Maybe$Nothing,
+				withCredentials: false
+			});
+		return A2(_elm_lang$http$Http$send, msg, request);
+	});
+var _kiotlog$kiotlogweb$Rest$updateSensorCommand = function (sensor) {
+	return A5(
+		_kiotlog$kiotlogweb$Rest$patch,
+		sensor,
+		A2(_elm_lang$core$Basics_ops['++'], 'sensors/', sensor.id),
+		_kiotlog$kiotlogweb$Rest$sensorEncoder,
+		_kiotlog$kiotlogweb$Rest$sensorDecoder,
+		_kiotlog$kiotlogweb$Types$SensorUpdated);
 };
 
 var _kiotlog$kiotlogweb$Ports$sendData = _elm_lang$core$Native_Platform.outgoingPort(
@@ -14245,12 +15342,16 @@ var _kiotlog$kiotlogweb$State$initialModel = {
 	devices: _krisajenkins$remotedata$RemoteData$NotAsked,
 	devicesTable: _evancz$elm_sortable_table$Table$initialSort('Id'),
 	device: _krisajenkins$remotedata$RemoteData$NotAsked,
+	sensor: _krisajenkins$remotedata$RemoteData$NotAsked,
 	sensorTypes: _krisajenkins$remotedata$RemoteData$NotAsked,
+	sensorType: _krisajenkins$remotedata$RemoteData$NotAsked,
 	conversions: _krisajenkins$remotedata$RemoteData$NotAsked,
 	currentRoute: _kiotlog$kiotlogweb$Types$NotFoundRoute,
-	pageState: _kiotlog$kiotlogweb$Types$BlankPage
+	pageState: _kiotlog$kiotlogweb$Types$BlankPage,
+	editingId: _elm_lang$core$Maybe$Nothing
 };
 var _kiotlog$kiotlogweb$State$emptySensor = {
+	id: '',
 	sensorTypeId: '',
 	conversionId: '',
 	meta: {name: '', description: ''},
@@ -14357,15 +15458,68 @@ var _kiotlog$kiotlogweb$State$setRoute = F2(
 							}
 						}
 					});
+			case 'SensorTypesRoute':
+				var _p7 = page(_kiotlog$kiotlogweb$Types$SensorTypesPage);
+				var newModel = _p7._0;
+				var pageCmd = _p7._1;
+				return A2(
+					_elm_lang$core$Platform_Cmd_ops['!'],
+					_elm_lang$core$Native_Utils.update(
+						newModel,
+						{sensorTypes: _krisajenkins$remotedata$RemoteData$Loading}),
+					{
+						ctor: '::',
+						_0: pageCmd,
+						_1: {
+							ctor: '::',
+							_0: _kiotlog$kiotlogweb$Rest$fetchSensorTypesCommand,
+							_1: {ctor: '[]'}
+						}
+					});
+			case 'SensorTypeRoute':
+				var _p10 = _p1._0;
+				var _p8 = page(_kiotlog$kiotlogweb$Types$SensorTypePage);
+				var newModel = _p8._0;
+				var pageCmd = _p8._1;
+				var dev = function () {
+					var _p9 = model.sensorTypes;
+					switch (_p9.ctor) {
+						case 'Success':
+							return A2(
+								_krisajenkins$remotedata$RemoteData$fromMaybe,
+								_elm_lang$http$Http$BadUrl(_p10),
+								A2(_kiotlog$kiotlogweb$State$findDeviceById, _p10, _p9._0));
+						case 'Failure':
+							return _krisajenkins$remotedata$RemoteData$Failure(_p9._0);
+						case 'NotAsked':
+							return _krisajenkins$remotedata$RemoteData$NotAsked;
+						default:
+							return _krisajenkins$remotedata$RemoteData$Loading;
+					}
+				}();
+				return A2(
+					_elm_lang$core$Platform_Cmd_ops['!'],
+					_elm_lang$core$Native_Utils.update(
+						newModel,
+						{sensorType: dev}),
+					{
+						ctor: '::',
+						_0: pageCmd,
+						_1: {
+							ctor: '::',
+							_0: _kiotlog$kiotlogweb$Rest$fetchSensorTypeCommand(_p10),
+							_1: {ctor: '[]'}
+						}
+					});
 			default:
 				return page(_kiotlog$kiotlogweb$Types$NotFoundPage);
 		}
 	});
 var _kiotlog$kiotlogweb$State$init = function (location) {
 	var currentRoute = _kiotlog$kiotlogweb$Routing$extractRoute(location);
-	var _p7 = A2(_kiotlog$kiotlogweb$State$setRoute, currentRoute, _kiotlog$kiotlogweb$State$initialModel);
-	var model = _p7._0;
-	var cmd = _p7._1;
+	var _p11 = A2(_kiotlog$kiotlogweb$State$setRoute, currentRoute, _kiotlog$kiotlogweb$State$initialModel);
+	var model = _p11._0;
+	var cmd = _p11._1;
 	return A2(
 		_elm_lang$core$Platform_Cmd_ops['!'],
 		model,
@@ -14382,8 +15536,8 @@ var _kiotlog$kiotlogweb$State$init = function (location) {
 };
 var _kiotlog$kiotlogweb$State$update = F2(
 	function (msg, model) {
-		var _p8 = msg;
-		switch (_p8.ctor) {
+		var _p12 = msg;
+		switch (_p12.ctor) {
 			case 'NoOp':
 				return {ctor: '_Tuple2', _0: model, _1: _elm_lang$core$Platform_Cmd$none};
 			case 'OpenDrawer':
@@ -14403,7 +15557,7 @@ var _kiotlog$kiotlogweb$State$update = F2(
 			case 'LocationChanged':
 				return A2(
 					_kiotlog$kiotlogweb$State$setRoute,
-					_kiotlog$kiotlogweb$Routing$extractRoute(_p8._0),
+					_kiotlog$kiotlogweb$Routing$extractRoute(_p12._0),
 					model);
 			case 'FetchDevices':
 				return {
@@ -14418,7 +15572,7 @@ var _kiotlog$kiotlogweb$State$update = F2(
 					ctor: '_Tuple2',
 					_0: _elm_lang$core$Native_Utils.update(
 						model,
-						{devices: _p8._0}),
+						{devices: _p12._0}),
 					_1: _elm_lang$core$Platform_Cmd$none
 				};
 			case 'SetDevicesTableState':
@@ -14426,7 +15580,7 @@ var _kiotlog$kiotlogweb$State$update = F2(
 					ctor: '_Tuple2',
 					_0: _elm_lang$core$Native_Utils.update(
 						model,
-						{devicesTable: _p8._0}),
+						{devicesTable: _p12._0}),
 					_1: _elm_lang$core$Platform_Cmd$none
 				};
 			case 'DeviceReceived':
@@ -14434,15 +15588,31 @@ var _kiotlog$kiotlogweb$State$update = F2(
 					ctor: '_Tuple2',
 					_0: _elm_lang$core$Native_Utils.update(
 						model,
-						{device: _p8._0}),
+						{device: _p12._0}),
 					_1: _elm_lang$core$Platform_Cmd$none
+				};
+			case 'FetchSensorTypes':
+				return {
+					ctor: '_Tuple2',
+					_0: _elm_lang$core$Native_Utils.update(
+						model,
+						{sensorTypes: _krisajenkins$remotedata$RemoteData$Loading}),
+					_1: _kiotlog$kiotlogweb$Rest$fetchSensorTypesCommand
 				};
 			case 'SensorTypesReceived':
 				return {
 					ctor: '_Tuple2',
 					_0: _elm_lang$core$Native_Utils.update(
 						model,
-						{sensorTypes: _p8._0}),
+						{sensorTypes: _p12._0}),
+					_1: _elm_lang$core$Platform_Cmd$none
+				};
+			case 'SensorTypeReceived':
+				return {
+					ctor: '_Tuple2',
+					_0: _elm_lang$core$Native_Utils.update(
+						model,
+						{sensorType: _p12._0}),
 					_1: _elm_lang$core$Platform_Cmd$none
 				};
 			case 'ConversionsReceived':
@@ -14450,7 +15620,7 @@ var _kiotlog$kiotlogweb$State$update = F2(
 					ctor: '_Tuple2',
 					_0: _elm_lang$core$Native_Utils.update(
 						model,
-						{conversions: _p8._0}),
+						{conversions: _p12._0}),
 					_1: _elm_lang$core$Platform_Cmd$none
 				};
 			case 'NewDeviceDevice':
@@ -14459,7 +15629,7 @@ var _kiotlog$kiotlogweb$State$update = F2(
 					_0: A2(
 						_kiotlog$kiotlogweb$State$editDevice,
 						model,
-						_kiotlog$kiotlogweb$State$setDeviceDevice(_p8._0)),
+						_kiotlog$kiotlogweb$State$setDeviceDevice(_p12._0)),
 					_1: _elm_lang$core$Platform_Cmd$none
 				};
 			case 'NewDeviceName':
@@ -14468,7 +15638,7 @@ var _kiotlog$kiotlogweb$State$update = F2(
 					_0: A2(
 						_kiotlog$kiotlogweb$State$editDevice,
 						model,
-						_kiotlog$kiotlogweb$State$setDeviceName(_p8._0)),
+						_kiotlog$kiotlogweb$State$setDeviceName(_p12._0)),
 					_1: _elm_lang$core$Platform_Cmd$none
 				};
 			case 'NewDeviceBigendian':
@@ -14477,16 +15647,16 @@ var _kiotlog$kiotlogweb$State$update = F2(
 					_0: A2(
 						_kiotlog$kiotlogweb$State$editDevice,
 						model,
-						_kiotlog$kiotlogweb$State$setDeviceBigendian(_p8._0)),
+						_kiotlog$kiotlogweb$State$setDeviceBigendian(_p12._0)),
 					_1: _elm_lang$core$Platform_Cmd$none
 				};
 			case 'AddSensor':
-				var _p9 = model.device;
-				if (_p9.ctor === 'Success') {
-					var _p10 = _p9._0;
+				var _p13 = model.device;
+				if (_p13.ctor === 'Success') {
+					var _p14 = _p13._0;
 					var sensors = A2(
 						_elm_lang$core$Basics_ops['++'],
-						_p10.sensors,
+						_p14.sensors,
 						{
 							ctor: '::',
 							_0: _kiotlog$kiotlogweb$State$emptySensor,
@@ -14499,7 +15669,7 @@ var _kiotlog$kiotlogweb$State$update = F2(
 							{
 								device: _krisajenkins$remotedata$RemoteData$Success(
 									_elm_lang$core$Native_Utils.update(
-										_p10,
+										_p14,
 										{
 											sensors: A2(_elm_lang$core$Debug$log, 'Sensors', sensors)
 										}))
@@ -14510,14 +15680,14 @@ var _kiotlog$kiotlogweb$State$update = F2(
 					return {ctor: '_Tuple2', _0: model, _1: _elm_lang$core$Platform_Cmd$none};
 				}
 			case 'RemoveSensorOnDevice':
-				var _p13 = _p8._0;
-				var _p11 = model.device;
-				if (_p11.ctor === 'Success') {
-					var _p12 = _p11._0;
+				var _p17 = _p12._0;
+				var _p15 = model.device;
+				if (_p15.ctor === 'Success') {
+					var _p16 = _p15._0;
 					var sensorsLeft = A2(
 						_elm_lang$core$Basics_ops['++'],
-						A2(_elm_lang$core$List$take, _p13, _p12.sensors),
-						A2(_elm_lang$core$List$drop, _p13 + 1, _p12.sensors));
+						A2(_elm_lang$core$List$take, _p17, _p16.sensors),
+						A2(_elm_lang$core$List$drop, _p17 + 1, _p16.sensors));
 					return {
 						ctor: '_Tuple2',
 						_0: _elm_lang$core$Native_Utils.update(
@@ -14525,7 +15695,7 @@ var _kiotlog$kiotlogweb$State$update = F2(
 							{
 								device: _krisajenkins$remotedata$RemoteData$Success(
 									_elm_lang$core$Native_Utils.update(
-										_p12,
+										_p16,
 										{sensors: sensorsLeft}))
 							}),
 						_1: _elm_lang$core$Platform_Cmd$none
@@ -14541,8 +15711,8 @@ var _kiotlog$kiotlogweb$State$update = F2(
 						model,
 						A2(
 							_kiotlog$kiotlogweb$State$updateSensorOnDevice,
-							_p8._0,
-							_kiotlog$kiotlogweb$State$setSensorName(_p8._1))),
+							_p12._0,
+							_kiotlog$kiotlogweb$State$setSensorName(_p12._1))),
 					_1: _elm_lang$core$Platform_Cmd$none
 				};
 			case 'SetSensorDescrOnDevice':
@@ -14553,8 +15723,8 @@ var _kiotlog$kiotlogweb$State$update = F2(
 						model,
 						A2(
 							_kiotlog$kiotlogweb$State$updateSensorOnDevice,
-							_p8._0,
-							_kiotlog$kiotlogweb$State$setSensorDescr(_p8._1))),
+							_p12._0,
+							_kiotlog$kiotlogweb$State$setSensorDescr(_p12._1))),
 					_1: _elm_lang$core$Platform_Cmd$none
 				};
 			case 'SetSensorTypeOnDevice':
@@ -14565,8 +15735,8 @@ var _kiotlog$kiotlogweb$State$update = F2(
 						model,
 						A2(
 							_kiotlog$kiotlogweb$State$updateSensorOnDevice,
-							_p8._0,
-							_kiotlog$kiotlogweb$State$setSensorType(_p8._1))),
+							_p12._0,
+							_kiotlog$kiotlogweb$State$setSensorType(_p12._1))),
 					_1: _elm_lang$core$Platform_Cmd$none
 				};
 			case 'SetSensorConversionOnDevice':
@@ -14577,8 +15747,8 @@ var _kiotlog$kiotlogweb$State$update = F2(
 						model,
 						A2(
 							_kiotlog$kiotlogweb$State$updateSensorOnDevice,
-							_p8._0,
-							_kiotlog$kiotlogweb$State$setConversion(_p8._1))),
+							_p12._0,
+							_kiotlog$kiotlogweb$State$setConversion(_p12._1))),
 					_1: _elm_lang$core$Platform_Cmd$none
 				};
 			case 'SetSensorFmtChrOnDevice':
@@ -14589,23 +15759,23 @@ var _kiotlog$kiotlogweb$State$update = F2(
 						model,
 						A2(
 							_kiotlog$kiotlogweb$State$updateSensorOnDevice,
-							_p8._0,
-							_kiotlog$kiotlogweb$State$setFmtChr(_p8._1))),
+							_p12._0,
+							_kiotlog$kiotlogweb$State$setFmtChr(_p12._1))),
 					_1: _elm_lang$core$Platform_Cmd$none
 				};
 			case 'CreateNewDevice':
-				var _p14 = model.device;
-				if (_p14.ctor === 'Success') {
+				var _p18 = model.device;
+				if (_p18.ctor === 'Success') {
 					return {
 						ctor: '_Tuple2',
 						_0: model,
-						_1: _kiotlog$kiotlogweb$Rest$createDeviceCommand(_p14._0)
+						_1: _kiotlog$kiotlogweb$Rest$createDeviceCommand(_p18._0)
 					};
 				} else {
 					return {ctor: '_Tuple2', _0: model, _1: _elm_lang$core$Platform_Cmd$none};
 				}
-			default:
-				if (_p8._0.ctor === 'Ok') {
+			case 'DeviceCreated':
+				if (_p12._0.ctor === 'Ok') {
 					return {
 						ctor: '_Tuple2',
 						_0: model,
@@ -14613,7 +15783,51 @@ var _kiotlog$kiotlogweb$State$update = F2(
 							A2(_elm_lang$core$Debug$log, 'redirecting to: ', '#/devices'))
 					};
 				} else {
-					var err = A2(_elm_lang$core$Debug$log, 'error: ', _p8._0._0);
+					var err = A2(_elm_lang$core$Debug$log, 'error: ', _p12._0._0);
+					return {ctor: '_Tuple2', _0: model, _1: _elm_lang$core$Platform_Cmd$none};
+				}
+			case 'StartEditing':
+				return {
+					ctor: '_Tuple2',
+					_0: _elm_lang$core$Native_Utils.update(
+						model,
+						{
+							editingId: _elm_lang$core$Maybe$Just(_p12._0)
+						}),
+					_1: _elm_lang$core$Platform_Cmd$none
+				};
+			case 'CancelEditing':
+				return {
+					ctor: '_Tuple2',
+					_0: _elm_lang$core$Native_Utils.update(
+						model,
+						{editingId: _elm_lang$core$Maybe$Nothing}),
+					_1: _elm_lang$core$Platform_Cmd$none
+				};
+			case 'EditSensor':
+				return {
+					ctor: '_Tuple2',
+					_0: _elm_lang$core$Native_Utils.update(
+						model,
+						{
+							editingId: _elm_lang$core$Maybe$Just(_p12._0.id),
+							sensor: _krisajenkins$remotedata$RemoteData$Success(_kiotlog$kiotlogweb$State$emptySensor)
+						}),
+					_1: _elm_lang$core$Platform_Cmd$none
+				};
+			case 'PutSensor':
+				return {
+					ctor: '_Tuple2',
+					_0: _elm_lang$core$Native_Utils.update(
+						model,
+						{editingId: _elm_lang$core$Maybe$Nothing}),
+					_1: _kiotlog$kiotlogweb$Rest$updateSensorCommand(_p12._0)
+				};
+			default:
+				if (_p12._0.ctor === 'Ok') {
+					return {ctor: '_Tuple2', _0: model, _1: _elm_lang$core$Platform_Cmd$none};
+				} else {
+					var err = A2(_elm_lang$core$Debug$log, 'error: ', _p12._0._0);
 					return {ctor: '_Tuple2', _0: model, _1: _elm_lang$core$Platform_Cmd$none};
 				}
 		}

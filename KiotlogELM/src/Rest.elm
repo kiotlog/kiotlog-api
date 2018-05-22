@@ -4,7 +4,9 @@ module Rest
         , fetchDeviceCommand
         , createDeviceCommand
         , fetchSensorTypesCommand
+        , fetchSensorTypeCommand
         , fetchConversionsCommand
+        , updateSensorCommand
         )
 
 import Types exposing (..)
@@ -45,6 +47,23 @@ post obj endpoint encoder decoder msg =
         request |> Http.send msg
 
 
+patch : a -> String -> (a -> Encode.Value) -> Decoder a -> (Result Error a -> Msg) -> Cmd Msg
+patch obj endpoint encoder decoder msg =
+    let
+        request =
+            Http.request
+                { method = "PATCH"
+                , headers = []
+                , url = apiBaseUrl ++ endpoint
+                , body = Http.jsonBody (encoder obj)
+                , expect = Http.expectJson decoder
+                , timeout = Nothing
+                , withCredentials = False
+                }
+    in
+        request |> Http.send msg
+
+
 metaDecoder : Decoder Meta
 metaDecoder =
     decode Meta
@@ -69,6 +88,7 @@ fmtDecoder =
 sensorDecoder : Decoder Sensor
 sensorDecoder =
     decode Sensor
+        |> required "Id" string
         |> required "SensorTypeId" string
         |> required "ConversionId" string
         |> required "Meta" metaDecoder
@@ -177,6 +197,11 @@ fetchSensorTypesCommand =
     get "sensortypes" (list sensorTypeDecoder) SensorTypesReceived
 
 
+fetchSensorTypeCommand : String -> Cmd Msg
+fetchSensorTypeCommand id =
+    get ("sensortypes/" ++ id) sensorTypeDecoder SensorTypeReceived
+
+
 fetchConversionsCommand : Cmd Msg
 fetchConversionsCommand =
     get "conversions" (list conversionsDecoder) ConversionsReceived
@@ -185,6 +210,11 @@ fetchConversionsCommand =
 createDeviceCommand : Device -> Cmd Msg
 createDeviceCommand device =
     post device "devices" newDeviceEncoder deviceDecoder DeviceCreated
+
+
+updateSensorCommand : Sensor -> Cmd Msg
+updateSensorCommand sensor =
+    patch sensor ("sensors/" ++ sensor.id) sensorEncoder sensorDecoder SensorUpdated
 
 
 

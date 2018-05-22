@@ -116,5 +116,6 @@ let rest resource =
         DELETE >=> uuidPatternRouting deleteResourceById
         GET >=> uuidPatternRouting getResourceById
         PUT >=> uuidPatternRouting updateResourceById
+        PATCH >=> uuidPatternRouting updateResourceById
         //HEAD >=> pathScan resourceIdPath isResourceExists
     ]

@@ -1,7 +1,7 @@
 module Views.Devices exposing (viewDevices, viewDevice, addDevice)
 
 import Html exposing (..)
-import Html.Attributes exposing (id, href, class, type_, style, for, attribute, value, selected, checked)
+import Html.Attributes exposing (id, href, class, type_, style, for, attribute, value, selected, checked, disabled)
 import Html.Events exposing (onClick, onInput, on)
 import Http
 import Types exposing (..)
@@ -39,7 +39,7 @@ viewDevice model =
             h3 [] [ text "Loading..." ]
 
         RemoteData.Success device ->
-            deviceCards device
+            deviceCards device model.editingId
 
         RemoteData.Failure httpError ->
             viewError "Couldn't fetch device." (createErrorMessage httpError)
@@ -85,10 +85,10 @@ devicesTable devices tableState =
         ]
 
 
-deviceCards : Device -> Html Msg
-deviceCards device =
-    div [ class "kiotlog-page" ]
-        [ div [ class "mdc-layout-grid padding-0" ]
+deviceCards : Device -> Maybe String -> Html Msg
+deviceCards device editing =
+    div [ class "kiotlog-page padding-0" ]
+        [ div [ class "mdc-layout-grid" ]
             [ div [ class "mdc-layout-grid__inner" ]
                 [ h1 [ class "mdc-layout-grid__cell--span-6 margin-0" ]
                     [ text device.meta.name ]
@@ -107,13 +107,21 @@ deviceCards device =
             ]
         , div [ class "mdc-layout-grid kiotlog-container-small" ]
             [ div [ class "mdc-layout-grid__inner" ]
-                ([ div [ class "mdc-card mdc-layout-grid__cell--span-12" ]
-                    [ div [ class "mdc-layout-grid__inner padding-gutter" ]
-                        [ h3 [ class "mdc-layout-grid__cell--span-12" ]
-                            [ text ("Device Id: " ++ device.device) ]
-                        , p [ class "mdc-layout-grid__cell--span-12" ]
-                            [ text ("Name: " ++ device.meta.description) ]
-                        , p [ class "mdc-layout-grid__cell--span-12" ]
+                ([ div [ class "mdc-card mdc-layout-grid__cell--span-12 padding-gutter" ]
+                    [ div [ class "mdc-layout-grid__inner align-center" ]
+                        [ span [ class "mdc-layout-grid__cell--span-6" ]
+                            [ text "Device Id:" ]
+                        , h3 [ class "mdc-layout-grid__cell--span-6" ]
+                            [ text device.device ]
+                        ]
+                    , div [ class "mdc-layout-grid__inner align-center" ]
+                        [ span [ class "mdc-layout-grid__cell--span-6" ]
+                            [ text "Name:" ]
+                        , h3 [ class "mdc-layout-grid__cell--span-6" ]
+                            [ text device.meta.description ]
+                        ]
+                    , div [ class "mdc-layout-grid__inner align-center" ]
+                        [ p [ class "mdc-layout-grid__cell--span-12" ]
                             [ text
                                 ((if device.frame.bigendian then
                                     "Big"
@@ -130,7 +138,7 @@ deviceCards device =
                             [ text "Sensors" ]
                        ]
                     ++ (List.map
-                            mapSensors
+                            (mapSensors editing)
                             device.sensors
                        )
                 )
@@ -138,33 +146,126 @@ deviceCards device =
         ]
 
 
-mapSensors : Sensor -> Html Msg
-mapSensors sensor =
-    div [ class "device-sensor mdc-card mdc-layout-grid__cell--span-12" ]
-        [ div [ class "mdc-layout-grid__inner padding-gutter" ]
-            [ div
-                []
-                ([ text sensor.meta.name
-                 , br [] []
-                 , text sensor.fmt.fmtChr
-                 ]
-                    ++ (case sensor.sensorType of
-                            Just st ->
-                                [ br [] []
-                                , text st.name
-                                , br [] []
-                                , text st.type_
-                                , br [] []
-                                , text (toString st.meta.min)
-                                , br [] []
-                                , text (toString st.meta.max)
-                                ]
+isEditing : Maybe String -> { a | id : String } -> Bool
+isEditing editing obj =
+    case editing of
+        Just id ->
+            id == obj.id
 
-                            Nothing ->
-                                []
-                       )
-                )
-            ]
+        _ ->
+            False
+
+
+mapSensors : Maybe String -> Sensor -> Html Msg
+mapSensors editing sensor =
+    div
+        [ class
+            ("device-sensor mdc-card mdc-layout-grid__cell--span-12"
+                ++ (if isEditing editing sensor then
+                        " editing"
+                    else
+                        ""
+                   )
+            )
+        ]
+        [ div [ class "mdc-layout-grid__inner padding-gutter" ]
+            ([ div
+                [ class "mdc-text-field mdc-layout-grid__cell--span-12 mdc-text-field--upgraded"
+                , attribute "data-mdc-auto-init" "MDCTextField"
+                ]
+                [ input
+                    [ type_ "text"
+                    , class "mdc-text-field__input"
+                    , value sensor.meta.name
+                    , id ("name-" ++ sensor.id)
+                    , disabled (not (isEditing editing sensor))
+                    ]
+                    []
+                , label
+                    [ class "mdc-floating-label mdc-floating-label--float-above"
+                    , for ("name-" ++ sensor.id)
+                    ]
+                    [ text "Name" ]
+                , div [ class "mdc-line-ripple" ]
+                    []
+                ]
+             , div
+                [ class "mdc-text-field mdc-layout-grid__cell--span-12 mdc-text-field--upgraded"
+                , attribute "data-mdc-auto-init" "MDCTextField"
+                ]
+                [ input
+                    [ type_ "text"
+                    , class "mdc-text-field__input"
+                    , value sensor.meta.description
+                    , id ("description-" ++ sensor.id)
+                    , disabled (not (isEditing editing sensor))
+                    ]
+                    []
+                , label
+                    [ class "mdc-floating-label mdc-floating-label--float-above"
+                    , for ("description-" ++ sensor.id)
+                    ]
+                    [ text "Description" ]
+                , div [ class "mdc-line-ripple" ]
+                    []
+                ]
+             , text sensor.fmt.fmtChr
+             ]
+                ++ (case sensor.sensorType of
+                        Just st ->
+                            [ br [] []
+                            , text st.name
+                            , br [] []
+                            , text st.type_
+                            , br [] []
+                            , text (toString st.meta.min)
+                            , br [] []
+                            , text (toString st.meta.max)
+                            ]
+
+                        Nothing ->
+                            []
+                   )
+            )
+        , (sensorCardActions editing sensor)
+        ]
+
+
+sensorCardActions : Maybe String -> Sensor -> Html Msg
+sensorCardActions editing sensor =
+    div [ class "mdc-card__actions" ]
+        [ div [ class "mdc-card__action-icons" ]
+            (if isEditing editing sensor then
+                [ button
+                    [ class "mdc-button mdc-card__action mdc-card__action--button"
+                    , onClick CancelEditing
+                    ]
+                    [ i [ class "material-icons" ]
+                        [ text "cancel"
+                        ]
+                    , text "Cancel"
+                    ]
+                , button
+                    [ class "mdc-button mdc-card__action mdc-card__action--button"
+                    , onClick (PutSensor sensor)
+                    ]
+                    [ i [ class "material-icons" ]
+                        [ text "done" ]
+                    , text "Done"
+                    ]
+                ]
+             else
+                [ button
+                    [ class "mdc-button mdc-card__action mdc-card__action--button"
+                    , onClick (EditSensor sensor)
+                    ]
+                    [ i [ class "material-icons" ]
+                        [ text "edit"
+                        ]
+                    , text "Edit"
+                    ]
+                ]
+            )
         ]
 
 
@@ -200,7 +301,7 @@ detailsColumn =
 
 showDeviceLink : Device -> HtmlDetails Msg
 showDeviceLink { id } =
-    HtmlDetails []
+    HtmlDetails [ class "action-btns" ]
         [ a
             [ href ("#/devices/" ++ id)
             , class "mdc-button"
@@ -419,6 +520,7 @@ editDevice device sensorTypes conversions =
                     ]
                     [ i [ class "material-icons" ]
                         [ text "add" ]
+                    , text "Add Sensor"
                     ]
                 ]
             ]

@@ -3081,23 +3081,25 @@ a.mdc-list-item {
   margin-left: 0 !important;
   margin-right: 32px !important; }
 
-table.devices-list {
+table.devices-list, table.sensor-types-list {
   width: 100%;
   border-collapse: collapse; }
-  table.devices-list tr {
+  table.devices-list tr, table.sensor-types-list tr {
     border-bottom: 1px solid rgba(0, 0, 0, 0.12);
     cursor: pointer; }
-  table.devices-list th {
+  table.devices-list th, table.sensor-types-list th {
     text-align: left; }
-    table.devices-list th i {
+    table.devices-list th i, table.sensor-types-list th i {
       vertical-align: middle; }
-  table.devices-list td, table.devices-list th {
+  table.devices-list td, table.devices-list th, table.sensor-types-list td, table.sensor-types-list th {
     padding: 15px 5px;
     text-align: left;
     vertical-align: middle; }
-  table.devices-list tbody tr {
+    table.devices-list td.action-btns, table.devices-list th.action-btns, table.sensor-types-list td.action-btns, table.sensor-types-list th.action-btns {
+      text-align: right; }
+  table.devices-list tbody tr, table.sensor-types-list tbody tr {
     transition: background-color .25s ease; }
-    table.devices-list tbody tr:hover {
+    table.devices-list tbody tr:hover, table.sensor-types-list tbody tr:hover {
       background-color: rgba(242, 242, 242, 0.5); }
 
 .mdc-switch {
@@ -3486,3 +3488,9 @@ body {
   max-width: 800px; }
   .kiotlog-container-small .kiotlog-container-small {
     padding: 0; }
+
+.device-sensor input.mdc-text-field__input {
+  height: auto; }
+
+.device-sensor:not(.editing) input.mdc-text-field__input {
+  border-bottom-width: 0; }

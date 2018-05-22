@@ -38,7 +38,7 @@ let main argv =
     let logger = Targets.create Verbose [||]
 
     let cors =
-        cors defaultCORSConfig
+        cors {defaultCORSConfig with allowedMethods = InclusiveOption.Some [HttpMethod.GET; HttpMethod.POST; HttpMethod.PUT; HttpMethod.PATCH; HttpMethod.DELETE]}
 
     let app =
         cors >=> choose [

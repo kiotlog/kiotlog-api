@@ -70,3 +70,14 @@ body {
         padding: 0;
     }
 }
+
+.device-sensor {
+    
+    input.mdc-text-field__input {
+        height: auto;
+    }
+    
+    &:not(.editing) input.mdc-text-field__input {
+        border-bottom-width: 0;
+    }
+}
