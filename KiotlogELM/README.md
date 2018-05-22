@@ -7,3 +7,8 @@
 3. Run Elm app with `elm-live`
 
     $ elm-live Kiotlog.elm --output=kiotlog.js --pushstate
+
+## Run in Docker
+
+    $ docker build --rm -f Dockerfile -t kiotlog/webui .
+    $ docker run --rm -ti -p 8000:80 --network <kiotlog platform network> kiotlog/webui
