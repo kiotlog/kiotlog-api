@@ -21,6 +21,7 @@
 module Kiotlog.Web.Webparts.Devices
 
 open System
+open System.Collections.Generic
 open Suave
 open Microsoft.EntityFrameworkCore
 
@@ -62,8 +63,12 @@ let private loadDeviceWithSensorsAsync (ctx : KiotlogDBFContext) (deviceId : Gui
         try
             let devices =
                 ctx.Devices
-                    .Include("Sensors.SensorType")
-                    .Include("Sensors.Conversion")
+                    .Include(fun d -> d.Sensors :> IEnumerable<_>)
+                        .ThenInclude(fun (s : Sensors) -> s.SensorType)
+                    .Include(fun d -> d.Sensors :> IEnumerable<_>)
+                        .ThenInclude(fun (s : Sensors) -> s.Conversion)
+                    // .Include("Sensors.SensorType")
+                    // .Include("Sensors.Conversion")
 
             let q =
                 query {

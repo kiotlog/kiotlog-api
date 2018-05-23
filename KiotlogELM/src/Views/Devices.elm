@@ -39,7 +39,7 @@ viewDevice model =
             h3 [] [ text "Loading..." ]
 
         RemoteData.Success device ->
-            deviceCards device model.editingId
+            deviceCards model device
 
         RemoteData.Failure httpError ->
             viewError "Couldn't fetch device." (createErrorMessage httpError)
@@ -85,8 +85,8 @@ devicesTable devices tableState =
         ]
 
 
-deviceCards : Device -> Maybe String -> Html Msg
-deviceCards device editing =
+deviceCards : Model -> Device -> Html Msg
+deviceCards model device =
     div [ class "kiotlog-page padding-0" ]
         [ div [ class "mdc-layout-grid" ]
             [ div [ class "mdc-layout-grid__inner" ]
@@ -137,8 +137,8 @@ deviceCards device editing =
                     ++ [ h3 [ class "mdc-layout-grid__cell--span-12 text-center" ]
                             [ text "Sensors" ]
                        ]
-                    ++ (List.map
-                            (mapSensors editing)
+                    ++ (List.indexedMap
+                            (mapSensors model)
                             device.sensors
                        )
                 )
@@ -156,12 +156,12 @@ isEditing editing obj =
             False
 
 
-mapSensors : Maybe String -> Sensor -> Html Msg
-mapSensors editing sensor =
+mapSensors : Model -> Int -> Sensor -> Html Msg
+mapSensors model idx sensor =
     div
         [ class
             ("device-sensor mdc-card mdc-layout-grid__cell--span-12"
-                ++ (if isEditing editing sensor then
+                ++ (if isEditing model.editingId sensor then
                         " editing"
                     else
                         ""
@@ -178,7 +178,8 @@ mapSensors editing sensor =
                     , class "mdc-text-field__input"
                     , value sensor.meta.name
                     , id ("name-" ++ sensor.id)
-                    , disabled (not (isEditing editing sensor))
+                    , disabled (not (isEditing model.editingId sensor))
+                    , onInput (SetSensorNameOnDevice idx)
                     ]
                     []
                 , label
@@ -198,7 +199,8 @@ mapSensors editing sensor =
                     , class "mdc-text-field__input"
                     , value sensor.meta.description
                     , id ("description-" ++ sensor.id)
-                    , disabled (not (isEditing editing sensor))
+                    , disabled (not (isEditing model.editingId sensor))
+                    , onInput (SetSensorDescrOnDevice idx)
                     ]
                     []
                 , label
@@ -210,6 +212,14 @@ mapSensors editing sensor =
                     []
                 ]
              , text sensor.fmt.fmtChr
+             , div [ class "mdc-select" ]
+                [ select [ class "mdc-select__native-control" ]
+                    ([ option [] [] ]
+                        ++ (sensorTypesOptions model.sensorTypes sensor.sensorTypeId)
+                    )
+                , label [ class "mdc-floating-label" ] []
+                , div [ class "mdc-line-ripple" ] []
+                ]
              ]
                 ++ (case sensor.sensorType of
                         Just st ->
@@ -227,12 +237,12 @@ mapSensors editing sensor =
                             []
                    )
             )
-        , (sensorCardActions editing sensor)
+        , (sensorCardActions model.editingId idx sensor)
         ]
 
 
-sensorCardActions : Maybe String -> Sensor -> Html Msg
-sensorCardActions editing sensor =
+sensorCardActions : Maybe String -> Int -> Sensor -> Html Msg
+sensorCardActions editing idx sensor =
     div [ class "mdc-card__actions" ]
         [ div [ class "mdc-card__action-icons" ]
             (if isEditing editing sensor then

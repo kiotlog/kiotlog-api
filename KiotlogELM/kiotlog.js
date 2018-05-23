@@ -13112,8 +13112,8 @@ var _kiotlog$kiotlogweb$Views_Devices$isEditing = F2(
 			return false;
 		}
 	});
-var _kiotlog$kiotlogweb$Views_Devices$sensorCardActions = F2(
-	function (editing, sensor) {
+var _kiotlog$kiotlogweb$Views_Devices$sensorCardActions = F3(
+	function (editing, idx, sensor) {
 		return A2(
 			_elm_lang$html$Html$div,
 			{
@@ -13238,8 +13238,8 @@ var _kiotlog$kiotlogweb$Views_Devices$sensorCardActions = F2(
 				_1: {ctor: '[]'}
 			});
 	});
-var _kiotlog$kiotlogweb$Views_Devices$mapSensors = F2(
-	function (editing, sensor) {
+var _kiotlog$kiotlogweb$Views_Devices$mapSensors = F3(
+	function (model, idx, sensor) {
 		return A2(
 			_elm_lang$html$Html$div,
 			{
@@ -13248,7 +13248,7 @@ var _kiotlog$kiotlogweb$Views_Devices$mapSensors = F2(
 					A2(
 						_elm_lang$core$Basics_ops['++'],
 						'device-sensor mdc-card mdc-layout-grid__cell--span-12',
-						A2(_kiotlog$kiotlogweb$Views_Devices$isEditing, editing, sensor) ? ' editing' : '')),
+						A2(_kiotlog$kiotlogweb$Views_Devices$isEditing, model.editingId, sensor) ? ' editing' : '')),
 				_1: {ctor: '[]'}
 			},
 			{
@@ -13295,8 +13295,13 @@ var _kiotlog$kiotlogweb$Views_Devices$mapSensors = F2(
 														_1: {
 															ctor: '::',
 															_0: _elm_lang$html$Html_Attributes$disabled(
-																!A2(_kiotlog$kiotlogweb$Views_Devices$isEditing, editing, sensor)),
-															_1: {ctor: '[]'}
+																!A2(_kiotlog$kiotlogweb$Views_Devices$isEditing, model.editingId, sensor)),
+															_1: {
+																ctor: '::',
+																_0: _elm_lang$html$Html_Events$onInput(
+																	_kiotlog$kiotlogweb$Types$SetSensorNameOnDevice(idx)),
+																_1: {ctor: '[]'}
+															}
 														}
 													}
 												}
@@ -13369,8 +13374,13 @@ var _kiotlog$kiotlogweb$Views_Devices$mapSensors = F2(
 															_1: {
 																ctor: '::',
 																_0: _elm_lang$html$Html_Attributes$disabled(
-																	!A2(_kiotlog$kiotlogweb$Views_Devices$isEditing, editing, sensor)),
-																_1: {ctor: '[]'}
+																	!A2(_kiotlog$kiotlogweb$Views_Devices$isEditing, model.editingId, sensor)),
+																_1: {
+																	ctor: '::',
+																	_0: _elm_lang$html$Html_Events$onInput(
+																		_kiotlog$kiotlogweb$Types$SetSensorDescrOnDevice(idx)),
+																	_1: {ctor: '[]'}
+																}
 															}
 														}
 													}
@@ -13413,7 +13423,61 @@ var _kiotlog$kiotlogweb$Views_Devices$mapSensors = F2(
 								_1: {
 									ctor: '::',
 									_0: _elm_lang$html$Html$text(sensor.fmt.fmtChr),
-									_1: {ctor: '[]'}
+									_1: {
+										ctor: '::',
+										_0: A2(
+											_elm_lang$html$Html$div,
+											{
+												ctor: '::',
+												_0: _elm_lang$html$Html_Attributes$class('mdc-select'),
+												_1: {ctor: '[]'}
+											},
+											{
+												ctor: '::',
+												_0: A2(
+													_elm_lang$html$Html$select,
+													{
+														ctor: '::',
+														_0: _elm_lang$html$Html_Attributes$class('mdc-select__native-control'),
+														_1: {ctor: '[]'}
+													},
+													A2(
+														_elm_lang$core$Basics_ops['++'],
+														{
+															ctor: '::',
+															_0: A2(
+																_elm_lang$html$Html$option,
+																{ctor: '[]'},
+																{ctor: '[]'}),
+															_1: {ctor: '[]'}
+														},
+														A2(_kiotlog$kiotlogweb$Views_Devices$sensorTypesOptions, model.sensorTypes, sensor.sensorTypeId))),
+												_1: {
+													ctor: '::',
+													_0: A2(
+														_elm_lang$html$Html$label,
+														{
+															ctor: '::',
+															_0: _elm_lang$html$Html_Attributes$class('mdc-floating-label'),
+															_1: {ctor: '[]'}
+														},
+														{ctor: '[]'}),
+													_1: {
+														ctor: '::',
+														_0: A2(
+															_elm_lang$html$Html$div,
+															{
+																ctor: '::',
+																_0: _elm_lang$html$Html_Attributes$class('mdc-line-ripple'),
+																_1: {ctor: '[]'}
+															},
+															{ctor: '[]'}),
+														_1: {ctor: '[]'}
+													}
+												}
+											}),
+										_1: {ctor: '[]'}
+									}
 								}
 							}
 						},
@@ -13474,13 +13538,13 @@ var _kiotlog$kiotlogweb$Views_Devices$mapSensors = F2(
 						}())),
 				_1: {
 					ctor: '::',
-					_0: A2(_kiotlog$kiotlogweb$Views_Devices$sensorCardActions, editing, sensor),
+					_0: A3(_kiotlog$kiotlogweb$Views_Devices$sensorCardActions, model.editingId, idx, sensor),
 					_1: {ctor: '[]'}
 				}
 			});
 	});
 var _kiotlog$kiotlogweb$Views_Devices$deviceCards = F2(
-	function (device, editing) {
+	function (model, device) {
 		return A2(
 			_elm_lang$html$Html$div,
 			{
@@ -13736,8 +13800,8 @@ var _kiotlog$kiotlogweb$Views_Devices$deviceCards = F2(
 											_1: {ctor: '[]'}
 										},
 										A2(
-											_elm_lang$core$List$map,
-											_kiotlog$kiotlogweb$Views_Devices$mapSensors(editing),
+											_elm_lang$core$List$indexedMap,
+											_kiotlog$kiotlogweb$Views_Devices$mapSensors(model),
 											device.sensors)))),
 							_1: {ctor: '[]'}
 						}),
@@ -13921,7 +13985,7 @@ var _kiotlog$kiotlogweb$Views_Devices$viewDevice = function (model) {
 					_1: {ctor: '[]'}
 				});
 		case 'Success':
-			return A2(_kiotlog$kiotlogweb$Views_Devices$deviceCards, _p13._0, model.editingId);
+			return A2(_kiotlog$kiotlogweb$Views_Devices$deviceCards, model, _p13._0);
 		default:
 			return A2(
 				_kiotlog$kiotlogweb$Views_Devices$viewError,
@@ -15193,11 +15257,32 @@ var _kiotlog$kiotlogweb$Ports$closeDrawer = _elm_lang$core$Native_Platform.outgo
 		return null;
 	});
 
+var _kiotlog$kiotlogweb$State$updateSensorInList = F2(
+	function (sensor, sensors) {
+		var updateSensor = function (s) {
+			return _elm_lang$core$Native_Utils.eq(s.id, sensor.id) ? sensor : s;
+		};
+		return A2(_elm_lang$core$List$map, updateSensor, sensors);
+	});
+var _kiotlog$kiotlogweb$State$editSensor = F2(
+	function (model, updateFunc) {
+		var _p0 = model.sensor;
+		if (_p0.ctor === 'Success') {
+			var updatedSensor = updateFunc(_p0._0);
+			return _elm_lang$core$Native_Utils.update(
+				model,
+				{
+					sensor: _krisajenkins$remotedata$RemoteData$Success(updatedSensor)
+				});
+		} else {
+			return model;
+		}
+	});
 var _kiotlog$kiotlogweb$State$editDevice = F2(
 	function (model, updateFunc) {
-		var _p0 = model.device;
-		if (_p0.ctor === 'Success') {
-			var updatedDevice = updateFunc(_p0._0);
+		var _p1 = model.device;
+		if (_p1.ctor === 'Success') {
+			var updatedDevice = updateFunc(_p1._0);
 			return _elm_lang$core$Native_Utils.update(
 				model,
 				{
@@ -15377,14 +15462,14 @@ var _kiotlog$kiotlogweb$State$setRoute = F2(
 					{ctor: '_Tuple0'})
 			};
 		};
-		var _p1 = route;
-		switch (_p1.ctor) {
+		var _p2 = route;
+		switch (_p2.ctor) {
 			case 'DashboardRoute':
 				return page(_kiotlog$kiotlogweb$Types$DashboardPage);
 			case 'DevicesRoute':
-				var _p2 = page(_kiotlog$kiotlogweb$Types$DevicesPage);
-				var newModel = _p2._0;
-				var pageCmd = _p2._1;
+				var _p3 = page(_kiotlog$kiotlogweb$Types$DevicesPage);
+				var newModel = _p3._0;
+				var pageCmd = _p3._1;
 				return A2(
 					_elm_lang$core$Platform_Cmd_ops['!'],
 					_elm_lang$core$Native_Utils.update(
@@ -15400,20 +15485,20 @@ var _kiotlog$kiotlogweb$State$setRoute = F2(
 						}
 					});
 			case 'DeviceRoute':
-				var _p5 = _p1._0;
-				var _p3 = page(_kiotlog$kiotlogweb$Types$DevicePage);
-				var newModel = _p3._0;
-				var pageCmd = _p3._1;
+				var _p6 = _p2._0;
+				var _p4 = page(_kiotlog$kiotlogweb$Types$DevicePage);
+				var newModel = _p4._0;
+				var pageCmd = _p4._1;
 				var dev = function () {
-					var _p4 = model.devices;
-					switch (_p4.ctor) {
+					var _p5 = model.devices;
+					switch (_p5.ctor) {
 						case 'Success':
 							return A2(
 								_krisajenkins$remotedata$RemoteData$fromMaybe,
-								_elm_lang$http$Http$BadUrl(_p5),
-								A2(_kiotlog$kiotlogweb$State$findDeviceById, _p5, _p4._0));
+								_elm_lang$http$Http$BadUrl(_p6),
+								A2(_kiotlog$kiotlogweb$State$findDeviceById, _p6, _p5._0));
 						case 'Failure':
-							return _krisajenkins$remotedata$RemoteData$Failure(_p4._0);
+							return _krisajenkins$remotedata$RemoteData$Failure(_p5._0);
 						case 'NotAsked':
 							return _krisajenkins$remotedata$RemoteData$NotAsked;
 						default:
@@ -15430,14 +15515,18 @@ var _kiotlog$kiotlogweb$State$setRoute = F2(
 						_0: pageCmd,
 						_1: {
 							ctor: '::',
-							_0: _kiotlog$kiotlogweb$Rest$fetchDeviceCommand(_p5),
-							_1: {ctor: '[]'}
+							_0: _kiotlog$kiotlogweb$Rest$fetchDeviceCommand(_p6),
+							_1: {
+								ctor: '::',
+								_0: _kiotlog$kiotlogweb$Rest$fetchSensorTypesCommand,
+								_1: {ctor: '[]'}
+							}
 						}
 					});
 			case 'NewDeviceRoute':
-				var _p6 = page(_kiotlog$kiotlogweb$Types$AddDevicePage);
-				var newModel = _p6._0;
-				var pageCmd = _p6._1;
+				var _p7 = page(_kiotlog$kiotlogweb$Types$AddDevicePage);
+				var newModel = _p7._0;
+				var pageCmd = _p7._1;
 				return A2(
 					_elm_lang$core$Platform_Cmd_ops['!'],
 					_elm_lang$core$Native_Utils.update(
@@ -15459,9 +15548,9 @@ var _kiotlog$kiotlogweb$State$setRoute = F2(
 						}
 					});
 			case 'SensorTypesRoute':
-				var _p7 = page(_kiotlog$kiotlogweb$Types$SensorTypesPage);
-				var newModel = _p7._0;
-				var pageCmd = _p7._1;
+				var _p8 = page(_kiotlog$kiotlogweb$Types$SensorTypesPage);
+				var newModel = _p8._0;
+				var pageCmd = _p8._1;
 				return A2(
 					_elm_lang$core$Platform_Cmd_ops['!'],
 					_elm_lang$core$Native_Utils.update(
@@ -15477,20 +15566,20 @@ var _kiotlog$kiotlogweb$State$setRoute = F2(
 						}
 					});
 			case 'SensorTypeRoute':
-				var _p10 = _p1._0;
-				var _p8 = page(_kiotlog$kiotlogweb$Types$SensorTypePage);
-				var newModel = _p8._0;
-				var pageCmd = _p8._1;
+				var _p11 = _p2._0;
+				var _p9 = page(_kiotlog$kiotlogweb$Types$SensorTypePage);
+				var newModel = _p9._0;
+				var pageCmd = _p9._1;
 				var dev = function () {
-					var _p9 = model.sensorTypes;
-					switch (_p9.ctor) {
+					var _p10 = model.sensorTypes;
+					switch (_p10.ctor) {
 						case 'Success':
 							return A2(
 								_krisajenkins$remotedata$RemoteData$fromMaybe,
-								_elm_lang$http$Http$BadUrl(_p10),
-								A2(_kiotlog$kiotlogweb$State$findDeviceById, _p10, _p9._0));
+								_elm_lang$http$Http$BadUrl(_p11),
+								A2(_kiotlog$kiotlogweb$State$findDeviceById, _p11, _p10._0));
 						case 'Failure':
-							return _krisajenkins$remotedata$RemoteData$Failure(_p9._0);
+							return _krisajenkins$remotedata$RemoteData$Failure(_p10._0);
 						case 'NotAsked':
 							return _krisajenkins$remotedata$RemoteData$NotAsked;
 						default:
@@ -15507,7 +15596,7 @@ var _kiotlog$kiotlogweb$State$setRoute = F2(
 						_0: pageCmd,
 						_1: {
 							ctor: '::',
-							_0: _kiotlog$kiotlogweb$Rest$fetchSensorTypeCommand(_p10),
+							_0: _kiotlog$kiotlogweb$Rest$fetchSensorTypeCommand(_p11),
 							_1: {ctor: '[]'}
 						}
 					});
@@ -15517,9 +15606,9 @@ var _kiotlog$kiotlogweb$State$setRoute = F2(
 	});
 var _kiotlog$kiotlogweb$State$init = function (location) {
 	var currentRoute = _kiotlog$kiotlogweb$Routing$extractRoute(location);
-	var _p11 = A2(_kiotlog$kiotlogweb$State$setRoute, currentRoute, _kiotlog$kiotlogweb$State$initialModel);
-	var model = _p11._0;
-	var cmd = _p11._1;
+	var _p12 = A2(_kiotlog$kiotlogweb$State$setRoute, currentRoute, _kiotlog$kiotlogweb$State$initialModel);
+	var model = _p12._0;
+	var cmd = _p12._1;
 	return A2(
 		_elm_lang$core$Platform_Cmd_ops['!'],
 		model,
@@ -15536,8 +15625,8 @@ var _kiotlog$kiotlogweb$State$init = function (location) {
 };
 var _kiotlog$kiotlogweb$State$update = F2(
 	function (msg, model) {
-		var _p12 = msg;
-		switch (_p12.ctor) {
+		var _p13 = msg;
+		switch (_p13.ctor) {
 			case 'NoOp':
 				return {ctor: '_Tuple2', _0: model, _1: _elm_lang$core$Platform_Cmd$none};
 			case 'OpenDrawer':
@@ -15557,7 +15646,7 @@ var _kiotlog$kiotlogweb$State$update = F2(
 			case 'LocationChanged':
 				return A2(
 					_kiotlog$kiotlogweb$State$setRoute,
-					_kiotlog$kiotlogweb$Routing$extractRoute(_p12._0),
+					_kiotlog$kiotlogweb$Routing$extractRoute(_p13._0),
 					model);
 			case 'FetchDevices':
 				return {
@@ -15572,7 +15661,7 @@ var _kiotlog$kiotlogweb$State$update = F2(
 					ctor: '_Tuple2',
 					_0: _elm_lang$core$Native_Utils.update(
 						model,
-						{devices: _p12._0}),
+						{devices: _p13._0}),
 					_1: _elm_lang$core$Platform_Cmd$none
 				};
 			case 'SetDevicesTableState':
@@ -15580,7 +15669,7 @@ var _kiotlog$kiotlogweb$State$update = F2(
 					ctor: '_Tuple2',
 					_0: _elm_lang$core$Native_Utils.update(
 						model,
-						{devicesTable: _p12._0}),
+						{devicesTable: _p13._0}),
 					_1: _elm_lang$core$Platform_Cmd$none
 				};
 			case 'DeviceReceived':
@@ -15588,7 +15677,7 @@ var _kiotlog$kiotlogweb$State$update = F2(
 					ctor: '_Tuple2',
 					_0: _elm_lang$core$Native_Utils.update(
 						model,
-						{device: _p12._0}),
+						{device: _p13._0}),
 					_1: _elm_lang$core$Platform_Cmd$none
 				};
 			case 'FetchSensorTypes':
@@ -15604,7 +15693,7 @@ var _kiotlog$kiotlogweb$State$update = F2(
 					ctor: '_Tuple2',
 					_0: _elm_lang$core$Native_Utils.update(
 						model,
-						{sensorTypes: _p12._0}),
+						{sensorTypes: _p13._0}),
 					_1: _elm_lang$core$Platform_Cmd$none
 				};
 			case 'SensorTypeReceived':
@@ -15612,7 +15701,7 @@ var _kiotlog$kiotlogweb$State$update = F2(
 					ctor: '_Tuple2',
 					_0: _elm_lang$core$Native_Utils.update(
 						model,
-						{sensorType: _p12._0}),
+						{sensorType: _p13._0}),
 					_1: _elm_lang$core$Platform_Cmd$none
 				};
 			case 'ConversionsReceived':
@@ -15620,7 +15709,7 @@ var _kiotlog$kiotlogweb$State$update = F2(
 					ctor: '_Tuple2',
 					_0: _elm_lang$core$Native_Utils.update(
 						model,
-						{conversions: _p12._0}),
+						{conversions: _p13._0}),
 					_1: _elm_lang$core$Platform_Cmd$none
 				};
 			case 'NewDeviceDevice':
@@ -15629,7 +15718,7 @@ var _kiotlog$kiotlogweb$State$update = F2(
 					_0: A2(
 						_kiotlog$kiotlogweb$State$editDevice,
 						model,
-						_kiotlog$kiotlogweb$State$setDeviceDevice(_p12._0)),
+						_kiotlog$kiotlogweb$State$setDeviceDevice(_p13._0)),
 					_1: _elm_lang$core$Platform_Cmd$none
 				};
 			case 'NewDeviceName':
@@ -15638,7 +15727,7 @@ var _kiotlog$kiotlogweb$State$update = F2(
 					_0: A2(
 						_kiotlog$kiotlogweb$State$editDevice,
 						model,
-						_kiotlog$kiotlogweb$State$setDeviceName(_p12._0)),
+						_kiotlog$kiotlogweb$State$setDeviceName(_p13._0)),
 					_1: _elm_lang$core$Platform_Cmd$none
 				};
 			case 'NewDeviceBigendian':
@@ -15647,16 +15736,16 @@ var _kiotlog$kiotlogweb$State$update = F2(
 					_0: A2(
 						_kiotlog$kiotlogweb$State$editDevice,
 						model,
-						_kiotlog$kiotlogweb$State$setDeviceBigendian(_p12._0)),
+						_kiotlog$kiotlogweb$State$setDeviceBigendian(_p13._0)),
 					_1: _elm_lang$core$Platform_Cmd$none
 				};
 			case 'AddSensor':
-				var _p13 = model.device;
-				if (_p13.ctor === 'Success') {
-					var _p14 = _p13._0;
+				var _p14 = model.device;
+				if (_p14.ctor === 'Success') {
+					var _p15 = _p14._0;
 					var sensors = A2(
 						_elm_lang$core$Basics_ops['++'],
-						_p14.sensors,
+						_p15.sensors,
 						{
 							ctor: '::',
 							_0: _kiotlog$kiotlogweb$State$emptySensor,
@@ -15669,7 +15758,7 @@ var _kiotlog$kiotlogweb$State$update = F2(
 							{
 								device: _krisajenkins$remotedata$RemoteData$Success(
 									_elm_lang$core$Native_Utils.update(
-										_p14,
+										_p15,
 										{
 											sensors: A2(_elm_lang$core$Debug$log, 'Sensors', sensors)
 										}))
@@ -15680,14 +15769,14 @@ var _kiotlog$kiotlogweb$State$update = F2(
 					return {ctor: '_Tuple2', _0: model, _1: _elm_lang$core$Platform_Cmd$none};
 				}
 			case 'RemoveSensorOnDevice':
-				var _p17 = _p12._0;
-				var _p15 = model.device;
-				if (_p15.ctor === 'Success') {
-					var _p16 = _p15._0;
+				var _p18 = _p13._0;
+				var _p16 = model.device;
+				if (_p16.ctor === 'Success') {
+					var _p17 = _p16._0;
 					var sensorsLeft = A2(
 						_elm_lang$core$Basics_ops['++'],
-						A2(_elm_lang$core$List$take, _p17, _p16.sensors),
-						A2(_elm_lang$core$List$drop, _p17 + 1, _p16.sensors));
+						A2(_elm_lang$core$List$take, _p18, _p17.sensors),
+						A2(_elm_lang$core$List$drop, _p18 + 1, _p17.sensors));
 					return {
 						ctor: '_Tuple2',
 						_0: _elm_lang$core$Native_Utils.update(
@@ -15695,7 +15784,7 @@ var _kiotlog$kiotlogweb$State$update = F2(
 							{
 								device: _krisajenkins$remotedata$RemoteData$Success(
 									_elm_lang$core$Native_Utils.update(
-										_p16,
+										_p17,
 										{sensors: sensorsLeft}))
 							}),
 						_1: _elm_lang$core$Platform_Cmd$none
@@ -15711,8 +15800,8 @@ var _kiotlog$kiotlogweb$State$update = F2(
 						model,
 						A2(
 							_kiotlog$kiotlogweb$State$updateSensorOnDevice,
-							_p12._0,
-							_kiotlog$kiotlogweb$State$setSensorName(_p12._1))),
+							_p13._0,
+							_kiotlog$kiotlogweb$State$setSensorName(_p13._1))),
 					_1: _elm_lang$core$Platform_Cmd$none
 				};
 			case 'SetSensorDescrOnDevice':
@@ -15723,8 +15812,8 @@ var _kiotlog$kiotlogweb$State$update = F2(
 						model,
 						A2(
 							_kiotlog$kiotlogweb$State$updateSensorOnDevice,
-							_p12._0,
-							_kiotlog$kiotlogweb$State$setSensorDescr(_p12._1))),
+							_p13._0,
+							_kiotlog$kiotlogweb$State$setSensorDescr(_p13._1))),
 					_1: _elm_lang$core$Platform_Cmd$none
 				};
 			case 'SetSensorTypeOnDevice':
@@ -15735,8 +15824,8 @@ var _kiotlog$kiotlogweb$State$update = F2(
 						model,
 						A2(
 							_kiotlog$kiotlogweb$State$updateSensorOnDevice,
-							_p12._0,
-							_kiotlog$kiotlogweb$State$setSensorType(_p12._1))),
+							_p13._0,
+							_kiotlog$kiotlogweb$State$setSensorType(_p13._1))),
 					_1: _elm_lang$core$Platform_Cmd$none
 				};
 			case 'SetSensorConversionOnDevice':
@@ -15747,8 +15836,8 @@ var _kiotlog$kiotlogweb$State$update = F2(
 						model,
 						A2(
 							_kiotlog$kiotlogweb$State$updateSensorOnDevice,
-							_p12._0,
-							_kiotlog$kiotlogweb$State$setConversion(_p12._1))),
+							_p13._0,
+							_kiotlog$kiotlogweb$State$setConversion(_p13._1))),
 					_1: _elm_lang$core$Platform_Cmd$none
 				};
 			case 'SetSensorFmtChrOnDevice':
@@ -15759,23 +15848,23 @@ var _kiotlog$kiotlogweb$State$update = F2(
 						model,
 						A2(
 							_kiotlog$kiotlogweb$State$updateSensorOnDevice,
-							_p12._0,
-							_kiotlog$kiotlogweb$State$setFmtChr(_p12._1))),
+							_p13._0,
+							_kiotlog$kiotlogweb$State$setFmtChr(_p13._1))),
 					_1: _elm_lang$core$Platform_Cmd$none
 				};
 			case 'CreateNewDevice':
-				var _p18 = model.device;
-				if (_p18.ctor === 'Success') {
+				var _p19 = model.device;
+				if (_p19.ctor === 'Success') {
 					return {
 						ctor: '_Tuple2',
 						_0: model,
-						_1: _kiotlog$kiotlogweb$Rest$createDeviceCommand(_p18._0)
+						_1: _kiotlog$kiotlogweb$Rest$createDeviceCommand(_p19._0)
 					};
 				} else {
 					return {ctor: '_Tuple2', _0: model, _1: _elm_lang$core$Platform_Cmd$none};
 				}
 			case 'DeviceCreated':
-				if (_p12._0.ctor === 'Ok') {
+				if (_p13._0.ctor === 'Ok') {
 					return {
 						ctor: '_Tuple2',
 						_0: model,
@@ -15783,7 +15872,7 @@ var _kiotlog$kiotlogweb$State$update = F2(
 							A2(_elm_lang$core$Debug$log, 'redirecting to: ', '#/devices'))
 					};
 				} else {
-					var err = A2(_elm_lang$core$Debug$log, 'error: ', _p12._0._0);
+					var err = A2(_elm_lang$core$Debug$log, 'error: ', _p13._0._0);
 					return {ctor: '_Tuple2', _0: model, _1: _elm_lang$core$Platform_Cmd$none};
 				}
 			case 'StartEditing':
@@ -15792,7 +15881,7 @@ var _kiotlog$kiotlogweb$State$update = F2(
 					_0: _elm_lang$core$Native_Utils.update(
 						model,
 						{
-							editingId: _elm_lang$core$Maybe$Just(_p12._0)
+							editingId: _elm_lang$core$Maybe$Just(_p13._0)
 						}),
 					_1: _elm_lang$core$Platform_Cmd$none
 				};
@@ -15805,13 +15894,14 @@ var _kiotlog$kiotlogweb$State$update = F2(
 					_1: _elm_lang$core$Platform_Cmd$none
 				};
 			case 'EditSensor':
+				var _p20 = _p13._0;
 				return {
 					ctor: '_Tuple2',
 					_0: _elm_lang$core$Native_Utils.update(
 						model,
 						{
-							editingId: _elm_lang$core$Maybe$Just(_p12._0.id),
-							sensor: _krisajenkins$remotedata$RemoteData$Success(_kiotlog$kiotlogweb$State$emptySensor)
+							editingId: _elm_lang$core$Maybe$Just(_p20.id),
+							sensor: _krisajenkins$remotedata$RemoteData$Success(_p20)
 						}),
 					_1: _elm_lang$core$Platform_Cmd$none
 				};
@@ -15821,13 +15911,33 @@ var _kiotlog$kiotlogweb$State$update = F2(
 					_0: _elm_lang$core$Native_Utils.update(
 						model,
 						{editingId: _elm_lang$core$Maybe$Nothing}),
-					_1: _kiotlog$kiotlogweb$Rest$updateSensorCommand(_p12._0)
+					_1: _kiotlog$kiotlogweb$Rest$updateSensorCommand(_p13._0)
 				};
 			default:
-				if (_p12._0.ctor === 'Ok') {
-					return {ctor: '_Tuple2', _0: model, _1: _elm_lang$core$Platform_Cmd$none};
+				if (_p13._0.ctor === 'Ok') {
+					var _p21 = model.device;
+					if (_p21.ctor === 'Success') {
+						var _p22 = _p21._0;
+						var s = _p22.sensors;
+						var d = _elm_lang$core$Native_Utils.update(
+							_p22,
+							{
+								sensors: A2(_kiotlog$kiotlogweb$State$updateSensorInList, _p13._0._0, s)
+							});
+						return {
+							ctor: '_Tuple2',
+							_0: _elm_lang$core$Native_Utils.update(
+								model,
+								{
+									device: _krisajenkins$remotedata$RemoteData$Success(d)
+								}),
+							_1: _elm_lang$core$Platform_Cmd$none
+						};
+					} else {
+						return {ctor: '_Tuple2', _0: model, _1: _elm_lang$core$Platform_Cmd$none};
+					}
 				} else {
-					var err = A2(_elm_lang$core$Debug$log, 'error: ', _p12._0._0);
+					var err = A2(_elm_lang$core$Debug$log, 'error: ', _p13._0._0);
 					return {ctor: '_Tuple2', _0: model, _1: _elm_lang$core$Platform_Cmd$none};
 				}
 		}

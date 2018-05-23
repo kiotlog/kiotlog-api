@@ -120,7 +120,7 @@ setRoute route model =
                     ( newModel, pageCmd ) =
                         page DevicePage
                 in
-                    { newModel | device = dev } ! [ pageCmd, (fetchDeviceCommand id) ]
+                    { newModel | device = dev } ! [ pageCmd, (fetchDeviceCommand id), fetchSensorTypesCommand ]
 
             NewDeviceRoute ->
                 let
@@ -341,14 +341,26 @@ update msg model =
             ( { model | editingId = Nothing }, Cmd.none )
 
         EditSensor sensor ->
-            ( { model | editingId = Just sensor.id, sensor = RemoteData.Success emptySensor }, Cmd.none )
+            ( { model | editingId = Just sensor.id, sensor = RemoteData.Success sensor }, Cmd.none )
 
         PutSensor sensor ->
             ( { model | editingId = Nothing }, updateSensorCommand sensor )
 
         SensorUpdated (Ok sensor) ->
             -- TODO update sensor in device's list
-            ( model, Cmd.none )
+            case model.device of
+                RemoteData.Success device ->
+                    let
+                        s =
+                            device.sensors
+
+                        d =
+                            { device | sensors = (updateSensorInList sensor s) }
+                    in
+                        ( { model | device = RemoteData.Success d }, Cmd.none )
+
+                _ ->
+                    ( model, Cmd.none )
 
         SensorUpdated (Err e) ->
             -- TODO display error
@@ -487,3 +499,29 @@ editDevice model updateFunc =
 
         _ ->
             model
+
+
+editSensor : Model -> (Sensor -> Sensor) -> Model
+editSensor model updateFunc =
+    case model.sensor of
+        RemoteData.Success sensor ->
+            let
+                updatedSensor =
+                    updateFunc sensor
+            in
+                { model | sensor = RemoteData.Success updatedSensor }
+
+        _ ->
+            model
+
+
+updateSensorInList : Sensor -> List Sensor -> List Sensor
+updateSensorInList sensor sensors =
+    let
+        updateSensor s =
+            if s.id == sensor.id then
+                sensor
+            else
+                s
+    in
+        List.map updateSensor sensors
