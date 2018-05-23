@@ -11951,7 +11951,15 @@ var _kiotlog$kiotlogweb$Views_Devices$addDeviceShowSensors = F4(
 													ctor: '::',
 													_0: A2(
 														_elm_lang$html$Html$option,
-														{ctor: '[]'},
+														{
+															ctor: '::',
+															_0: _elm_lang$html$Html_Attributes$disabled(true),
+															_1: {
+																ctor: '::',
+																_0: _elm_lang$html$Html_Attributes$selected(true),
+																_1: {ctor: '[]'}
+															}
+														},
 														{ctor: '[]'}),
 													_1: {ctor: '[]'}
 												},
@@ -12022,7 +12030,15 @@ var _kiotlog$kiotlogweb$Views_Devices$addDeviceShowSensors = F4(
 														ctor: '::',
 														_0: A2(
 															_elm_lang$html$Html$option,
-															{ctor: '[]'},
+															{
+																ctor: '::',
+																_0: _elm_lang$html$Html_Attributes$disabled(true),
+																_1: {
+																	ctor: '::',
+																	_0: _elm_lang$html$Html_Attributes$selected(true),
+																	_1: {ctor: '[]'}
+																}
+															},
 															{ctor: '[]'}),
 														_1: {ctor: '[]'}
 													},
@@ -13103,15 +13119,6 @@ var _kiotlog$kiotlogweb$Views_Devices$config = _evancz$elm_sortable_table$Table$
 				thead: _kiotlog$kiotlogweb$Views_Devices$simpleThead
 			})
 	});
-var _kiotlog$kiotlogweb$Views_Devices$isEditing = F2(
-	function (editing, obj) {
-		var _p10 = editing;
-		if (_p10.ctor === 'Just') {
-			return _elm_lang$core$Native_Utils.eq(_p10._0, obj.id);
-		} else {
-			return false;
-		}
-	});
 var _kiotlog$kiotlogweb$Views_Devices$sensorCardActions = F3(
 	function (editing, idx, sensor) {
 		return A2(
@@ -13130,7 +13137,7 @@ var _kiotlog$kiotlogweb$Views_Devices$sensorCardActions = F3(
 						_0: _elm_lang$html$Html_Attributes$class('mdc-card__action-icons'),
 						_1: {ctor: '[]'}
 					},
-					A2(_kiotlog$kiotlogweb$Views_Devices$isEditing, editing, sensor) ? {
+					editing ? {
 						ctor: '::',
 						_0: A2(
 							_elm_lang$html$Html$button,
@@ -13238,8 +13245,18 @@ var _kiotlog$kiotlogweb$Views_Devices$sensorCardActions = F3(
 				_1: {ctor: '[]'}
 			});
 	});
+var _kiotlog$kiotlogweb$Views_Devices$isEditing = F2(
+	function (editing, obj) {
+		var _p10 = editing;
+		if (_p10.ctor === 'Just') {
+			return _elm_lang$core$Native_Utils.eq(_p10._0, obj.id);
+		} else {
+			return false;
+		}
+	});
 var _kiotlog$kiotlogweb$Views_Devices$mapSensors = F3(
 	function (model, idx, sensor) {
+		var editing = A2(_kiotlog$kiotlogweb$Views_Devices$isEditing, model.editingId, sensor);
 		return A2(
 			_elm_lang$html$Html$div,
 			{
@@ -13247,8 +13264,8 @@ var _kiotlog$kiotlogweb$Views_Devices$mapSensors = F3(
 				_0: _elm_lang$html$Html_Attributes$class(
 					A2(
 						_elm_lang$core$Basics_ops['++'],
-						'device-sensor mdc-card mdc-layout-grid__cell--span-12',
-						A2(_kiotlog$kiotlogweb$Views_Devices$isEditing, model.editingId, sensor) ? ' editing' : '')),
+						'device-sensor mdc-card mdc-layout-grid__cell--span-12 margin-bottom-gutter',
+						editing ? ' editing' : '')),
 				_1: {ctor: '[]'}
 			},
 			{
@@ -13294,8 +13311,7 @@ var _kiotlog$kiotlogweb$Views_Devices$mapSensors = F3(
 															A2(_elm_lang$core$Basics_ops['++'], 'name-', sensor.id)),
 														_1: {
 															ctor: '::',
-															_0: _elm_lang$html$Html_Attributes$disabled(
-																!A2(_kiotlog$kiotlogweb$Views_Devices$isEditing, model.editingId, sensor)),
+															_0: _elm_lang$html$Html_Attributes$disabled(!editing),
 															_1: {
 																ctor: '::',
 																_0: _elm_lang$html$Html_Events$onInput(
@@ -13373,8 +13389,7 @@ var _kiotlog$kiotlogweb$Views_Devices$mapSensors = F3(
 																A2(_elm_lang$core$Basics_ops['++'], 'description-', sensor.id)),
 															_1: {
 																ctor: '::',
-																_0: _elm_lang$html$Html_Attributes$disabled(
-																	!A2(_kiotlog$kiotlogweb$Views_Devices$isEditing, model.editingId, sensor)),
+																_0: _elm_lang$html$Html_Attributes$disabled(!editing),
 																_1: {
 																	ctor: '::',
 																	_0: _elm_lang$html$Html_Events$onInput(
@@ -13422,15 +13437,89 @@ var _kiotlog$kiotlogweb$Views_Devices$mapSensors = F3(
 									}),
 								_1: {
 									ctor: '::',
-									_0: _elm_lang$html$Html$text(sensor.fmt.fmtChr),
+									_0: A2(
+										_elm_lang$html$Html$div,
+										{
+											ctor: '::',
+											_0: _elm_lang$html$Html_Attributes$class(
+												A2(
+													_elm_lang$core$Basics_ops['++'],
+													'mdc-select mdc-layout-grid__cell--span-5',
+													editing ? '' : ' mdc-select--disabled')),
+											_1: {
+												ctor: '::',
+												_0: A2(_elm_lang$html$Html_Attributes$attribute, 'data-mdc-auto-init', 'MDCSelect'),
+												_1: {ctor: '[]'}
+											}
+										},
+										{
+											ctor: '::',
+											_0: A2(
+												_elm_lang$html$Html$select,
+												{
+													ctor: '::',
+													_0: _elm_lang$html$Html_Attributes$class('mdc-select__native-control'),
+													_1: {
+														ctor: '::',
+														_0: _elm_lang$html$Html_Attributes$disabled(!editing),
+														_1: {
+															ctor: '::',
+															_0: A2(
+																_elm_lang$html$Html_Events$on,
+																'change',
+																A2(
+																	_elm_lang$core$Json_Decode$map,
+																	_kiotlog$kiotlogweb$Types$SetSensorTypeOnDevice(idx),
+																	_elm_lang$html$Html_Events$targetValue)),
+															_1: {ctor: '[]'}
+														}
+													}
+												},
+												A2(_kiotlog$kiotlogweb$Views_Devices$sensorTypesOptions, model.sensorTypes, sensor.sensorTypeId)),
+											_1: {
+												ctor: '::',
+												_0: A2(
+													_elm_lang$html$Html$label,
+													{
+														ctor: '::',
+														_0: _elm_lang$html$Html_Attributes$class('mdc-floating-label'),
+														_1: {ctor: '[]'}
+													},
+													{
+														ctor: '::',
+														_0: _elm_lang$html$Html$text('Sensor Type'),
+														_1: {ctor: '[]'}
+													}),
+												_1: {
+													ctor: '::',
+													_0: A2(
+														_elm_lang$html$Html$div,
+														{
+															ctor: '::',
+															_0: _elm_lang$html$Html_Attributes$class('mdc-line-ripple'),
+															_1: {ctor: '[]'}
+														},
+														{ctor: '[]'}),
+													_1: {ctor: '[]'}
+												}
+											}
+										}),
 									_1: {
 										ctor: '::',
 										_0: A2(
 											_elm_lang$html$Html$div,
 											{
 												ctor: '::',
-												_0: _elm_lang$html$Html_Attributes$class('mdc-select'),
-												_1: {ctor: '[]'}
+												_0: _elm_lang$html$Html_Attributes$class(
+													A2(
+														_elm_lang$core$Basics_ops['++'],
+														'mdc-select mdc-layout-grid__cell--span-4',
+														editing ? '' : ' mdc-select--disabled')),
+												_1: {
+													ctor: '::',
+													_0: A2(_elm_lang$html$Html_Attributes$attribute, 'data-mdc-auto-init', 'MDCSelect'),
+													_1: {ctor: '[]'}
+												}
 											},
 											{
 												ctor: '::',
@@ -13439,19 +13528,23 @@ var _kiotlog$kiotlogweb$Views_Devices$mapSensors = F3(
 													{
 														ctor: '::',
 														_0: _elm_lang$html$Html_Attributes$class('mdc-select__native-control'),
-														_1: {ctor: '[]'}
-													},
-													A2(
-														_elm_lang$core$Basics_ops['++'],
-														{
+														_1: {
 															ctor: '::',
-															_0: A2(
-																_elm_lang$html$Html$option,
-																{ctor: '[]'},
-																{ctor: '[]'}),
-															_1: {ctor: '[]'}
-														},
-														A2(_kiotlog$kiotlogweb$Views_Devices$sensorTypesOptions, model.sensorTypes, sensor.sensorTypeId))),
+															_0: _elm_lang$html$Html_Attributes$disabled(!editing),
+															_1: {
+																ctor: '::',
+																_0: A2(
+																	_elm_lang$html$Html_Events$on,
+																	'change',
+																	A2(
+																		_elm_lang$core$Json_Decode$map,
+																		_kiotlog$kiotlogweb$Types$SetSensorConversionOnDevice(idx),
+																		_elm_lang$html$Html_Events$targetValue)),
+																_1: {ctor: '[]'}
+															}
+														}
+													},
+													A2(_kiotlog$kiotlogweb$Views_Devices$conversionsOptions, model.conversions, sensor.conversionId)),
 												_1: {
 													ctor: '::',
 													_0: A2(
@@ -13461,7 +13554,11 @@ var _kiotlog$kiotlogweb$Views_Devices$mapSensors = F3(
 															_0: _elm_lang$html$Html_Attributes$class('mdc-floating-label'),
 															_1: {ctor: '[]'}
 														},
-														{ctor: '[]'}),
+														{
+															ctor: '::',
+															_0: _elm_lang$html$Html$text('Conversion'),
+															_1: {ctor: '[]'}
+														}),
 													_1: {
 														ctor: '::',
 														_0: A2(
@@ -13476,15 +13573,297 @@ var _kiotlog$kiotlogweb$Views_Devices$mapSensors = F3(
 													}
 												}
 											}),
-										_1: {ctor: '[]'}
+										_1: {
+											ctor: '::',
+											_0: A2(
+												_elm_lang$html$Html$div,
+												{
+													ctor: '::',
+													_0: _elm_lang$html$Html_Attributes$class(
+														A2(
+															_elm_lang$core$Basics_ops['++'],
+															'mdc-select mdc-layout-grid__cell--span-3',
+															editing ? '' : ' mdc-select--disabled')),
+													_1: {
+														ctor: '::',
+														_0: A2(_elm_lang$html$Html_Attributes$attribute, 'data-mdc-auto-init', 'MDCSelect'),
+														_1: {
+															ctor: '::',
+															_0: A2(
+																_elm_lang$html$Html_Events$on,
+																'change',
+																A2(
+																	_elm_lang$core$Json_Decode$map,
+																	_kiotlog$kiotlogweb$Types$SetSensorFmtChrOnDevice(idx),
+																	_elm_lang$html$Html_Events$targetValue)),
+															_1: {ctor: '[]'}
+														}
+													}
+												},
+												{
+													ctor: '::',
+													_0: A2(
+														_elm_lang$html$Html$select,
+														{
+															ctor: '::',
+															_0: _elm_lang$html$Html_Attributes$class('mdc-select__native-control'),
+															_1: {
+																ctor: '::',
+																_0: _elm_lang$html$Html_Attributes$disabled(!editing),
+																_1: {ctor: '[]'}
+															}
+														},
+														{
+															ctor: '::',
+															_0: A2(
+																_elm_lang$html$Html$option,
+																{
+																	ctor: '::',
+																	_0: _elm_lang$html$Html_Attributes$selected(
+																		_elm_lang$core$Native_Utils.eq(sensor.fmt.fmtChr, '')),
+																	_1: {ctor: '[]'}
+																},
+																{ctor: '[]'}),
+															_1: {
+																ctor: '::',
+																_0: A2(
+																	_elm_lang$html$Html$option,
+																	{
+																		ctor: '::',
+																		_0: _elm_lang$html$Html_Attributes$value('b'),
+																		_1: {
+																			ctor: '::',
+																			_0: _elm_lang$html$Html_Attributes$selected(
+																				_elm_lang$core$Native_Utils.eq(sensor.fmt.fmtChr, 'b')),
+																			_1: {ctor: '[]'}
+																		}
+																	},
+																	{
+																		ctor: '::',
+																		_0: _elm_lang$html$Html$text('signed char'),
+																		_1: {ctor: '[]'}
+																	}),
+																_1: {
+																	ctor: '::',
+																	_0: A2(
+																		_elm_lang$html$Html$option,
+																		{
+																			ctor: '::',
+																			_0: _elm_lang$html$Html_Attributes$value('B'),
+																			_1: {
+																				ctor: '::',
+																				_0: _elm_lang$html$Html_Attributes$selected(
+																					_elm_lang$core$Native_Utils.eq(sensor.fmt.fmtChr, 'B')),
+																				_1: {ctor: '[]'}
+																			}
+																		},
+																		{
+																			ctor: '::',
+																			_0: _elm_lang$html$Html$text('unsigned char'),
+																			_1: {ctor: '[]'}
+																		}),
+																	_1: {
+																		ctor: '::',
+																		_0: A2(
+																			_elm_lang$html$Html$option,
+																			{
+																				ctor: '::',
+																				_0: _elm_lang$html$Html_Attributes$value('h'),
+																				_1: {
+																					ctor: '::',
+																					_0: _elm_lang$html$Html_Attributes$selected(
+																						_elm_lang$core$Native_Utils.eq(sensor.fmt.fmtChr, 'h')),
+																					_1: {ctor: '[]'}
+																				}
+																			},
+																			{
+																				ctor: '::',
+																				_0: _elm_lang$html$Html$text('short'),
+																				_1: {ctor: '[]'}
+																			}),
+																		_1: {
+																			ctor: '::',
+																			_0: A2(
+																				_elm_lang$html$Html$option,
+																				{
+																					ctor: '::',
+																					_0: _elm_lang$html$Html_Attributes$value('H'),
+																					_1: {
+																						ctor: '::',
+																						_0: _elm_lang$html$Html_Attributes$selected(
+																							_elm_lang$core$Native_Utils.eq(sensor.fmt.fmtChr, 'H')),
+																						_1: {ctor: '[]'}
+																					}
+																				},
+																				{
+																					ctor: '::',
+																					_0: _elm_lang$html$Html$text('unsigned short'),
+																					_1: {ctor: '[]'}
+																				}),
+																			_1: {
+																				ctor: '::',
+																				_0: A2(
+																					_elm_lang$html$Html$option,
+																					{
+																						ctor: '::',
+																						_0: _elm_lang$html$Html_Attributes$value('i'),
+																						_1: {
+																							ctor: '::',
+																							_0: _elm_lang$html$Html_Attributes$selected(
+																								_elm_lang$core$Native_Utils.eq(sensor.fmt.fmtChr, 'i')),
+																							_1: {ctor: '[]'}
+																						}
+																					},
+																					{
+																						ctor: '::',
+																						_0: _elm_lang$html$Html$text('int'),
+																						_1: {ctor: '[]'}
+																					}),
+																				_1: {
+																					ctor: '::',
+																					_0: A2(
+																						_elm_lang$html$Html$option,
+																						{
+																							ctor: '::',
+																							_0: _elm_lang$html$Html_Attributes$value('I'),
+																							_1: {
+																								ctor: '::',
+																								_0: _elm_lang$html$Html_Attributes$selected(
+																									_elm_lang$core$Native_Utils.eq(sensor.fmt.fmtChr, 'I')),
+																								_1: {ctor: '[]'}
+																							}
+																						},
+																						{
+																							ctor: '::',
+																							_0: _elm_lang$html$Html$text('unsigned int'),
+																							_1: {ctor: '[]'}
+																						}),
+																					_1: {
+																						ctor: '::',
+																						_0: A2(
+																							_elm_lang$html$Html$option,
+																							{
+																								ctor: '::',
+																								_0: _elm_lang$html$Html_Attributes$value('l'),
+																								_1: {
+																									ctor: '::',
+																									_0: _elm_lang$html$Html_Attributes$selected(
+																										_elm_lang$core$Native_Utils.eq(sensor.fmt.fmtChr, 'l')),
+																									_1: {ctor: '[]'}
+																								}
+																							},
+																							{
+																								ctor: '::',
+																								_0: _elm_lang$html$Html$text('long'),
+																								_1: {ctor: '[]'}
+																							}),
+																						_1: {
+																							ctor: '::',
+																							_0: A2(
+																								_elm_lang$html$Html$option,
+																								{
+																									ctor: '::',
+																									_0: _elm_lang$html$Html_Attributes$value('L'),
+																									_1: {
+																										ctor: '::',
+																										_0: _elm_lang$html$Html_Attributes$selected(
+																											_elm_lang$core$Native_Utils.eq(sensor.fmt.fmtChr, 'L')),
+																										_1: {ctor: '[]'}
+																									}
+																								},
+																								{
+																									ctor: '::',
+																									_0: _elm_lang$html$Html$text('unsigned long'),
+																									_1: {ctor: '[]'}
+																								}),
+																							_1: {
+																								ctor: '::',
+																								_0: A2(
+																									_elm_lang$html$Html$option,
+																									{
+																										ctor: '::',
+																										_0: _elm_lang$html$Html_Attributes$value('q'),
+																										_1: {
+																											ctor: '::',
+																											_0: _elm_lang$html$Html_Attributes$selected(
+																												_elm_lang$core$Native_Utils.eq(sensor.fmt.fmtChr, 'q')),
+																											_1: {ctor: '[]'}
+																										}
+																									},
+																									{
+																										ctor: '::',
+																										_0: _elm_lang$html$Html$text('long long'),
+																										_1: {ctor: '[]'}
+																									}),
+																								_1: {
+																									ctor: '::',
+																									_0: A2(
+																										_elm_lang$html$Html$option,
+																										{
+																											ctor: '::',
+																											_0: _elm_lang$html$Html_Attributes$value('Q'),
+																											_1: {
+																												ctor: '::',
+																												_0: _elm_lang$html$Html_Attributes$selected(
+																													_elm_lang$core$Native_Utils.eq(sensor.fmt.fmtChr, 'Q')),
+																												_1: {ctor: '[]'}
+																											}
+																										},
+																										{
+																											ctor: '::',
+																											_0: _elm_lang$html$Html$text('unsigned long long'),
+																											_1: {ctor: '[]'}
+																										}),
+																									_1: {ctor: '[]'}
+																								}
+																							}
+																						}
+																					}
+																				}
+																			}
+																		}
+																	}
+																}
+															}
+														}),
+													_1: {
+														ctor: '::',
+														_0: A2(
+															_elm_lang$html$Html$label,
+															{
+																ctor: '::',
+																_0: _elm_lang$html$Html_Attributes$class('mdc-floating-label'),
+																_1: {ctor: '[]'}
+															},
+															{
+																ctor: '::',
+																_0: _elm_lang$html$Html$text('Format'),
+																_1: {ctor: '[]'}
+															}),
+														_1: {
+															ctor: '::',
+															_0: A2(
+																_elm_lang$html$Html$div,
+																{
+																	ctor: '::',
+																	_0: _elm_lang$html$Html_Attributes$class('mdc-line-ripple'),
+																	_1: {ctor: '[]'}
+																},
+																{ctor: '[]'}),
+															_1: {ctor: '[]'}
+														}
+													}
+												}),
+											_1: {ctor: '[]'}
+										}
 									}
 								}
 							}
 						},
 						function () {
-							var _p11 = sensor.sensorType;
-							if (_p11.ctor === 'Just') {
-								var _p12 = _p11._0;
+							var _p11 = {ctor: '_Tuple2', _0: editing, _1: sensor.sensorType};
+							if (((_p11.ctor === '_Tuple2') && (_p11._0 === false)) && (_p11._1.ctor === 'Just')) {
+								var _p12 = _p11._1._0;
 								return {
 									ctor: '::',
 									_0: A2(
@@ -13493,7 +13872,7 @@ var _kiotlog$kiotlogweb$Views_Devices$mapSensors = F3(
 										{ctor: '[]'}),
 									_1: {
 										ctor: '::',
-										_0: _elm_lang$html$Html$text(_p12.name),
+										_0: _elm_lang$html$Html$text(_p12.type_),
 										_1: {
 											ctor: '::',
 											_0: A2(
@@ -13502,7 +13881,8 @@ var _kiotlog$kiotlogweb$Views_Devices$mapSensors = F3(
 												{ctor: '[]'}),
 											_1: {
 												ctor: '::',
-												_0: _elm_lang$html$Html$text(_p12.type_),
+												_0: _elm_lang$html$Html$text(
+													_elm_lang$core$Basics$toString(_p12.meta.min)),
 												_1: {
 													ctor: '::',
 													_0: A2(
@@ -13512,20 +13892,8 @@ var _kiotlog$kiotlogweb$Views_Devices$mapSensors = F3(
 													_1: {
 														ctor: '::',
 														_0: _elm_lang$html$Html$text(
-															_elm_lang$core$Basics$toString(_p12.meta.min)),
-														_1: {
-															ctor: '::',
-															_0: A2(
-																_elm_lang$html$Html$br,
-																{ctor: '[]'},
-																{ctor: '[]'}),
-															_1: {
-																ctor: '::',
-																_0: _elm_lang$html$Html$text(
-																	_elm_lang$core$Basics$toString(_p12.meta.max)),
-																_1: {ctor: '[]'}
-															}
-														}
+															_elm_lang$core$Basics$toString(_p12.meta.max)),
+														_1: {ctor: '[]'}
 													}
 												}
 											}
@@ -13538,7 +13906,7 @@ var _kiotlog$kiotlogweb$Views_Devices$mapSensors = F3(
 						}())),
 				_1: {
 					ctor: '::',
-					_0: A3(_kiotlog$kiotlogweb$Views_Devices$sensorCardActions, model.editingId, idx, sensor),
+					_0: A3(_kiotlog$kiotlogweb$Views_Devices$sensorCardActions, editing, idx, sensor),
 					_1: {ctor: '[]'}
 				}
 			});
@@ -13663,7 +14031,7 @@ var _kiotlog$kiotlogweb$Views_Devices$deviceCards = F2(
 											_elm_lang$html$Html$div,
 											{
 												ctor: '::',
-												_0: _elm_lang$html$Html_Attributes$class('mdc-card mdc-layout-grid__cell--span-12 padding-gutter'),
+												_0: _elm_lang$html$Html_Attributes$class('mdc-card mdc-layout-grid__cell--span-12 padding-gutter margin-bottom-gutter'),
 												_1: {ctor: '[]'}
 											},
 											{
@@ -13726,7 +14094,7 @@ var _kiotlog$kiotlogweb$Views_Devices$deviceCards = F2(
 																},
 																{
 																	ctor: '::',
-																	_0: _elm_lang$html$Html$text('Name:'),
+																	_0: _elm_lang$html$Html$text('Description:'),
 																	_1: {ctor: '[]'}
 																}),
 															_1: {
@@ -15519,7 +15887,11 @@ var _kiotlog$kiotlogweb$State$setRoute = F2(
 							_1: {
 								ctor: '::',
 								_0: _kiotlog$kiotlogweb$Rest$fetchSensorTypesCommand,
-								_1: {ctor: '[]'}
+								_1: {
+									ctor: '::',
+									_0: _kiotlog$kiotlogweb$Rest$fetchConversionsCommand,
+									_1: {ctor: '[]'}
+								}
 							}
 						}
 					});
@@ -15886,22 +16258,44 @@ var _kiotlog$kiotlogweb$State$update = F2(
 					_1: _elm_lang$core$Platform_Cmd$none
 				};
 			case 'CancelEditing':
-				return {
-					ctor: '_Tuple2',
-					_0: _elm_lang$core$Native_Utils.update(
-						model,
-						{editingId: _elm_lang$core$Maybe$Nothing}),
-					_1: _elm_lang$core$Platform_Cmd$none
-				};
+				var _p20 = {ctor: '_Tuple2', _0: model.device, _1: model.sensor};
+				if (((_p20.ctor === '_Tuple2') && (_p20._0.ctor === 'Success')) && (_p20._1.ctor === 'Success')) {
+					var _p21 = _p20._0._0;
+					var s = _p21.sensors;
+					var d = _elm_lang$core$Native_Utils.update(
+						_p21,
+						{
+							sensors: A2(_kiotlog$kiotlogweb$State$updateSensorInList, _p20._1._0, s)
+						});
+					return {
+						ctor: '_Tuple2',
+						_0: _elm_lang$core$Native_Utils.update(
+							model,
+							{
+								editingId: _elm_lang$core$Maybe$Nothing,
+								sensor: _krisajenkins$remotedata$RemoteData$NotAsked,
+								device: _krisajenkins$remotedata$RemoteData$Success(d)
+							}),
+						_1: _elm_lang$core$Platform_Cmd$none
+					};
+				} else {
+					return {
+						ctor: '_Tuple2',
+						_0: _elm_lang$core$Native_Utils.update(
+							model,
+							{editingId: _elm_lang$core$Maybe$Nothing}),
+						_1: _elm_lang$core$Platform_Cmd$none
+					};
+				}
 			case 'EditSensor':
-				var _p20 = _p13._0;
+				var _p22 = _p13._0;
 				return {
 					ctor: '_Tuple2',
 					_0: _elm_lang$core$Native_Utils.update(
 						model,
 						{
-							editingId: _elm_lang$core$Maybe$Just(_p20.id),
-							sensor: _krisajenkins$remotedata$RemoteData$Success(_p20)
+							editingId: _elm_lang$core$Maybe$Just(_p22.id),
+							sensor: _krisajenkins$remotedata$RemoteData$Success(_p22)
 						}),
 					_1: _elm_lang$core$Platform_Cmd$none
 				};
@@ -15915,12 +16309,12 @@ var _kiotlog$kiotlogweb$State$update = F2(
 				};
 			default:
 				if (_p13._0.ctor === 'Ok') {
-					var _p21 = model.device;
-					if (_p21.ctor === 'Success') {
-						var _p22 = _p21._0;
-						var s = _p22.sensors;
+					var _p23 = model.device;
+					if (_p23.ctor === 'Success') {
+						var _p24 = _p23._0;
+						var s = _p24.sensors;
 						var d = _elm_lang$core$Native_Utils.update(
-							_p22,
+							_p24,
 							{
 								sensors: A2(_kiotlog$kiotlogweb$State$updateSensorInList, _p13._0._0, s)
 							});

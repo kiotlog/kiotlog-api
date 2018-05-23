@@ -107,7 +107,7 @@ deviceCards model device =
             ]
         , div [ class "mdc-layout-grid kiotlog-container-small" ]
             [ div [ class "mdc-layout-grid__inner" ]
-                ([ div [ class "mdc-card mdc-layout-grid__cell--span-12 padding-gutter" ]
+                ([ div [ class "mdc-card mdc-layout-grid__cell--span-12 padding-gutter margin-bottom-gutter" ]
                     [ div [ class "mdc-layout-grid__inner align-center" ]
                         [ span [ class "mdc-layout-grid__cell--span-6" ]
                             [ text "Device Id:" ]
@@ -116,7 +116,7 @@ deviceCards model device =
                         ]
                     , div [ class "mdc-layout-grid__inner align-center" ]
                         [ span [ class "mdc-layout-grid__cell--span-6" ]
-                            [ text "Name:" ]
+                            [ text "Description:" ]
                         , h3 [ class "mdc-layout-grid__cell--span-6" ]
                             [ text device.meta.description ]
                         ]
@@ -158,94 +158,198 @@ isEditing editing obj =
 
 mapSensors : Model -> Int -> Sensor -> Html Msg
 mapSensors model idx sensor =
-    div
-        [ class
-            ("device-sensor mdc-card mdc-layout-grid__cell--span-12"
-                ++ (if isEditing model.editingId sensor then
-                        " editing"
-                    else
-                        ""
-                   )
-            )
-        ]
-        [ div [ class "mdc-layout-grid__inner padding-gutter" ]
-            ([ div
-                [ class "mdc-text-field mdc-layout-grid__cell--span-12 mdc-text-field--upgraded"
-                , attribute "data-mdc-auto-init" "MDCTextField"
-                ]
-                [ input
-                    [ type_ "text"
-                    , class "mdc-text-field__input"
-                    , value sensor.meta.name
-                    , id ("name-" ++ sensor.id)
-                    , disabled (not (isEditing model.editingId sensor))
-                    , onInput (SetSensorNameOnDevice idx)
+    let
+        editing =
+            isEditing model.editingId sensor
+    in
+        div
+            [ class
+                ("device-sensor mdc-card mdc-layout-grid__cell--span-12 margin-bottom-gutter"
+                    ++ (if editing then
+                            " editing"
+                        else
+                            ""
+                       )
+                )
+            ]
+            [ div [ class "mdc-layout-grid__inner padding-gutter" ]
+                ([ div
+                    [ class "mdc-text-field mdc-layout-grid__cell--span-12 mdc-text-field--upgraded"
+                    , attribute "data-mdc-auto-init" "MDCTextField"
                     ]
-                    []
-                , label
-                    [ class "mdc-floating-label mdc-floating-label--float-above"
-                    , for ("name-" ++ sensor.id)
+                    [ input
+                        [ type_ "text"
+                        , class "mdc-text-field__input"
+                        , value sensor.meta.name
+                        , id ("name-" ++ sensor.id)
+                        , disabled (not editing)
+                        , onInput (SetSensorNameOnDevice idx)
+                        ]
+                        []
+                    , label
+                        [ class "mdc-floating-label mdc-floating-label--float-above"
+                        , for ("name-" ++ sensor.id)
+                        ]
+                        [ text "Name" ]
+                    , div [ class "mdc-line-ripple" ]
+                        []
                     ]
-                    [ text "Name" ]
-                , div [ class "mdc-line-ripple" ]
-                    []
-                ]
-             , div
-                [ class "mdc-text-field mdc-layout-grid__cell--span-12 mdc-text-field--upgraded"
-                , attribute "data-mdc-auto-init" "MDCTextField"
-                ]
-                [ input
-                    [ type_ "text"
-                    , class "mdc-text-field__input"
-                    , value sensor.meta.description
-                    , id ("description-" ++ sensor.id)
-                    , disabled (not (isEditing model.editingId sensor))
-                    , onInput (SetSensorDescrOnDevice idx)
+                 , div
+                    [ class "mdc-text-field mdc-layout-grid__cell--span-12 mdc-text-field--upgraded"
+                    , attribute "data-mdc-auto-init" "MDCTextField"
                     ]
-                    []
-                , label
-                    [ class "mdc-floating-label mdc-floating-label--float-above"
-                    , for ("description-" ++ sensor.id)
+                    [ input
+                        [ type_ "text"
+                        , class "mdc-text-field__input"
+                        , value sensor.meta.description
+                        , id ("description-" ++ sensor.id)
+                        , disabled (not editing)
+                        , onInput (SetSensorDescrOnDevice idx)
+                        ]
+                        []
+                    , label
+                        [ class "mdc-floating-label mdc-floating-label--float-above"
+                        , for ("description-" ++ sensor.id)
+                        ]
+                        [ text "Description" ]
+                    , div [ class "mdc-line-ripple" ]
+                        []
                     ]
-                    [ text "Description" ]
-                , div [ class "mdc-line-ripple" ]
-                    []
-                ]
-             , text sensor.fmt.fmtChr
-             , div [ class "mdc-select" ]
-                [ select [ class "mdc-select__native-control" ]
-                    ([ option [] [] ]
-                        ++ (sensorTypesOptions model.sensorTypes sensor.sensorTypeId)
-                    )
-                , label [ class "mdc-floating-label" ] []
-                , div [ class "mdc-line-ripple" ] []
-                ]
-             ]
-                ++ (case sensor.sensorType of
-                        Just st ->
-                            [ br [] []
-                            , text st.name
-                            , br [] []
-                            , text st.type_
-                            , br [] []
-                            , text (toString st.meta.min)
-                            , br [] []
-                            , text (toString st.meta.max)
-                            ]
+                 , div
+                    [ class
+                        ("mdc-select mdc-layout-grid__cell--span-5"
+                            ++ (if editing then
+                                    ""
+                                else
+                                    " mdc-select--disabled"
+                               )
+                        )
+                    , attribute "data-mdc-auto-init" "MDCSelect"
+                    ]
+                    [ select
+                        [ class "mdc-select__native-control"
+                        , disabled (not editing)
+                        , on "change" (JD.map (SetSensorTypeOnDevice idx) Html.Events.targetValue)
+                        ]
+                        (sensorTypesOptions model.sensorTypes sensor.sensorTypeId)
+                    , label [ class "mdc-floating-label" ] [ text "Sensor Type" ]
+                    , div [ class "mdc-line-ripple" ] []
+                    ]
+                 , div
+                    [ class
+                        ("mdc-select mdc-layout-grid__cell--span-4"
+                            ++ (if editing then
+                                    ""
+                                else
+                                    " mdc-select--disabled"
+                               )
+                        )
+                    , attribute "data-mdc-auto-init" "MDCSelect"
+                    ]
+                    [ select
+                        [ class "mdc-select__native-control"
+                        , disabled (not editing)
+                        , on "change" (JD.map (SetSensorConversionOnDevice idx) Html.Events.targetValue)
+                        ]
+                        (conversionsOptions model.conversions sensor.conversionId)
+                    , label [ class "mdc-floating-label" ] [ text "Conversion" ]
+                    , div [ class "mdc-line-ripple" ] []
+                    ]
+                 , div
+                    [ class
+                        ("mdc-select mdc-layout-grid__cell--span-3"
+                            ++ (if editing then
+                                    ""
+                                else
+                                    " mdc-select--disabled"
+                               )
+                        )
+                    , attribute "data-mdc-auto-init" "MDCSelect"
+                    , on "change" (JD.map (SetSensorFmtChrOnDevice idx) Html.Events.targetValue)
+                    ]
+                    [ select
+                        [ class "mdc-select__native-control"
+                        , disabled (not editing)
+                        ]
+                        [ option [ selected (sensor.fmt.fmtChr == "") ] []
+                        , option [ value "b", selected (sensor.fmt.fmtChr == "b") ] [ text "signed char" ]
+                        , option [ value "B", selected (sensor.fmt.fmtChr == "B") ] [ text "unsigned char" ]
+                        , option [ value "h", selected (sensor.fmt.fmtChr == "h") ] [ text "short" ]
+                        , option [ value "H", selected (sensor.fmt.fmtChr == "H") ] [ text "unsigned short" ]
+                        , option [ value "i", selected (sensor.fmt.fmtChr == "i") ] [ text "int" ]
+                        , option [ value "I", selected (sensor.fmt.fmtChr == "I") ] [ text "unsigned int" ]
+                        , option [ value "l", selected (sensor.fmt.fmtChr == "l") ] [ text "long" ]
+                        , option [ value "L", selected (sensor.fmt.fmtChr == "L") ] [ text "unsigned long" ]
+                        , option [ value "q", selected (sensor.fmt.fmtChr == "q") ] [ text "long long" ]
+                        , option [ value "Q", selected (sensor.fmt.fmtChr == "Q") ] [ text "unsigned long long" ]
+                        ]
+                    , label [ class "mdc-floating-label" ]
+                        [ text "Format" ]
+                    , div [ class "mdc-line-ripple" ] []
+                    ]
+                 ]
+                    ++ (case ( editing, sensor.sensorType ) of
+                            ( False, Just st ) ->
+                                [ br [] []
+                                , text st.type_
+                                , br [] []
+                                , text (toString st.meta.min)
+                                , br [] []
+                                , text (toString st.meta.max)
+                                ]
 
-                        Nothing ->
-                            []
-                   )
-            )
-        , (sensorCardActions model.editingId idx sensor)
-        ]
+                            _ ->
+                                []
+                       )
+                )
+            , (sensorCardActions editing idx sensor)
+            ]
 
 
-sensorCardActions : Maybe String -> Int -> Sensor -> Html Msg
+
+-- deviceCardActions : Maybe String -> Device -> Html Msg
+-- deviceCardActions editing device =
+--     div [ class "mdc-card__actions" ]
+--         [ div [ class "mdc-card__action-icons" ]
+--             (if isEditing editing sensor then
+--                 [ button
+--                     [ class "mdc-button mdc-card__action mdc-card__action--button"
+--                     , onClick CancelEditing
+--                     ]
+--                     [ i [ class "material-icons" ]
+--                         [ text "cancel"
+--                         ]
+--                     , text "Cancel"
+--                     ]
+--                 , button
+--                     [ class "mdc-button mdc-card__action mdc-card__action--button"
+--                     , onClick (PutSensor sensor)
+--                     ]
+--                     [ i [ class "material-icons" ]
+--                         [ text "done" ]
+--                     , text "Done"
+--                     ]
+--                 ]
+--              else
+--                 [ button
+--                     [ class "mdc-button mdc-card__action mdc-card__action--button"
+--                     , onClick (EditSensor sensor)
+--                     ]
+--                     [ i [ class "material-icons" ]
+--                         [ text "edit"
+--                         ]
+--                     , text "Edit"
+--                     ]
+--                 ]
+--             )
+--         ]
+
+
+sensorCardActions : Bool -> Int -> Sensor -> Html Msg
 sensorCardActions editing idx sensor =
     div [ class "mdc-card__actions" ]
         [ div [ class "mdc-card__action-icons" ]
-            (if isEditing editing sensor then
+            (if editing then
                 [ button
                     [ class "mdc-button mdc-card__action mdc-card__action--button"
                     , onClick CancelEditing
@@ -585,7 +689,7 @@ addDeviceShowSensors sensorTypes conversions idx sensor =
                 , on "change" (JD.map (SetSensorTypeOnDevice idx) Html.Events.targetValue)
                 ]
                 [ select [ class "mdc-select__native-control" ]
-                    ([ option [] [] ]
+                    ([ option [ disabled True, selected True ] [] ]
                         ++ (sensorTypesOptions sensorTypes sensor.sensorTypeId)
                     )
                 , label [ class "mdc-floating-label" ]
@@ -598,7 +702,7 @@ addDeviceShowSensors sensorTypes conversions idx sensor =
                 , on "change" (JD.map (SetSensorConversionOnDevice idx) Html.Events.targetValue)
                 ]
                 [ select [ class "mdc-select__native-control" ]
-                    ([ option [] [] ]
+                    ([ option [ disabled True, selected True ] [] ]
                         ++ (conversionsOptions conversions sensor.conversionId)
                     )
                 , label [ class "mdc-floating-label" ]

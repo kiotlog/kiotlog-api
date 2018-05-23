@@ -76,8 +76,19 @@ body {
     input.mdc-text-field__input {
         height: auto;
     }
+
+    .mdc-select--disabled {
+        opacity: 1;
+    }
     
-    &:not(.editing) input.mdc-text-field__input {
-        border-bottom-width: 0;
+    &:not(.editing) {
+        input.mdc-text-field__input {
+            // border-bottom-width: 0;
+            border-bottom-style: none
+        }
+        .mdc-select--disabled .mdc-select__native-control {
+            border-bottom-style: none;
+            color: inherit;
+        }
     }
 }

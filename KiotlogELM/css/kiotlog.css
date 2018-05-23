@@ -3492,5 +3492,12 @@ body {
 .device-sensor input.mdc-text-field__input {
   height: auto; }
 
+.device-sensor .mdc-select--disabled {
+  opacity: 1; }
+
 .device-sensor:not(.editing) input.mdc-text-field__input {
-  border-bottom-width: 0; }
+  border-bottom-style: none; }
+
+.device-sensor:not(.editing) .mdc-select--disabled .mdc-select__native-control {
+  border-bottom-style: none;
+  color: inherit; }

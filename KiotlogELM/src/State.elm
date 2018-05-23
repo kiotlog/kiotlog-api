@@ -120,7 +120,7 @@ setRoute route model =
                     ( newModel, pageCmd ) =
                         page DevicePage
                 in
-                    { newModel | device = dev } ! [ pageCmd, (fetchDeviceCommand id), fetchSensorTypesCommand ]
+                    { newModel | device = dev } ! [ pageCmd, (fetchDeviceCommand id), fetchSensorTypesCommand, fetchConversionsCommand ]
 
             NewDeviceRoute ->
                 let
@@ -338,7 +338,19 @@ update msg model =
             ( { model | editingId = Just id }, Cmd.none )
 
         CancelEditing ->
-            ( { model | editingId = Nothing }, Cmd.none )
+            case ( model.device, model.sensor ) of
+                ( RemoteData.Success device, RemoteData.Success sensor ) ->
+                    let
+                        s =
+                            device.sensors
+
+                        d =
+                            { device | sensors = (updateSensorInList sensor s) }
+                    in
+                        ( { model | editingId = Nothing, sensor = RemoteData.NotAsked, device = RemoteData.Success d }, Cmd.none )
+
+                _ ->
+                    ( { model | editingId = Nothing }, Cmd.none )
 
         EditSensor sensor ->
             ( { model | editingId = Just sensor.id, sensor = RemoteData.Success sensor }, Cmd.none )
