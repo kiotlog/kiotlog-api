@@ -56,6 +56,16 @@ let createEntity<'T when 'T : not struct> (cs : string) (entity: 'T) =
     | :? DbUpdateException -> Error { Errors = [|"Error adding " + typeof<'T>.Name|]; Status = HTTP_409 }
     | _ -> Error { Errors = [|"Some DB error occurred"|]; Status = HTTP_500 }
 
+let private loadCollections<'T when 'T : not struct and 'T : null> (ctx : KiotlogDBFContext) (e : 'T) (collections: string list) =
+    match collections with
+    | [] -> ()
+    | _ -> collections |> List.iter (fun i -> ctx.Entry(e).Collection(i).Load())
+
+let private loadReferences<'T when 'T : not struct and 'T : null> (ctx : KiotlogDBFContext) (e : 'T) (references: string list) =
+    match references with
+    | [] -> ()
+    | _ -> references |> List.iter (fun i -> ctx.Entry(e).Reference(i).Load())
+
 let private loadEntityAsync<'T when 'T : not struct and 'T : null> (ctx : KiotlogDBFContext) (collections: string list) (references: string list) (entityId : Guid) =
     async {
         try
@@ -65,13 +75,9 @@ let private loadEntityAsync<'T when 'T : not struct and 'T : null> (ctx : Kiotlo
             match entity with
             | null -> return Error { Errors = [| typeof<'T>.Name + " not found"|]; Status = HTTP_404 }
             | e ->
-                match collections with
-                | [] -> ()
-                | _ -> collections |> List.iter (fun i -> ctx.Entry(e).Collection(i).Load())
+                loadCollections ctx e collections
+                loadReferences ctx e references
 
-                match references with
-                | [] -> ()
-                | _ -> references |> List.iter (fun i -> ctx.Entry(e).Reference(i).Load())
                 return Ok e
         with
         | _ -> return Error { Errors = [|"Some DB error occurred"|]; Status = HTTP_500 }
@@ -87,7 +93,7 @@ let private getEntityAsync<'T when 'T : not struct and 'T : null> (cs : string) 
 let getEntity<'T when 'T : not struct and 'T: null> (cs : string) (collections: string list) (references: string list) (entityId: Guid) =
     getEntityAsync<'T> cs collections references entityId |> Async.RunSynchronously
 
-let private updateEntityByIdAsync<'T when 'T : not struct and 'T : null> updateFunc (cs : string) (entityId: Guid)  =
+let private updateEntityByIdAsync<'T when 'T : not struct and 'T : null> updateFunc (cs : string) (collections: string list) (references: string list) (entityId: Guid)  =
     async {
         use ctx = getContext cs
 
@@ -99,14 +105,18 @@ let private updateEntityByIdAsync<'T when 'T : not struct and 'T : null> updateF
             updateFunc entity
             try
                 ctx.SaveChanges() |> ignore
+
+                loadCollections ctx entity collections
+                loadReferences ctx entity references
+
                 return Ok entity
             with
             | :? DbUpdateException -> return Error { Errors = [| "Error updating " + typeof<'T>.Name |]; Status = HTTP_409 }
             | _ -> return Error { Errors = [|"Some DB error occurred"|]; Status = HTTP_500 }
     }
 
-let updateEntityById<'T when 'T : not struct and 'T : null> updateFunc (cs : string) (entityId: Guid) =
-    updateEntityByIdAsync<'T> updateFunc cs entityId  |> Async.RunSynchronously
+let updateEntityById<'T when 'T : not struct and 'T : null> updateFunc (cs : string) (collections: string list) (references: string list) (entityId: Guid) =
+    updateEntityByIdAsync<'T> updateFunc cs collections references entityId  |> Async.RunSynchronously
 
 let private deleteEntityAsync<'T when 'T : not struct> (cs : string) (entityId : Guid) =
     async {

@@ -34,7 +34,7 @@ let updateSensorTypeById<'T when 'T : not struct> (cs : string) (sensortypeId: G
         if not (String.IsNullOrEmpty sensortype.Type) then entity.Type <- entity.Type
         if not (isNull sensortype.Meta) then entity.Meta <- sensortype.Meta
 
-    updateEntityById<SensorTypes> updateFunc cs sensortypeId
+    updateEntityById<SensorTypes> updateFunc cs ["Sensors"] [] sensortypeId
 
 let webPart (cs : string) =
     choose [
