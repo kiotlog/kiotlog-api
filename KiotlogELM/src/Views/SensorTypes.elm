@@ -5,7 +5,7 @@ import Html.Attributes exposing (class, type_, attribute, href, style)
 import Html.Events exposing (onClick)
 import Http
 import RemoteData exposing (WebData)
-import Types exposing (..)
+import Types exposing (Msg(..), Model, SensorType)
 import Table exposing (Config, stringColumn, intColumn, defaultCustomizations, Status(..), HtmlDetails, customConfig, veryCustomColumn)
 
 

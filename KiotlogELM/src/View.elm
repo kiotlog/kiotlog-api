@@ -5,6 +5,7 @@ import Html.Attributes exposing (class, src, style)
 import Types exposing (Model, Msg, Route(..), Page(..))
 import Views.Toolbar as Toolbar exposing (view)
 import Views.Drawer as Drawer exposing (view)
+import Views.Dashboard as Dashboard exposing (viewDashboard)
 import Views.Devices as Devices exposing (viewDevices, viewDevice, addDevice)
 import Views.SensorTypes as SensorTypes exposing (viewSensorTypes, viewSensorType)
 
@@ -16,26 +17,7 @@ mainPage model =
             div [] [ text "Benvenuto!" ]
 
         DashboardPage ->
-            div
-                [ class "kiotlog-page"
-                , style
-                    [ ( "position", "fixed" )
-                    , ( "top", "0" )
-                    , ( "bottom", "0" )
-                    , ( "left", "0" )
-                    , ( "right", "0" )
-                    , ( "display", "flex" )
-                    , ( "align-content", "center" )
-                    , ( "justify-conten", "center" )
-                    , ( "justify-content", "center" )
-                    ]
-                ]
-                [ img
-                    [ src "/img/transparent.svg"
-                    , style [ ( "width", "640px" ) ]
-                    ]
-                    []
-                ]
+            Dashboard.viewDashboard model
 
         DevicesPage ->
             Devices.viewDevices model

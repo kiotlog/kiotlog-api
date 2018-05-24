@@ -1,6 +1,7 @@
 module Rest
     exposing
-        ( fetchDevicesCommand
+        ( fetchKiotlogStatusCommand
+        , fetchDevicesCommand
         , fetchDeviceCommand
         , createDeviceCommand
         , fetchSensorTypesCommand
@@ -12,9 +13,10 @@ module Rest
 import Types exposing (..)
 import Http exposing (..)
 import RemoteData exposing (WebData)
-import Json.Decode exposing (string, int, list, bool, Decoder, maybe)
+import Json.Decode exposing (string, int, list, bool, Decoder, maybe, andThen, fail, succeed)
 import Json.Decode.Pipeline exposing (decode, required, optional)
 import Json.Encode as Encode
+import Date exposing (Date)
 
 
 apiBaseUrl : String
@@ -62,6 +64,20 @@ patch obj endpoint encoder decoder msg =
                 }
     in
         request |> Http.send msg
+
+
+stringToDate : Decoder Date
+stringToDate =
+    string
+        |> andThen
+            (\val ->
+                case Date.fromString val of
+                    Err err ->
+                        fail err
+
+                    Ok date ->
+                        succeed date
+            )
 
 
 metaDecoder : Decoder Meta
@@ -127,6 +143,35 @@ conversionsDecoder =
     decode Conversion
         |> required "Id" string
         |> required "Fun" string
+
+
+statusDeviceDecoder : Decoder StatusDevice
+statusDeviceDecoder =
+    decode StatusDevice
+        |> required "Id" string
+        |> required "Device" string
+        |> optional "LastPoint" (maybe stringToDate) Nothing
+
+
+statusSensorTypeGroupDecoder : Decoder StatusSensorTypeGroup
+statusSensorTypeGroupDecoder =
+    decode StatusSensorTypeGroup
+        |> required "Type" string
+        |> required "Count" int
+
+
+statusSensorsDecoder : Decoder StatusSensor
+statusSensorsDecoder =
+    decode StatusSensor
+        |> required "Total" int
+        |> required "Types" (list statusSensorTypeGroupDecoder)
+
+
+kiotlogStatusDecoder : Decoder KiotlogStatus
+kiotlogStatusDecoder =
+    decode KiotlogStatus
+        |> required "Devices" (list statusDeviceDecoder)
+        |> required "Sensors" statusSensorsDecoder
 
 
 metaEncoder : Meta -> Encode.Value
@@ -205,6 +250,11 @@ fetchSensorTypeCommand id =
 fetchConversionsCommand : Cmd Msg
 fetchConversionsCommand =
     get "conversions" (list conversionsDecoder) ConversionsReceived
+
+
+fetchKiotlogStatusCommand : Cmd Msg
+fetchKiotlogStatusCommand =
+    get "status" kiotlogStatusDecoder KiotlogStatusReceived
 
 
 createDeviceCommand : Device -> Cmd Msg

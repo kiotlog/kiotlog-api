@@ -4,6 +4,7 @@ import RemoteData exposing (WebData)
 import Navigation exposing (Location)
 import Table
 import Http
+import Date exposing (Date)
 
 
 type alias Device =
@@ -63,9 +64,35 @@ type alias Fmt =
     }
 
 
+type alias StatusDevice =
+    { id : String
+    , device : String
+    , lastPoint : Maybe Date
+    }
+
+
+type alias StatusSensorTypeGroup =
+    { type_ : String
+    , count : Int
+    }
+
+
+type alias StatusSensor =
+    { total : Int
+    , types : List StatusSensorTypeGroup
+    }
+
+
+type alias KiotlogStatus =
+    { devices : List StatusDevice
+    , sensors : StatusSensor
+    }
+
+
 type alias Model =
     { devices : WebData (List Device)
     , devicesTable : Table.State
+    , status : WebData KiotlogStatus
     , device : WebData Device
     , sensor : WebData Sensor
     , sensorTypes : WebData (List SensorType)
@@ -82,6 +109,8 @@ type Msg
     | LocationChanged Location
     | OpenDrawer
     | CloseDrawer
+    | FetchKiotlogStatus
+    | KiotlogStatusReceived (WebData KiotlogStatus)
     | FetchDevices
     | DevicesReceived (WebData (List Device))
     | SetDevicesTableState Table.State

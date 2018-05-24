@@ -4,7 +4,7 @@ import Html exposing (..)
 import Html.Attributes exposing (id, href, class, type_, style, for, attribute, value, selected, checked, disabled)
 import Html.Events exposing (onClick, onInput, on)
 import Http
-import Types exposing (..)
+import Types exposing (Msg(..), Model, Device, Conversion, SensorType, Sensor)
 import RemoteData exposing (WebData)
 import Table exposing (Config, stringColumn, intColumn, defaultCustomizations, Status(..), HtmlDetails, customConfig, veryCustomColumn)
 import Json.Decode as JD

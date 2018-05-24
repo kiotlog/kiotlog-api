@@ -6,7 +6,8 @@ import RemoteData exposing (WebData, fromMaybe)
 import Types exposing (Msg(..), Model, Route(..), Page(..), Device, Sensor)
 import Rest
     exposing
-        ( fetchDevicesCommand
+        ( fetchKiotlogStatusCommand
+        , fetchDevicesCommand
         , fetchDeviceCommand
         , createDeviceCommand
         , fetchSensorTypesCommand
@@ -56,6 +57,7 @@ initialModel : Model
 initialModel =
     { devices = RemoteData.NotAsked
     , devicesTable = (Table.initialSort "Id")
+    , status = RemoteData.NotAsked
     , device = RemoteData.NotAsked
     , sensor = RemoteData.NotAsked
     , sensorTypes = RemoteData.NotAsked
@@ -92,7 +94,11 @@ setRoute route model =
     in
         case route of
             DashboardRoute ->
-                page DashboardPage
+                let
+                    ( newModel, pageCmd ) =
+                        page DashboardPage
+                in
+                    { newModel | status = RemoteData.Loading } ! [ pageCmd, fetchKiotlogStatusCommand ]
 
             DevicesRoute ->
                 let
@@ -182,6 +188,12 @@ update msg model =
 
         LocationChanged location ->
             setRoute (Routing.extractRoute location) model
+
+        FetchKiotlogStatus ->
+            ( { model | status = RemoteData.Loading }, fetchKiotlogStatusCommand )
+
+        KiotlogStatusReceived response ->
+            ( { model | status = response }, Cmd.none )
 
         FetchDevices ->
             ( { model | devices = RemoteData.Loading }, fetchDevicesCommand )
