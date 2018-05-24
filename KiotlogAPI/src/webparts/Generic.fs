@@ -37,7 +37,7 @@ let private getEntitiesAsync<'T when 'T : not struct and 'T : null> (cs : string
             let! entity = set.ToArrayAsync() |> Async.AwaitTask
 
             return Ok entity
-        with | _ -> return Error { Errors = [|"Error getting Sensort Types from DB"|]; Status = HTTP_500 }
+        with | _ -> return Error { Errors = [|"Error getting Entities from DB"|]; Status = HTTP_500 }
     }
 
 let getEntities<'T when 'T : not struct and 'T : null> (cs : string) () =
