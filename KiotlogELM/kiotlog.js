@@ -11707,7 +11707,7 @@ var _kiotlog$kiotlogweb$Views_Dashboard$showSensorType = function (sensorType) {
 						_elm_lang$html$Html$h3,
 						{
 							ctor: '::',
-							_0: _elm_lang$html$Html_Attributes$class('margin-0 mdc-layout-grid__cell--span-6 text-right'),
+							_0: _elm_lang$html$Html_Attributes$class('margin-0 mdc-layout-grid__cell--span-6-desktop mdc-layout-grid__cell--span-4-tablet mdc-layout-grid__cell--span-2-phone text-right'),
 							_1: {ctor: '[]'}
 						},
 						{
@@ -11721,7 +11721,7 @@ var _kiotlog$kiotlogweb$Views_Dashboard$showSensorType = function (sensorType) {
 							_elm_lang$html$Html$h3,
 							{
 								ctor: '::',
-								_0: _elm_lang$html$Html_Attributes$class('margin-0 mdc-layout-grid__cell--span-6'),
+								_0: _elm_lang$html$Html_Attributes$class('margin-0 mdc-layout-grid__cell--span-6-desktop mdc-layout-grid__cell--span-4-tablet mdc-layout-grid__cell--span-2-phone'),
 								_1: {ctor: '[]'}
 							},
 							{
@@ -11761,7 +11761,7 @@ var _kiotlog$kiotlogweb$Views_Dashboard$viewSensorsStatus = function (status) {
 		_elm_lang$html$Html$div,
 		{
 			ctor: '::',
-			_0: _elm_lang$html$Html_Attributes$class('mdc-card mdc-layout-grid__cell--span-6 padding-gutter'),
+			_0: _elm_lang$html$Html_Attributes$class('mdc-card mdc-layout-grid__cell--span-6-desktop mdc-layout-grid__cell--span-4-tablet mdc-layout-grid__cell--span-4-phone padding-gutter'),
 			_1: {ctor: '[]'}
 		},
 		{
@@ -11804,7 +11804,7 @@ var _kiotlog$kiotlogweb$Views_Dashboard$viewDevicesStatus = function (status) {
 		_elm_lang$html$Html$div,
 		{
 			ctor: '::',
-			_0: _elm_lang$html$Html_Attributes$class('mdc-card mdc-layout-grid__cell--span-6 padding-gutter'),
+			_0: _elm_lang$html$Html_Attributes$class('mdc-card mdc-layout-grid__cell--span-6-desktop mdc-layout-grid__cell--span-4-tablet mdc-layout-grid__cell--span-4-phone padding-gutter'),
 			_1: {ctor: '[]'}
 		},
 		{
@@ -11838,45 +11838,67 @@ var _kiotlog$kiotlogweb$Views_Dashboard$viewDevicesStatus = function (status) {
 					_1: {
 						ctor: '::',
 						_0: A2(
-							_elm_lang$html$Html$h3,
+							_elm_lang$html$Html$div,
 							{
 								ctor: '::',
-								_0: _elm_lang$html$Html_Attributes$class('mdc-layout-grid__cell--span-12 text-center margin-0'),
+								_0: _elm_lang$html$Html_Attributes$class('mdc-layout-grid__cell--span-12'),
 								_1: {ctor: '[]'}
 							},
 							{
 								ctor: '::',
-								_0: _elm_lang$html$Html$text(
-									A2(
-										_elm_lang$core$Basics_ops['++'],
-										'Active: ',
-										_elm_lang$core$Basics$toString(
-											_elm_lang$core$List$length(
-												_kiotlog$kiotlogweb$Views_Dashboard$filterActiveDevices(status.devices))))),
+								_0: A2(
+									_elm_lang$html$Html$div,
+									{
+										ctor: '::',
+										_0: _elm_lang$html$Html_Attributes$class('mdc-layout-grid__inner'),
+										_1: {ctor: '[]'}
+									},
+									{
+										ctor: '::',
+										_0: A2(
+											_elm_lang$html$Html$h3,
+											{
+												ctor: '::',
+												_0: _elm_lang$html$Html_Attributes$class('mdc-layout-grid__cell--span-12 text-center margin-0'),
+												_1: {ctor: '[]'}
+											},
+											{
+												ctor: '::',
+												_0: _elm_lang$html$Html$text(
+													A2(
+														_elm_lang$core$Basics_ops['++'],
+														'Active: ',
+														_elm_lang$core$Basics$toString(
+															_elm_lang$core$List$length(
+																_kiotlog$kiotlogweb$Views_Dashboard$filterActiveDevices(status.devices))))),
+												_1: {ctor: '[]'}
+											}),
+										_1: {
+											ctor: '::',
+											_0: A2(
+												_elm_lang$html$Html$h3,
+												{
+													ctor: '::',
+													_0: _elm_lang$html$Html_Attributes$class('mdc-layout-grid__cell--span-12 text-center margin-0'),
+													_1: {ctor: '[]'}
+												},
+												{
+													ctor: '::',
+													_0: _elm_lang$html$Html$text(
+														A2(
+															_elm_lang$core$Basics_ops['++'],
+															'Dead: ',
+															_elm_lang$core$Basics$toString(
+																_elm_lang$core$List$length(
+																	_kiotlog$kiotlogweb$Views_Dashboard$filterDeadDevices(status.devices))))),
+													_1: {ctor: '[]'}
+												}),
+											_1: {ctor: '[]'}
+										}
+									}),
 								_1: {ctor: '[]'}
 							}),
-						_1: {
-							ctor: '::',
-							_0: A2(
-								_elm_lang$html$Html$h3,
-								{
-									ctor: '::',
-									_0: _elm_lang$html$Html_Attributes$class('mdc-layout-grid__cell--span-12 text-center margin-0'),
-									_1: {ctor: '[]'}
-								},
-								{
-									ctor: '::',
-									_0: _elm_lang$html$Html$text(
-										A2(
-											_elm_lang$core$Basics_ops['++'],
-											'Dead: ',
-											_elm_lang$core$Basics$toString(
-												_elm_lang$core$List$length(
-													_kiotlog$kiotlogweb$Views_Dashboard$filterDeadDevices(status.devices))))),
-									_1: {ctor: '[]'}
-								}),
-							_1: {ctor: '[]'}
-						}
+						_1: {ctor: '[]'}
 					}
 				}),
 			_1: {ctor: '[]'}
@@ -13741,6 +13763,142 @@ var _kiotlog$kiotlogweb$Views_Devices$sensorCardActions = F3(
 				_1: {ctor: '[]'}
 			});
 	});
+var _kiotlog$kiotlogweb$Views_Devices$deviceCardActions = F2(
+	function (editing, device) {
+		return A2(
+			_elm_lang$html$Html$div,
+			{
+				ctor: '::',
+				_0: _elm_lang$html$Html_Attributes$class('mdc-card__actions'),
+				_1: {ctor: '[]'}
+			},
+			{
+				ctor: '::',
+				_0: A2(
+					_elm_lang$html$Html$div,
+					{
+						ctor: '::',
+						_0: _elm_lang$html$Html_Attributes$class('mdc-card__action-icons'),
+						_1: {ctor: '[]'}
+					},
+					editing ? {
+						ctor: '::',
+						_0: A2(
+							_elm_lang$html$Html$button,
+							{
+								ctor: '::',
+								_0: _elm_lang$html$Html_Attributes$class('mdc-button mdc-card__action mdc-card__action--button'),
+								_1: {
+									ctor: '::',
+									_0: _elm_lang$html$Html_Events$onClick(_kiotlog$kiotlogweb$Types$CancelEditing),
+									_1: {
+										ctor: '::',
+										_0: _elm_lang$html$Html_Attributes$disabled(true),
+										_1: {ctor: '[]'}
+									}
+								}
+							},
+							{
+								ctor: '::',
+								_0: A2(
+									_elm_lang$html$Html$i,
+									{
+										ctor: '::',
+										_0: _elm_lang$html$Html_Attributes$class('material-icons'),
+										_1: {ctor: '[]'}
+									},
+									{
+										ctor: '::',
+										_0: _elm_lang$html$Html$text('cancel'),
+										_1: {ctor: '[]'}
+									}),
+								_1: {
+									ctor: '::',
+									_0: _elm_lang$html$Html$text('Cancel'),
+									_1: {ctor: '[]'}
+								}
+							}),
+						_1: {
+							ctor: '::',
+							_0: A2(
+								_elm_lang$html$Html$button,
+								{
+									ctor: '::',
+									_0: _elm_lang$html$Html_Attributes$class('mdc-button mdc-card__action mdc-card__action--button'),
+									_1: {
+										ctor: '::',
+										_0: _elm_lang$html$Html_Events$onClick(_kiotlog$kiotlogweb$Types$CancelEditing),
+										_1: {
+											ctor: '::',
+											_0: _elm_lang$html$Html_Attributes$disabled(true),
+											_1: {ctor: '[]'}
+										}
+									}
+								},
+								{
+									ctor: '::',
+									_0: A2(
+										_elm_lang$html$Html$i,
+										{
+											ctor: '::',
+											_0: _elm_lang$html$Html_Attributes$class('material-icons'),
+											_1: {ctor: '[]'}
+										},
+										{
+											ctor: '::',
+											_0: _elm_lang$html$Html$text('done'),
+											_1: {ctor: '[]'}
+										}),
+									_1: {
+										ctor: '::',
+										_0: _elm_lang$html$Html$text('Done'),
+										_1: {ctor: '[]'}
+									}
+								}),
+							_1: {ctor: '[]'}
+						}
+					} : {
+						ctor: '::',
+						_0: A2(
+							_elm_lang$html$Html$button,
+							{
+								ctor: '::',
+								_0: _elm_lang$html$Html_Attributes$class('mdc-button mdc-card__action mdc-card__action--button'),
+								_1: {
+									ctor: '::',
+									_0: _elm_lang$html$Html_Events$onClick(_kiotlog$kiotlogweb$Types$CancelEditing),
+									_1: {
+										ctor: '::',
+										_0: _elm_lang$html$Html_Attributes$disabled(true),
+										_1: {ctor: '[]'}
+									}
+								}
+							},
+							{
+								ctor: '::',
+								_0: A2(
+									_elm_lang$html$Html$i,
+									{
+										ctor: '::',
+										_0: _elm_lang$html$Html_Attributes$class('material-icons'),
+										_1: {ctor: '[]'}
+									},
+									{
+										ctor: '::',
+										_0: _elm_lang$html$Html$text('edit'),
+										_1: {ctor: '[]'}
+									}),
+								_1: {
+									ctor: '::',
+									_0: _elm_lang$html$Html$text('Edit'),
+									_1: {ctor: '[]'}
+								}
+							}),
+						_1: {ctor: '[]'}
+					}),
+				_1: {ctor: '[]'}
+			});
+	});
 var _kiotlog$kiotlogweb$Views_Devices$isEditing = F2(
 	function (editing, obj) {
 		var _p10 = editing;
@@ -14409,6 +14567,7 @@ var _kiotlog$kiotlogweb$Views_Devices$mapSensors = F3(
 	});
 var _kiotlog$kiotlogweb$Views_Devices$deviceCards = F2(
 	function (model, device) {
+		var editing = A2(_kiotlog$kiotlogweb$Views_Devices$isEditing, model.editingId, device);
 		return A2(
 			_elm_lang$html$Html$div,
 			{
@@ -14639,7 +14798,11 @@ var _kiotlog$kiotlogweb$Views_Devices$deviceCards = F2(
 																	}),
 																_1: {ctor: '[]'}
 															}),
-														_1: {ctor: '[]'}
+														_1: {
+															ctor: '::',
+															_0: A2(_kiotlog$kiotlogweb$Views_Devices$deviceCardActions, editing, device),
+															_1: {ctor: '[]'}
+														}
 													}
 												}
 											}),

@@ -87,63 +87,68 @@ devicesTable devices tableState =
 
 deviceCards : Model -> Device -> Html Msg
 deviceCards model device =
-    div [ class "kiotlog-page padding-0" ]
-        [ div [ class "mdc-layout-grid" ]
-            [ div [ class "mdc-layout-grid__inner" ]
-                [ h1 [ class "mdc-layout-grid__cell--span-6 margin-0" ]
-                    [ text device.meta.name ]
-                , h1 [ class "mdc-layout-grid__cell--span-6 margin-0 text-right" ]
-                    [ a
-                        [ href "#/devices"
-                        , class "mdc-button"
-                        , attribute "data-mdc-auto-init" "MDCRipple"
-                        ]
-                        [ i [ class "material-icons mdc-button__icon" ]
-                            [ text "arrow_back" ]
-                        , text "Back"
-                        ]
-                    ]
-                ]
-            ]
-        , div [ class "mdc-layout-grid kiotlog-container-small" ]
-            [ div [ class "mdc-layout-grid__inner" ]
-                ([ div [ class "mdc-card mdc-layout-grid__cell--span-12 padding-gutter margin-bottom-gutter" ]
-                    [ div [ class "mdc-layout-grid__inner align-center" ]
-                        [ span [ class "mdc-layout-grid__cell--span-6" ]
-                            [ text "Device Id:" ]
-                        , h3 [ class "mdc-layout-grid__cell--span-6" ]
-                            [ text device.device ]
-                        ]
-                    , div [ class "mdc-layout-grid__inner align-center" ]
-                        [ span [ class "mdc-layout-grid__cell--span-6" ]
-                            [ text "Description:" ]
-                        , h3 [ class "mdc-layout-grid__cell--span-6" ]
-                            [ text device.meta.description ]
-                        ]
-                    , div [ class "mdc-layout-grid__inner align-center" ]
-                        [ p [ class "mdc-layout-grid__cell--span-12" ]
-                            [ text
-                                ((if device.frame.bigendian then
-                                    "Big"
-                                  else
-                                    "Little"
-                                 )
-                                    ++ " endian"
-                                )
+    let
+        editing =
+            isEditing model.editingId device
+    in
+        div [ class "kiotlog-page padding-0" ]
+            [ div [ class "mdc-layout-grid" ]
+                [ div [ class "mdc-layout-grid__inner" ]
+                    [ h1 [ class "mdc-layout-grid__cell--span-6 margin-0" ]
+                        [ text device.meta.name ]
+                    , h1 [ class "mdc-layout-grid__cell--span-6 margin-0 text-right" ]
+                        [ a
+                            [ href "#/devices"
+                            , class "mdc-button"
+                            , attribute "data-mdc-auto-init" "MDCRipple"
+                            ]
+                            [ i [ class "material-icons mdc-button__icon" ]
+                                [ text "arrow_back" ]
+                            , text "Back"
                             ]
                         ]
                     ]
-                 ]
-                    ++ [ h3 [ class "mdc-layout-grid__cell--span-12 text-center" ]
-                            [ text "Sensors" ]
-                       ]
-                    ++ (List.indexedMap
-                            (mapSensors model)
-                            device.sensors
-                       )
-                )
+                ]
+            , div [ class "mdc-layout-grid kiotlog-container-small" ]
+                [ div [ class "mdc-layout-grid__inner" ]
+                    ([ div [ class "mdc-card mdc-layout-grid__cell--span-12 padding-gutter margin-bottom-gutter" ]
+                        [ div [ class "mdc-layout-grid__inner align-center" ]
+                            [ span [ class "mdc-layout-grid__cell--span-6" ]
+                                [ text "Device Id:" ]
+                            , h3 [ class "mdc-layout-grid__cell--span-6" ]
+                                [ text device.device ]
+                            ]
+                        , div [ class "mdc-layout-grid__inner align-center" ]
+                            [ span [ class "mdc-layout-grid__cell--span-6" ]
+                                [ text "Description:" ]
+                            , h3 [ class "mdc-layout-grid__cell--span-6" ]
+                                [ text device.meta.description ]
+                            ]
+                        , div [ class "mdc-layout-grid__inner align-center" ]
+                            [ p [ class "mdc-layout-grid__cell--span-12" ]
+                                [ text
+                                    ((if device.frame.bigendian then
+                                        "Big"
+                                      else
+                                        "Little"
+                                     )
+                                        ++ " endian"
+                                    )
+                                ]
+                            ]
+                        , (deviceCardActions editing device)
+                        ]
+                     ]
+                        ++ [ h3 [ class "mdc-layout-grid__cell--span-12 text-center" ]
+                                [ text "Sensors" ]
+                           ]
+                        ++ (List.indexedMap
+                                (mapSensors model)
+                                device.sensors
+                           )
+                    )
+                ]
             ]
-        ]
 
 
 isEditing : Maybe String -> { a | id : String } -> Bool
@@ -306,43 +311,45 @@ mapSensors model idx sensor =
             ]
 
 
-
--- deviceCardActions : Maybe String -> Device -> Html Msg
--- deviceCardActions editing device =
---     div [ class "mdc-card__actions" ]
---         [ div [ class "mdc-card__action-icons" ]
---             (if isEditing editing sensor then
---                 [ button
---                     [ class "mdc-button mdc-card__action mdc-card__action--button"
---                     , onClick CancelEditing
---                     ]
---                     [ i [ class "material-icons" ]
---                         [ text "cancel"
---                         ]
---                     , text "Cancel"
---                     ]
---                 , button
---                     [ class "mdc-button mdc-card__action mdc-card__action--button"
---                     , onClick (PutSensor sensor)
---                     ]
---                     [ i [ class "material-icons" ]
---                         [ text "done" ]
---                     , text "Done"
---                     ]
---                 ]
---              else
---                 [ button
---                     [ class "mdc-button mdc-card__action mdc-card__action--button"
---                     , onClick (EditSensor sensor)
---                     ]
---                     [ i [ class "material-icons" ]
---                         [ text "edit"
---                         ]
---                     , text "Edit"
---                     ]
---                 ]
---             )
---         ]
+deviceCardActions : Bool -> Device -> Html Msg
+deviceCardActions editing device =
+    div [ class "mdc-card__actions" ]
+        [ div [ class "mdc-card__action-icons" ]
+            (if editing then
+                [ button
+                    [ class "mdc-button mdc-card__action mdc-card__action--button"
+                    , onClick CancelEditing
+                    , disabled True
+                    ]
+                    [ i [ class "material-icons" ]
+                        [ text "cancel"
+                        ]
+                    , text "Cancel"
+                    ]
+                , button
+                    [ class "mdc-button mdc-card__action mdc-card__action--button"
+                    , onClick CancelEditing
+                    , disabled True
+                    ]
+                    [ i [ class "material-icons" ]
+                        [ text "done" ]
+                    , text "Done"
+                    ]
+                ]
+             else
+                [ button
+                    [ class "mdc-button mdc-card__action mdc-card__action--button"
+                    , onClick (CancelEditing)
+                    , disabled True
+                    ]
+                    [ i [ class "material-icons" ]
+                        [ text "edit"
+                        ]
+                    , text "Edit"
+                    ]
+                ]
+            )
+        ]
 
 
 sensorCardActions : Bool -> Int -> Sensor -> Html Msg

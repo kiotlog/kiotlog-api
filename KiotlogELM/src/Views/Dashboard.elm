@@ -68,21 +68,25 @@ viewStatusCard status view =
 viewDevicesStatus : KiotlogStatus -> Html Msg
 viewDevicesStatus status =
     div
-        [ class "mdc-card mdc-layout-grid__cell--span-6 padding-gutter" ]
+        [ class "mdc-card mdc-layout-grid__cell--span-6-desktop mdc-layout-grid__cell--span-4-tablet mdc-layout-grid__cell--span-4-phone padding-gutter" ]
         [ div [ class "mdc-layout-grid__inner" ]
             [ h1 [ class "mdc-layout-grid__cell--span-12 text-center" ]
                 [ text ("Total Devices: " ++ (toString (List.length status.devices))) ]
-            , h3 [ class "mdc-layout-grid__cell--span-12 text-center margin-0" ]
-                [ text ("Active: " ++ (toString (List.length (filterActiveDevices status.devices)))) ]
-            , h3 [ class "mdc-layout-grid__cell--span-12 text-center margin-0" ]
-                [ text ("Dead: " ++ (toString (List.length (filterDeadDevices status.devices)))) ]
+            , div [ class "mdc-layout-grid__cell--span-12" ]
+                [ div [ class "mdc-layout-grid__inner" ]
+                    [ h3 [ class "mdc-layout-grid__cell--span-12 text-center margin-0" ]
+                        [ text ("Active: " ++ (toString (List.length (filterActiveDevices status.devices)))) ]
+                    , h3 [ class "mdc-layout-grid__cell--span-12 text-center margin-0" ]
+                        [ text ("Dead: " ++ (toString (List.length (filterDeadDevices status.devices)))) ]
+                    ]
+                ]
             ]
         ]
 
 
 viewSensorsStatus : KiotlogStatus -> Html Msg
 viewSensorsStatus status =
-    div [ class "mdc-card mdc-layout-grid__cell--span-6 padding-gutter" ]
+    div [ class "mdc-card mdc-layout-grid__cell--span-6-desktop mdc-layout-grid__cell--span-4-tablet mdc-layout-grid__cell--span-4-phone padding-gutter" ]
         [ div [ class "mdc-layout-grid__inner" ]
             ([ h1 [ class "mdc-layout-grid__cell--span-12 text-center margin-0 margin-bottom-gutter" ]
                 [ text ("Total Sensors: " ++ (toString status.sensors.total)) ]
@@ -121,9 +125,9 @@ showSensorType : StatusSensorTypeGroup -> Html Msg
 showSensorType sensorType =
     div [ class "mdc-layout-grid__cell--span-12" ]
         [ div [ class "mdc-layout-grid__inner" ]
-            [ h3 [ class "margin-0 mdc-layout-grid__cell--span-6 text-right" ]
+            [ h3 [ class "margin-0 mdc-layout-grid__cell--span-6-desktop mdc-layout-grid__cell--span-4-tablet mdc-layout-grid__cell--span-2-phone text-right" ]
                 [ text sensorType.type_ ]
-            , h3 [ class "margin-0 mdc-layout-grid__cell--span-6" ]
+            , h3 [ class "margin-0 mdc-layout-grid__cell--span-6-desktop mdc-layout-grid__cell--span-4-tablet mdc-layout-grid__cell--span-2-phone" ]
                 [ text (toString sensorType.count) ]
             ]
         ]
