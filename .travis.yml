@@ -1,6 +1,18 @@
+sudo: required
+services:
+  - docker
 language: csharp
 solution: Kiotlog.sln
 mono: none
 dotnet: 2.1.105
+env:
+  global:
+    secure: 1D87ODfLgRi1hyBxiLQ7ETO8/SeTnHMzvfPg5Z1gY7JCZXTRhUuCRDyPhUwbtbsK49soA3e8/qOy4EdyqQSTDIVNP1XB9JZq+iA+lm+DHSNjtoPOy99flKd5p6Z+JEHrD7GU0++ONtKOcaEjNaxck2ee5phwEL1g2uwT7CZsL/ZNO3MhpR09iJyUSljMo7MpJQtZOw61Q+pe9unxzB+8BuaV5oABu9eWceLpJwI/d0xIhb4jEoQEa5ufI0adb7F1YHXKrl06h6ZHn6I/VT8TEb7nnCO1bZIlUvW92Fe0K6YmXT5mC7TAJi0Im7Y1wb+XCsYQrWa2GwU1EQ7AoDbidNPSbcF6xnmFEg6NTQhnWqfSOrGM/u8HZiXXQkFIAk4WpeIZOC4Ywpht8dVpO3N7bs95GIp0f9IzYTk+rp2IyFOS8gDKXm73m8/7JMefBYvkNsz4bZCQwbQGtIq63LACSjVzxtBUJr1H1+tN/33v+kYNFB+aQWMV+ICaQY8xVMpngs3lz2MXSeexE/0RpkDlhas9u/PsnVRqpyPDyM8C/6KTxPLNwl28IV+a85gWVuxKXgmm3hTixz3JZ0FE/KK5aNZY2wltxZG6QlI8+yOG82LWMkkvmMrNQDV23CscCtm6E06MmS5W3nm7rhRpHi4oPBj8lFBby/4dkHOJUkGKpvU=
 script:
   - dotnet build
+  - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
+  - docker build -t kiotlog/api -f KiotlogAPI/Dockerfile .
+  - docker build -t kiotlog/webui -f KiotlogELM/Dockerfile KiotlogELM
+  - docker push kiotlog/api:latest
+  - docker push kiotlog/webui:latest
+
