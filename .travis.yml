@@ -11,8 +11,8 @@ env:
 script:
   - dotnet build
   - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
-  - docker build -t kiotlog/api -f KiotlogAPI/Dockerfile .
+  - docker build -t kiotlog/klapi -f KiotlogAPI/Dockerfile .
   - docker build -t kiotlog/webui -f KiotlogELM/Dockerfile KiotlogELM
-  - docker push kiotlog/api:latest
+  - docker push kiotlog/klapi:latest
   - docker push kiotlog/webui:latest
 
