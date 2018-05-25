@@ -1,10 +1,10 @@
 .mdc-typography {
-  font-family: Roboto, sans-serif;
+  font-family: "Poly", serif;
   -moz-osx-font-smoothing: grayscale;
   -webkit-font-smoothing: antialiased; }
 
 .mdc-typography--headline1 {
-  font-family: Roboto, sans-serif;
+  font-family: "'Kadwa', serif";
   -moz-osx-font-smoothing: grayscale;
   -webkit-font-smoothing: antialiased;
   font-size: 6rem;
@@ -12,10 +12,11 @@
   font-weight: 300;
   letter-spacing: -0.01562em;
   text-decoration: inherit;
-  text-transform: inherit; }
+  text-transform: inherit;
+  font-style: bold; }
 
 .mdc-typography--headline2 {
-  font-family: Roboto, sans-serif;
+  font-family: "'Mukta Vaani', sans-serif";
   -moz-osx-font-smoothing: grayscale;
   -webkit-font-smoothing: antialiased;
   font-size: 3.75rem;
@@ -26,7 +27,7 @@
   text-transform: inherit; }
 
 .mdc-typography--headline3 {
-  font-family: Roboto, sans-serif;
+  font-family: "Poly", serif;
   -moz-osx-font-smoothing: grayscale;
   -webkit-font-smoothing: antialiased;
   font-size: 3rem;
@@ -37,7 +38,7 @@
   text-transform: inherit; }
 
 .mdc-typography--headline4 {
-  font-family: Roboto, sans-serif;
+  font-family: "Poly", serif;
   -moz-osx-font-smoothing: grayscale;
   -webkit-font-smoothing: antialiased;
   font-size: 2.125rem;
@@ -48,7 +49,7 @@
   text-transform: inherit; }
 
 .mdc-typography--headline5 {
-  font-family: Roboto, sans-serif;
+  font-family: "Poly", serif;
   -moz-osx-font-smoothing: grayscale;
   -webkit-font-smoothing: antialiased;
   font-size: 1.5rem;
@@ -59,7 +60,7 @@
   text-transform: inherit; }
 
 .mdc-typography--headline6 {
-  font-family: Roboto, sans-serif;
+  font-family: "Poly", serif;
   -moz-osx-font-smoothing: grayscale;
   -webkit-font-smoothing: antialiased;
   font-size: 1.25rem;
@@ -70,7 +71,7 @@
   text-transform: inherit; }
 
 .mdc-typography--subtitle1 {
-  font-family: Roboto, sans-serif;
+  font-family: "Poly", serif;
   -moz-osx-font-smoothing: grayscale;
   -webkit-font-smoothing: antialiased;
   font-size: 1rem;
@@ -81,7 +82,7 @@
   text-transform: inherit; }
 
 .mdc-typography--subtitle2 {
-  font-family: Roboto, sans-serif;
+  font-family: "Poly", serif;
   -moz-osx-font-smoothing: grayscale;
   -webkit-font-smoothing: antialiased;
   font-size: 0.875rem;
@@ -92,7 +93,7 @@
   text-transform: inherit; }
 
 .mdc-typography--body1 {
-  font-family: Roboto, sans-serif;
+  font-family: "Poly", serif;
   -moz-osx-font-smoothing: grayscale;
   -webkit-font-smoothing: antialiased;
   font-size: 1rem;
@@ -103,7 +104,7 @@
   text-transform: inherit; }
 
 .mdc-typography--body2 {
-  font-family: Roboto, sans-serif;
+  font-family: "Poly", serif;
   -moz-osx-font-smoothing: grayscale;
   -webkit-font-smoothing: antialiased;
   font-size: 0.875rem;
@@ -114,7 +115,7 @@
   text-transform: inherit; }
 
 .mdc-typography--caption {
-  font-family: Roboto, sans-serif;
+  font-family: "Poly", serif;
   -moz-osx-font-smoothing: grayscale;
   -webkit-font-smoothing: antialiased;
   font-size: 0.75rem;
@@ -125,7 +126,7 @@
   text-transform: inherit; }
 
 .mdc-typography--button {
-  font-family: Roboto, sans-serif;
+  font-family: "Poly", serif;
   -moz-osx-font-smoothing: grayscale;
   -webkit-font-smoothing: antialiased;
   font-size: 0.875rem;
@@ -136,7 +137,7 @@
   text-transform: uppercase; }
 
 .mdc-typography--overline {
-  font-family: Roboto, sans-serif;
+  font-family: "Poly", serif;
   -moz-osx-font-smoothing: grayscale;
   -webkit-font-smoothing: antialiased;
   font-size: 0.75rem;
@@ -318,7 +319,7 @@
     border: var(--mdc-ripple-surface-test-edge-var); }
 
 .mdc-list {
-  font-family: Roboto, sans-serif;
+  font-family: "Poly", serif;
   -moz-osx-font-smoothing: grayscale;
   -webkit-font-smoothing: antialiased;
   font-size: 1rem;
@@ -419,7 +420,7 @@
   display: block; }
 
 .mdc-list-item__secondary-text {
-  font-family: Roboto, sans-serif;
+  font-family: "Poly", serif;
   -moz-osx-font-smoothing: grayscale;
   -webkit-font-smoothing: antialiased;
   font-size: 0.875rem;
@@ -474,7 +475,7 @@
   --mdc-ripple-fg-scale: 1;
   --mdc-ripple-fg-translate-end: 0;
   --mdc-ripple-fg-translate-start: 0;
-  -webkit-tap-highlight-color: transparent;
+  -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
   will-change: transform, opacity; }
   :not(.mdc-list--non-interactive) > .mdc-list-item::before, :not(.mdc-list--non-interactive) > .mdc-list-item::after {
     position: absolute;
@@ -626,7 +627,7 @@ a.mdc-list-item {
   padding: 0; }
 
 .mdc-list-group__subheader {
-  font-family: Roboto, sans-serif;
+  font-family: "Poly", serif;
   -moz-osx-font-smoothing: grayscale;
   -webkit-font-smoothing: antialiased;
   font-size: 1rem;
@@ -643,7 +644,7 @@ a.mdc-list-item {
   color: var(--mdc-theme-text-primary-on-background, rgba(0, 0, 0, 0.87)); }
 
 .mdc-button {
-  font-family: Roboto, sans-serif;
+  font-family: "Poly", serif;
   -moz-osx-font-smoothing: grayscale;
   -webkit-font-smoothing: antialiased;
   font-size: 0.875rem;
@@ -658,7 +659,7 @@ a.mdc-list-item {
   --mdc-ripple-fg-scale: 1;
   --mdc-ripple-fg-translate-end: 0;
   --mdc-ripple-fg-translate-start: 0;
-  -webkit-tap-highlight-color: transparent;
+  -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
   will-change: transform, opacity;
   padding: 0 8px 0 8px;
   display: inline-flex;
@@ -1434,7 +1435,7 @@ a.mdc-list-item {
   --mdc-ripple-fg-scale: 1;
   --mdc-ripple-fg-translate-end: 0;
   --mdc-ripple-fg-translate-start: 0;
-  -webkit-tap-highlight-color: transparent;
+  -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
   will-change: transform, opacity;
   display: flex;
   flex-direction: column;
@@ -1593,7 +1594,7 @@ a.mdc-list-item {
   color: var(--mdc-theme-text-icon-on-background, rgba(0, 0, 0, 0.38)); }
 
 .mdc-floating-label {
-  font-family: Roboto, sans-serif;
+  font-family: "Poly", serif;
   -moz-osx-font-smoothing: grayscale;
   -webkit-font-smoothing: antialiased;
   font-size: 1rem;
@@ -1689,7 +1690,7 @@ a.mdc-list-item {
   opacity: 0; }
 
 .mdc-text-field-helper-text {
-  font-family: Roboto, sans-serif;
+  font-family: "Poly", serif;
   -moz-osx-font-smoothing: grayscale;
   -webkit-font-smoothing: antialiased;
   font-size: 0.75rem;
@@ -1749,7 +1750,7 @@ a.mdc-list-item {
     color: rgba(0, 0, 0, 0.54); }
 
 .mdc-text-field__input {
-  font-family: Roboto, sans-serif;
+  font-family: "Poly", serif;
   -moz-osx-font-smoothing: grayscale;
   -webkit-font-smoothing: antialiased;
   font-size: 1rem;
@@ -1859,7 +1860,7 @@ a.mdc-list-item {
   --mdc-ripple-fg-scale: 1;
   --mdc-ripple-fg-translate-end: 0;
   --mdc-ripple-fg-translate-start: 0;
-  -webkit-tap-highlight-color: transparent;
+  -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
   will-change: transform, opacity;
   border-radius: 4px 4px 0 0;
   display: inline-flex;
@@ -2471,7 +2472,7 @@ a.mdc-list-item {
       justify-content: flex-end;
       order: 1; }
   .mdc-top-app-bar__title {
-    font-family: Roboto, sans-serif;
+    font-family: "Poly", serif;
     -moz-osx-font-smoothing: grayscale;
     -webkit-font-smoothing: antialiased;
     font-size: 1.25rem;
@@ -2500,7 +2501,7 @@ a.mdc-list-item {
     --mdc-ripple-fg-scale: 1;
     --mdc-ripple-fg-translate-end: 0;
     --mdc-ripple-fg-translate-start: 0;
-    -webkit-tap-highlight-color: transparent;
+    -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
     will-change: transform, opacity;
     display: flex;
     position: relative;
@@ -2783,7 +2784,7 @@ a.mdc-list-item {
     box-sizing: border-box;
     padding: 16px; }
   .mdc-drawer--persistent .mdc-list-item {
-    font-family: Roboto, sans-serif;
+    font-family: "Poly", serif;
     -moz-osx-font-smoothing: grayscale;
     -webkit-font-smoothing: antialiased;
     font-size: 0.875rem;
@@ -2891,7 +2892,7 @@ a.mdc-list-item {
     box-sizing: border-box;
     padding: 16px; }
   .mdc-drawer--permanent .mdc-list-item {
-    font-family: Roboto, sans-serif;
+    font-family: "Poly", serif;
     -moz-osx-font-smoothing: grayscale;
     -webkit-font-smoothing: antialiased;
     font-size: 0.875rem;
@@ -2973,7 +2974,7 @@ a.mdc-list-item {
     box-sizing: border-box;
     padding: 16px; }
   .mdc-drawer--temporary .mdc-list-item {
-    font-family: Roboto, sans-serif;
+    font-family: "Poly", serif;
     -moz-osx-font-smoothing: grayscale;
     -webkit-font-smoothing: antialiased;
     font-size: 0.875rem;
@@ -3252,7 +3253,7 @@ table.devices-list, table.sensor-types-list {
     padding-left: 0;
     /* @noflip */
     padding-right: 26px;
-    font-family: Roboto, sans-serif;
+    font-family: "Poly", serif;
     -moz-osx-font-smoothing: grayscale;
     -webkit-font-smoothing: antialiased;
     font-size: 1rem;
@@ -3296,7 +3297,7 @@ table.devices-list, table.sensor-types-list {
   --mdc-ripple-fg-scale: 1;
   --mdc-ripple-fg-translate-end: 0;
   --mdc-ripple-fg-translate-start: 0;
-  -webkit-tap-highlight-color: transparent;
+  -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
   will-change: transform, opacity;
   height: 56px;
   border-radius: 4px 4px 0 0;
