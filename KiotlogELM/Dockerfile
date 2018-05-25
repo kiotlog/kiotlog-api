@@ -1,4 +1,4 @@
-FROM node:slim AS build
+FROM node AS build
 
 RUN set -ex \
     && npm update -g \
@@ -7,7 +7,7 @@ RUN set -ex \
 COPY . /Build
 WORKDIR /Build
 RUN set -ex \
-    && elm-make --yes src/Kiotlog.elm --output=kiotlog.js
+    && elm-make src/Kiotlog.elm --output=kiotlog.js --yes
 
 FROM nginx:alpine
 
