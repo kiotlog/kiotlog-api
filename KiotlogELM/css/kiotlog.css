@@ -1,26 +1,26 @@
-.mdc-typography {
+.mdc-typography, body {
   font-family: "Poly", serif;
   -moz-osx-font-smoothing: grayscale;
   -webkit-font-smoothing: antialiased; }
 
-.mdc-typography--headline1 {
-  font-family: "'Kadwa', serif";
+.mdc-typography--headline1, h1 {
+  font-family: "Kadwa", serif;
   -moz-osx-font-smoothing: grayscale;
   -webkit-font-smoothing: antialiased;
-  font-size: 6rem;
-  line-height: 6rem;
+  font-size: 3rem;
+  line-height: 3rem;
   font-weight: 300;
   letter-spacing: -0.01562em;
   text-decoration: inherit;
   text-transform: inherit;
   font-style: bold; }
 
-.mdc-typography--headline2 {
-  font-family: "'Mukta Vaani', sans-serif";
+.mdc-typography--headline2, h2 {
+  font-family: "Mukta Vaani", sans-serif;
   -moz-osx-font-smoothing: grayscale;
   -webkit-font-smoothing: antialiased;
-  font-size: 3.75rem;
-  line-height: 3.75rem;
+  font-size: 2rem;
+  line-height: 2rem;
   font-weight: 300;
   letter-spacing: -0.00833em;
   text-decoration: inherit;
@@ -475,7 +475,7 @@
   --mdc-ripple-fg-scale: 1;
   --mdc-ripple-fg-translate-end: 0;
   --mdc-ripple-fg-translate-start: 0;
-  -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+  -webkit-tap-highlight-color: transparent;
   will-change: transform, opacity; }
   :not(.mdc-list--non-interactive) > .mdc-list-item::before, :not(.mdc-list--non-interactive) > .mdc-list-item::after {
     position: absolute;
@@ -659,7 +659,7 @@ a.mdc-list-item {
   --mdc-ripple-fg-scale: 1;
   --mdc-ripple-fg-translate-end: 0;
   --mdc-ripple-fg-translate-start: 0;
-  -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+  -webkit-tap-highlight-color: transparent;
   will-change: transform, opacity;
   padding: 0 8px 0 8px;
   display: inline-flex;
@@ -1435,7 +1435,7 @@ a.mdc-list-item {
   --mdc-ripple-fg-scale: 1;
   --mdc-ripple-fg-translate-end: 0;
   --mdc-ripple-fg-translate-start: 0;
-  -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+  -webkit-tap-highlight-color: transparent;
   will-change: transform, opacity;
   display: flex;
   flex-direction: column;
@@ -1860,7 +1860,7 @@ a.mdc-list-item {
   --mdc-ripple-fg-scale: 1;
   --mdc-ripple-fg-translate-end: 0;
   --mdc-ripple-fg-translate-start: 0;
-  -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+  -webkit-tap-highlight-color: transparent;
   will-change: transform, opacity;
   border-radius: 4px 4px 0 0;
   display: inline-flex;
@@ -2501,7 +2501,7 @@ a.mdc-list-item {
     --mdc-ripple-fg-scale: 1;
     --mdc-ripple-fg-translate-end: 0;
     --mdc-ripple-fg-translate-start: 0;
-    -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+    -webkit-tap-highlight-color: transparent;
     will-change: transform, opacity;
     display: flex;
     position: relative;
@@ -3297,7 +3297,7 @@ table.devices-list, table.sensor-types-list {
   --mdc-ripple-fg-scale: 1;
   --mdc-ripple-fg-translate-end: 0;
   --mdc-ripple-fg-translate-start: 0;
-  -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+  -webkit-tap-highlight-color: transparent;
   will-change: transform, opacity;
   height: 56px;
   border-radius: 4px 4px 0 0;

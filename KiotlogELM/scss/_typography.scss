@@ -1,0 +1,9 @@
+@import "@material/typography/mdc-typography";
+
+h1 {
+    @extend .mdc-typography--headline1;
+}
+
+h2 {
+    @extend .mdc-typography--headline2;
+}

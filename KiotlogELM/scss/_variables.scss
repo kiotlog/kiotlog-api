@@ -34,5 +34,14 @@ $drawer-fill-color: $mdc-theme-primary;
 $drawer-ink-color: $mdc-theme-on-primary;
 
 $mdc-typography-font-family: 'Poly', serif;
-$mdc-typography-styles-headline1: (font-family: "'Kadwa', serif", font-style: bold );
-$mdc-typography-styles-headline2: (font-family: "'Mukta Vaani', sans-serif" );
+$mdc-typography-styles-headline1: (
+    font-family: ('Kadwa', serif),
+    font-style: bold,
+    font-size: 3rem,
+    line-height: 3rem
+);
+$mdc-typography-styles-headline2: (
+    font-family: ('Mukta Vaani', sans-serif),
+    font-size: 2rem,
+    line-height: 2rem
+);
