@@ -1,0 +1,58 @@
+{
+  "Device": "mkr-mnx",
+  "Meta": {
+    "Name": "mkr-mnx",
+    "Description": "Mancho's Klsn device 04",
+    "Kind": "MkrGsm1400"
+  },
+  "Frame": {
+    "Bigendian": false,
+    "Bitfields": false
+  },
+  "Sensors": [
+    {
+      "Meta": {
+        "Name": "pressure"
+      },
+      "Fmt": {
+        "Index": 1,
+        "FmtChr": "H"
+      },
+      "ConversionId": "1fe37862-08d4-42a9-a74f-d890e36049ce",
+      "SensorTypeId": "cd1f1dd1-8447-4372-a8c5-edb3f173346a"
+    },
+    {
+      "Meta": {
+        "Name": "humidity"
+      },
+      "Fmt": {
+        "Index": 2,
+        "FmtChr": "H"
+      },
+      "ConversionId": "6b398b67-9767-4c45-8ac1-d6f71424019a",
+      "SensorTypeId": "af23a956-1622-441c-9e6d-509c96adc76c"
+    },
+    {
+      "Meta": {
+        "Name": "temperature"
+      },
+      "Fmt": {
+        "Index": 0,
+        "FmtChr": "h"
+      },
+      "ConversionId": "6b398b67-9767-4c45-8ac1-d6f71424019a",
+      "SensorTypeId": "47cbfb77-d56a-4ade-b8b4-0860bdbfedd3"
+    },
+    {
+      "Meta": {
+        "Name": "battery"
+      },
+      "Fmt": {
+        "Index": 3,
+        "FmtChr": "H"
+      },
+      "ConversionId": "f8600146-8591-406f-bc0b-73d52ed5b7e0",
+      "SensorTypeId": "bc62a922-eacb-457e-99d9-3398901627e8"
+    }
+  ]
+}
