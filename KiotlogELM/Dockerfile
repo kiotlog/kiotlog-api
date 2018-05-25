@@ -7,7 +7,7 @@ RUN set -ex \
 COPY . /Build
 WORKDIR /Build
 RUN set -ex \
-    && elm-make src/Kiotlog.elm --output=kiotlog.js
+    && elm-make --yes src/Kiotlog.elm --output=kiotlog.js
 
 FROM nginx:alpine
 
