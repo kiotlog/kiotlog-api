@@ -12648,7 +12648,7 @@ var _kiotlog$kiotlogweb$Views_Devices$addDeviceShowSensors = F4(
 																},
 																{
 																	ctor: '::',
-																	_0: _elm_lang$html$Html$text('signed char'),
+																	_0: _elm_lang$html$Html$text('int8_t'),
 																	_1: {ctor: '[]'}
 																}),
 															_1: {
@@ -12667,7 +12667,7 @@ var _kiotlog$kiotlogweb$Views_Devices$addDeviceShowSensors = F4(
 																	},
 																	{
 																		ctor: '::',
-																		_0: _elm_lang$html$Html$text('unsigned char'),
+																		_0: _elm_lang$html$Html$text('uint8_t'),
 																		_1: {ctor: '[]'}
 																	}),
 																_1: {
@@ -12686,7 +12686,7 @@ var _kiotlog$kiotlogweb$Views_Devices$addDeviceShowSensors = F4(
 																		},
 																		{
 																			ctor: '::',
-																			_0: _elm_lang$html$Html$text('short'),
+																			_0: _elm_lang$html$Html$text('int16_t'),
 																			_1: {ctor: '[]'}
 																		}),
 																	_1: {
@@ -12705,7 +12705,7 @@ var _kiotlog$kiotlogweb$Views_Devices$addDeviceShowSensors = F4(
 																			},
 																			{
 																				ctor: '::',
-																				_0: _elm_lang$html$Html$text('unsigned short'),
+																				_0: _elm_lang$html$Html$text('uint16_t'),
 																				_1: {ctor: '[]'}
 																			}),
 																		_1: {
@@ -12724,7 +12724,7 @@ var _kiotlog$kiotlogweb$Views_Devices$addDeviceShowSensors = F4(
 																				},
 																				{
 																					ctor: '::',
-																					_0: _elm_lang$html$Html$text('int'),
+																					_0: _elm_lang$html$Html$text('int32_t'),
 																					_1: {ctor: '[]'}
 																				}),
 																			_1: {
@@ -12743,7 +12743,7 @@ var _kiotlog$kiotlogweb$Views_Devices$addDeviceShowSensors = F4(
 																					},
 																					{
 																						ctor: '::',
-																						_0: _elm_lang$html$Html$text('unsigned int'),
+																						_0: _elm_lang$html$Html$text('uint32_t'),
 																						_1: {ctor: '[]'}
 																					}),
 																				_1: {
@@ -12762,7 +12762,7 @@ var _kiotlog$kiotlogweb$Views_Devices$addDeviceShowSensors = F4(
 																						},
 																						{
 																							ctor: '::',
-																							_0: _elm_lang$html$Html$text('long'),
+																							_0: _elm_lang$html$Html$text('int32_t'),
 																							_1: {ctor: '[]'}
 																						}),
 																					_1: {
@@ -12781,7 +12781,7 @@ var _kiotlog$kiotlogweb$Views_Devices$addDeviceShowSensors = F4(
 																							},
 																							{
 																								ctor: '::',
-																								_0: _elm_lang$html$Html$text('unsigned long'),
+																								_0: _elm_lang$html$Html$text('uint32_t'),
 																								_1: {ctor: '[]'}
 																							}),
 																						_1: {
@@ -12800,7 +12800,7 @@ var _kiotlog$kiotlogweb$Views_Devices$addDeviceShowSensors = F4(
 																								},
 																								{
 																									ctor: '::',
-																									_0: _elm_lang$html$Html$text('long long'),
+																									_0: _elm_lang$html$Html$text('int64_t'),
 																									_1: {ctor: '[]'}
 																								}),
 																							_1: {
@@ -12819,7 +12819,7 @@ var _kiotlog$kiotlogweb$Views_Devices$addDeviceShowSensors = F4(
 																									},
 																									{
 																										ctor: '::',
-																										_0: _elm_lang$html$Html$text('unsigned long long'),
+																										_0: _elm_lang$html$Html$text('uint64_t'),
 																										_1: {ctor: '[]'}
 																									}),
 																								_1: {ctor: '[]'}
@@ -14294,7 +14294,7 @@ var _kiotlog$kiotlogweb$Views_Devices$mapSensors = F3(
 																	},
 																	{
 																		ctor: '::',
-																		_0: _elm_lang$html$Html$text('signed char'),
+																		_0: _elm_lang$html$Html$text('int8_t'),
 																		_1: {ctor: '[]'}
 																	}),
 																_1: {
@@ -14313,7 +14313,7 @@ var _kiotlog$kiotlogweb$Views_Devices$mapSensors = F3(
 																		},
 																		{
 																			ctor: '::',
-																			_0: _elm_lang$html$Html$text('unsigned char'),
+																			_0: _elm_lang$html$Html$text('uint8_t'),
 																			_1: {ctor: '[]'}
 																		}),
 																	_1: {
@@ -14332,7 +14332,7 @@ var _kiotlog$kiotlogweb$Views_Devices$mapSensors = F3(
 																			},
 																			{
 																				ctor: '::',
-																				_0: _elm_lang$html$Html$text('short'),
+																				_0: _elm_lang$html$Html$text('int16_t'),
 																				_1: {ctor: '[]'}
 																			}),
 																		_1: {
@@ -14351,7 +14351,7 @@ var _kiotlog$kiotlogweb$Views_Devices$mapSensors = F3(
 																				},
 																				{
 																					ctor: '::',
-																					_0: _elm_lang$html$Html$text('unsigned short'),
+																					_0: _elm_lang$html$Html$text('uint16_t'),
 																					_1: {ctor: '[]'}
 																				}),
 																			_1: {
@@ -14370,7 +14370,7 @@ var _kiotlog$kiotlogweb$Views_Devices$mapSensors = F3(
 																					},
 																					{
 																						ctor: '::',
-																						_0: _elm_lang$html$Html$text('int'),
+																						_0: _elm_lang$html$Html$text('int32_t'),
 																						_1: {ctor: '[]'}
 																					}),
 																				_1: {
@@ -14389,7 +14389,7 @@ var _kiotlog$kiotlogweb$Views_Devices$mapSensors = F3(
 																						},
 																						{
 																							ctor: '::',
-																							_0: _elm_lang$html$Html$text('unsigned int'),
+																							_0: _elm_lang$html$Html$text('uint32_t'),
 																							_1: {ctor: '[]'}
 																						}),
 																					_1: {
@@ -14408,7 +14408,7 @@ var _kiotlog$kiotlogweb$Views_Devices$mapSensors = F3(
 																							},
 																							{
 																								ctor: '::',
-																								_0: _elm_lang$html$Html$text('long'),
+																								_0: _elm_lang$html$Html$text('int32_t'),
 																								_1: {ctor: '[]'}
 																							}),
 																						_1: {
@@ -14427,7 +14427,7 @@ var _kiotlog$kiotlogweb$Views_Devices$mapSensors = F3(
 																								},
 																								{
 																									ctor: '::',
-																									_0: _elm_lang$html$Html$text('unsigned long'),
+																									_0: _elm_lang$html$Html$text('uint32_t'),
 																									_1: {ctor: '[]'}
 																								}),
 																							_1: {
@@ -14446,7 +14446,7 @@ var _kiotlog$kiotlogweb$Views_Devices$mapSensors = F3(
 																									},
 																									{
 																										ctor: '::',
-																										_0: _elm_lang$html$Html$text('long long'),
+																										_0: _elm_lang$html$Html$text('int64_t'),
 																										_1: {ctor: '[]'}
 																									}),
 																								_1: {
@@ -14465,7 +14465,7 @@ var _kiotlog$kiotlogweb$Views_Devices$mapSensors = F3(
 																										},
 																										{
 																											ctor: '::',
-																											_0: _elm_lang$html$Html$text('unsigned long long'),
+																											_0: _elm_lang$html$Html$text('uint64_t'),
 																											_1: {ctor: '[]'}
 																										}),
 																									_1: {ctor: '[]'}
