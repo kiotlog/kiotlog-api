@@ -6,8 +6,8 @@ services:
     build:
       context: .
       dockerfile: KiotlogAPI/Dockerfile
-  webui:
-    image: kiotlog/webui
-    build:
-      context: KiotlogELM
-      dockerfile: Dockerfile
+  # webui:
+  #   image: kiotlog/webui
+  #   build:
+  #     context: KiotlogELM
+  #     dockerfile: Dockerfile
