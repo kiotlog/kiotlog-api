@@ -152,7 +152,7 @@ let deleteDeviceAsync (cs : string) (deviceId : Guid) =
     async {
         use ctx = getContext cs
 
-        let! device = ctx.Devices.FindAsync(deviceId) |> Async.AwaitTask
+        let! device = ctx.Devices.FindAsync(deviceId).AsTask () |> Async.AwaitTask
 
         match box device with
         | null -> return Error { Errors = [|"Device not found"|]; Status = HTTP_404}

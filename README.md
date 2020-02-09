@@ -10,8 +10,8 @@ Web related services for Kiotlog platform
 
 Clone this repository and move in
 
-    $ git clone https://github.com/kiotlog/kiotlogapi
-    $ cd kiotlogapi
+    $ git clone https://github.com/kiotlog/kiotlog-api
+    $ cd kiotlog-api
 
 ### Build microservices
 

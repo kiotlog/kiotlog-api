@@ -70,7 +70,7 @@ let private loadEntityAsync<'T when 'T : not struct and 'T : null> (ctx : Kiotlo
     async {
         try
             let entitiesSet = ctx.Set<'T>()
-            let! entity = entitiesSet.FindAsync entityId |> Async.AwaitTask
+            let! entity = (entitiesSet.FindAsync entityId).AsTask () |> Async.AwaitTask
 
             match entity with
             | null -> return Error { Errors = [| typeof<'T>.Name + " not found"|]; Status = HTTP_404 }
@@ -123,7 +123,8 @@ let private deleteEntityAsync<'T when 'T : not struct> (cs : string) (entityId :
         use ctx = getContext cs
         let set = ctx.Set<'T>()
 
-        let! entity = set.FindAsync entityId |> Async.AwaitTask
+        // let entity = (set.FindAsync entityId).Result
+        let! entity = (set.FindAsync entityId).AsTask () |> Async.AwaitTask
 
         match box entity with
         | null -> return Error { Errors = [| typeof<'T>.Name + " not found"|]; Status = HTTP_404}
