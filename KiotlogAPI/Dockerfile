@@ -1,4 +1,4 @@
-FROM microsoft/dotnet:2.1-sdk AS build-env
+FROM mcr.microsoft.com/dotnet/core/sdk:3.1 AS build-env
 WORKDIR /Sln
 
 #######################################################
@@ -15,7 +15,7 @@ WORKDIR /Sln/${PROJECT}
 RUN dotnet publish -c Release -r linux-x64 -o out /p:LinkDuringPublish=false /p:ShowLinkerSizeComparison=true
 
 # build runtime image
-FROM debian:stretch-slim
+FROM debian:buster-slim
 
 #######################################################
 # WARINING!
