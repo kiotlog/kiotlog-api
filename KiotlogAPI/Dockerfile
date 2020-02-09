@@ -28,7 +28,7 @@ WORKDIR /App
 RUN set -ef \
     && apt update \
     && apt install -y --no-install-recommends \
-        libicu57 libcurl3 libunwind8 libssl1.0 \
+        libicu63 libcurl4 libunwind8 \
     && rm -rf /var/lib/apt/lists/*
 
 COPY --from=build-env /Sln/${PROJECT}/out ./
