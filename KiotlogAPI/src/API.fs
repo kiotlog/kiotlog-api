@@ -48,6 +48,7 @@ let main argv =
             Webparts.Sensors.webPart cs
             Webparts.Conversions.webPart cs
             Webparts.Status.webPart cs
+            Webparts.Annotations.webPart cs
             RequestErrors.NOT_FOUND "Found no handlers"
         ] >=> logStructured logger logFormatStructured
 

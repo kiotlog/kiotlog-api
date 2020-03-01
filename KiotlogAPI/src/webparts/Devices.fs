@@ -22,6 +22,7 @@ module Kiotlog.Web.Webparts.Devices
 
 open System
 open System.Collections.Generic
+open System.Linq
 open Suave
 open Microsoft.EntityFrameworkCore
 
@@ -37,9 +38,19 @@ let getDevicesAsync (cs : string) () =
         use ctx = getContext cs
 
         try
-            let! devices = ctx.Devices.ToArrayAsync() |> Async.AwaitTask
+            let devicesWithAnnotations =
+                ctx.Devices
+                    .Include(fun d -> d.Annotations :> IEnumerable<_>)
+                    
+            let! devices = devicesWithAnnotations.ToArrayAsync() |> Async.AwaitTask
 
-            return Ok devices
+            return Ok (
+                    devices
+                    |> Array.map(fun d ->
+                        d.Annotations <- d.Annotations.OrderByDescending(fun a -> a.Begin).Take(1).ToHashSet()
+                        d
+                    )
+                )
         with | _ -> return Error { Errors = [|"Error getting devices from DB"|]; Status = HTTP_500 }
     }
 
@@ -58,7 +69,7 @@ let createDevice (cs : string) (device: Devices) =
     | :? DbUpdateException -> Error { Errors = [|"Error adding Device"|]; Status = HTTP_409 }
     | _ -> Error { Errors = [|"Some DB error occurred"|]; Status = HTTP_500 }
 
-let private loadDeviceWithSensorsAsync (ctx : KiotlogDBFContext) (deviceId : Guid) =
+let private loadDeviceWithSensorsAndAnnotationsAsync (ctx : KiotlogDBFContext) (deviceId : Guid) =
     async {
         try
             let devices =
@@ -67,6 +78,7 @@ let private loadDeviceWithSensorsAsync (ctx : KiotlogDBFContext) (deviceId : Gui
                         .ThenInclude(fun (s : Sensors) -> s.SensorType)
                     .Include(fun d -> d.Sensors :> IEnumerable<_>)
                         .ThenInclude(fun (s : Sensors) -> s.Conversion)
+                    .Include(fun d -> d.Annotations :> IEnumerable<_>)
                     // .Include("Sensors.SensorType")
                     // .Include("Sensors.Conversion")
 
@@ -89,7 +101,7 @@ let getDeviceAsync (cs : string) (deviceId : Guid) =
     async {
         use ctx = getContext cs
 
-        return! loadDeviceWithSensorsAsync ctx deviceId
+        return! loadDeviceWithSensorsAndAnnotationsAsync ctx deviceId
     }
 
 let getDevice (cs : string) (deviceId: Guid) =
@@ -101,7 +113,7 @@ let updateDeviceByIdAsync (cs : string) (deviceId: Guid) (device: Devices) =
 
         device.Id <- deviceId
 
-        let! res = loadDeviceWithSensorsAsync ctx deviceId
+        let! res = loadDeviceWithSensorsAndAnnotationsAsync ctx deviceId
 
         match res with
         | Error _ -> return res
