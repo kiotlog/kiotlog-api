@@ -49,6 +49,10 @@ type RestResource<'a> = {
     // IsExists : int -> bool
 }
 
+let handleRailwayResource = function
+    | Ok x -> JSON OK x
+    | Error e -> JSON (Encoding.UTF8.GetBytes >> Response.response e.Status) e
+
 let rest resource =
     let resourcePath = "/" + resource.Name
     // let resourceIdPath = new PrintfFormat<(Guid -> string),unit,string,string,Guid>(resourcePath + "/%s")
@@ -73,10 +77,6 @@ let rest resource =
     //     | Some r -> r |> JSON OK
     //     | _ -> requestError
 
-    let handleRailwayResource = function
-        | Ok x -> JSON OK x
-        | Error e -> JSON (Encoding.UTF8.GetBytes >> Response.response e.Status) e
-
     let getAll = warbler (fun _ -> resource.GetAll () |> handleRailwayResource)
 
     let getResourceById =
@@ -90,19 +90,8 @@ let rest resource =
         | Ok _ -> NO_CONTENT
         | Error e -> JSON (Encoding.UTF8.GetBytes >> Response.response e.Status) e
 
-    //let isResourceExists id =
-    //    if resource.IsExists id then OK "" else NOT_FOUND ""
-
     let uuidPatternRouting part : WebPart =
-        fun (ctx : HttpContext) -> async {
-            let resourceRegEx = resourcePath + "/([0-9A-F]{8}[-]([0-9A-F]{4}[-]){3}[0-9A-F]{12})$"
-            match ctx.request.url.AbsolutePath with
-            | RegexMatch resourceRegEx groups ->
-                match Guid.TryParse(groups.[1].Value) with
-                | (true, g) -> return! part g ctx
-                | _ -> return! fail
-            | _ -> return! fail
-        }
+        regexPatternRouting (resourcePath + "/" + uuidRegEx) (uuidMatcher part)
 
     choose [
         path resourcePath >=> choose [

@@ -20,10 +20,31 @@
 
 module Kiotlog.Web.Utils
 
+open System
 open System.Text.RegularExpressions
+open Suave
+
+let uuidRegEx = "([0-9A-F]{8}[-]([0-9A-F]{4}[-]){3}[0-9A-F]{12})$"
 
 let (|RegexMatch|_|) pattern input =
     let matches = Regex.Match(input, pattern, RegexOptions.Compiled ||| RegexOptions.IgnoreCase)
     if matches.Success
     then Some matches.Groups
     else None
+
+let regexPatternRouting regex matcher : WebPart =
+    fun (ctx : HttpContext) -> async {
+        // let resourceRegEx = resourcePath + "/([0-9A-F]{8}[-]([0-9A-F]{4}[-]){3}[0-9A-F]{12})$"
+        match ctx.request.url.AbsolutePath with
+        | RegexMatch regex groups ->
+            return! matcher ctx groups
+            // match Guid.TryParse(groups.[1].Value) with
+            // | (true, g) -> return! part g ctx
+            // | _ -> return! fail
+        | _ -> return! fail
+    }
+
+let uuidMatcher part (ctx: HttpContext) (groups: GroupCollection) = 
+    match Guid.TryParse(groups.[1].Value) with
+        | (true, g) -> part g ctx
+        | _ -> fail

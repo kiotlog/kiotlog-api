@@ -15,8 +15,8 @@
     <Compile Include="src/Json.fs" />
     <Compile Include="src/RestFul.fs" />
     <Compile Include="src/webparts/Generic.fs" />
-    <Compile Include="src/webparts/Devices.fs" />
     <Compile Include="src/webparts/Annotations.fs" />
+    <Compile Include="src/webparts/Devices.fs" />
     <Compile Include="src/webparts/SensorTypes.fs" />
     <Compile Include="src/webparts/Sensors.fs" />
     <Compile Include="src/webparts/Conversions.fs" />
@@ -24,7 +24,6 @@
     <Compile Include="src/API.fs" />
   </ItemGroup>
   <ItemGroup>
-    <!-- <PackageReference Include="FSharp.Core" Version="4.3.4" /> -->
     <PackageReference Include="Argu" Version="6.0.0" />
     <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
     <PackageReference Include="Suave" Version="2.5.6" />

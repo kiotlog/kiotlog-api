@@ -29,9 +29,16 @@ open Microsoft.EntityFrameworkCore
 open Kiotlog.Web.RestFul
 open Kiotlog.Web.DB
 open Kiotlog.Web.Railway
+open Kiotlog.Web.Utils
 
 open KiotlogDBF.Models
 open KiotlogDBF.Context
+open Suave.Successful
+open Kiotlog.Web.Json
+open System.Text
+open Suave.Filters
+open Suave.Operators
+
 
 let getDevicesAsync (cs : string) () =
     async {
@@ -182,6 +189,46 @@ let deleteDeviceAsync (cs : string) (deviceId : Guid) =
 let deleteDevice (cs : string) (deviceId : Guid) =
     deleteDeviceAsync cs deviceId |> Async.RunSynchronously
 
+
+// let handleRailwayResource = function
+//     | Ok x -> JSON OK x
+//     | Error e -> JSON (Encoding.UTF8.GetBytes >> Response.response e.Status) e
+
+// let getResourceById =
+//     getDevice >> handleRailwayResource
+
+// let resourceIdPath = new PrintfFormat<(Guid -> string),unit,string,string,Guid>(resourcePath + "/%s")
+
+
+let private getAnnotationsByDeviceAsync (cs : string) (deviceId : Guid) =
+    async {
+        use ctx = getContext cs
+
+        try
+            let devices =
+                ctx.Devices
+                    .Include(fun d -> d.Annotations :> IEnumerable<_>)
+
+            let q =
+                query {
+                    for d in devices do
+                    where (d.Id = deviceId)
+                    select d
+                }
+            let! device = q.SingleOrDefaultAsync () |> Async.AwaitTask
+
+            match box device with
+            | null -> return Error { Errors = [|"Device not found"|]; Status = HTTP_404 }
+            | d -> return Ok ((d :?> Devices).Annotations.OrderByDescending(fun a -> a.Begin))
+        with
+        | _ -> return Error { Errors = [|"Some DB error occurred"|]; Status = HTTP_500 }
+    }
+
+let private annotations (cs : string) (deviceId : Guid) =
+    choose [
+        GET >=> (getAnnotationsByDeviceAsync cs deviceId |> Async.RunSynchronously |> handleRailwayResource)
+    ]
+
 let webPart (cs : string) =
     choose [
         rest {
@@ -192,4 +239,7 @@ let webPart (cs : string) =
             GetById = getDevice cs
             UpdateById = updateDeviceById cs
         }
+
+        // regexPatternRouting ("devices/" + uuidRegEx + "/annotations") (uuidMatcher (getResourceById cs))
+        pathScan "/devices/%s/annotations" (Guid.Parse >> annotations cs)
     ]
