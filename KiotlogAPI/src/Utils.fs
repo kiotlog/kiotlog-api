@@ -24,7 +24,7 @@ open System
 open System.Text.RegularExpressions
 open Suave
 
-let uuidRegEx = "([0-9A-F]{8}[-]([0-9A-F]{4}[-]){3}[0-9A-F]{12})$"
+let uuidRegEx = "([0-9A-F]{8}[-]([0-9A-F]{4}[-]){3}[0-9A-F]{12})"
 
 let (|RegexMatch|_|) pattern input =
     let matches = Regex.Match(input, pattern, RegexOptions.Compiled ||| RegexOptions.IgnoreCase)

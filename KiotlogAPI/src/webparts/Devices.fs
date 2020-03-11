@@ -231,6 +231,9 @@ let private annotations (cs : string) (deviceId : Guid) =
 
 let webPart (cs : string) =
     choose [
+        // pathScan "/devices/%s/annotations" (Guid.Parse >> annotations cs)
+        regexPatternRouting ("/devices/" + uuidRegEx + "/annotations") (uuidMatcher (annotations cs))
+
         rest {
             Name = "devices"
             GetAll = getDevices cs
@@ -239,7 +242,4 @@ let webPart (cs : string) =
             GetById = getDevice cs
             UpdateById = updateDeviceById cs
         }
-
-        // regexPatternRouting ("devices/" + uuidRegEx + "/annotations") (uuidMatcher (getResourceById cs))
-        pathScan "/devices/%s/annotations" (Guid.Parse >> annotations cs)
     ]

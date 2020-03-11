@@ -27,6 +27,7 @@ open Kiotlog.Web.Webparts.Generics
 open Kiotlog.Web.RestFul
 
 open KiotlogDBF.Models
+open Suave.Successful
 
 let updateAnnotationById<'T when 'T : not struct and 'T : null> (cs : string) (conversionId: Guid) (annotation: Annotations) =
     let updateFunc (entity : Annotations) =
@@ -39,7 +40,7 @@ let webPart (cs : string) =
         rest {
             Name = "annotations"
             GetAll = getEntities<Annotations> cs
-            Create = createEntity<Annotations> cs
+            Create = fun _ -> Error { Errors = [|"Not available"|]; Status = HTTP_422 } //createEntity<Annotations> cs
             Delete = deleteEntity<Annotations> cs
             GetById =  getEntity<Annotations> cs [] []
             UpdateById = updateAnnotationById cs

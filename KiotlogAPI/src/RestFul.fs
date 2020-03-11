@@ -91,7 +91,7 @@ let rest resource =
         | Error e -> JSON (Encoding.UTF8.GetBytes >> Response.response e.Status) e
 
     let uuidPatternRouting part : WebPart =
-        regexPatternRouting (resourcePath + "/" + uuidRegEx) (uuidMatcher part)
+        regexPatternRouting (resourcePath + "/" + uuidRegEx + "/?$") (uuidMatcher part)
 
     choose [
         path resourcePath >=> choose [
