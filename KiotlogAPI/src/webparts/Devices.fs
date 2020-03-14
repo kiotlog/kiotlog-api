@@ -30,6 +30,7 @@ open Kiotlog.Web.RestFul
 open Kiotlog.Web.DB
 open Kiotlog.Web.Railway
 open Kiotlog.Web.Utils
+open Kiotlog.Web.Webparts.Generics
 
 open KiotlogDBF.Models
 open KiotlogDBF.Context
@@ -45,6 +46,7 @@ let getDevicesAsync (cs : string) () =
         use ctx = getContext cs
 
         try
+            let now = DateTime.UtcNow
             let devicesWithAnnotations =
                 ctx.Devices
                     .Include(fun d -> d.Annotations :> IEnumerable<_>)
@@ -54,7 +56,7 @@ let getDevicesAsync (cs : string) () =
             return Ok (
                     devices
                     |> Array.map(fun d ->
-                        d.Annotations <- d.Annotations.OrderByDescending(fun a -> a.Begin).Take(1).ToHashSet()
+                        d.Annotations <- d.Annotations.Where(fun x -> x.Begin < now && (not x.End.HasValue || x.End.Value > now)).OrderByDescending(fun a -> a.Begin).Take(1).ToHashSet()
                         d
                     )
                 )
@@ -224,9 +226,14 @@ let private getAnnotationsByDeviceAsync (cs : string) (deviceId : Guid) =
         | _ -> return Error { Errors = [|"Some DB error occurred"|]; Status = HTTP_500 }
     }
 
+let createAnnotation (cs : string) (devideId : Guid) (annotation : Annotations) =
+    annotation.DeviceId <- devideId
+    createEntity<Annotations> cs annotation
+
 let private annotations (cs : string) (deviceId : Guid) =
     choose [
         GET >=> (getAnnotationsByDeviceAsync cs deviceId |> Async.RunSynchronously |> handleRailwayResource)
+        POST >=> request (getResourceFromReq >> Result.bind validate >> Result.bind (createAnnotation cs deviceId) >> handleRailwayResource)
     ]
 
 let webPart (cs : string) =

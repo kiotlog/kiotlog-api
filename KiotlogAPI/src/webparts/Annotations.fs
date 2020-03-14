@@ -39,7 +39,7 @@ let webPart (cs : string) =
     choose [
         rest {
             Name = "annotations"
-            GetAll = getEntities<Annotations> cs
+            GetAll = fun _ -> Error { Errors = [|"Not available"|]; Status = HTTP_422 } //getEntities<Annotations> cs
             Create = fun _ -> Error { Errors = [|"Not available"|]; Status = HTTP_422 } //createEntity<Annotations> cs
             Delete = deleteEntity<Annotations> cs
             GetById =  getEntity<Annotations> cs [] []

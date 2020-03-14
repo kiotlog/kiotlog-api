@@ -53,20 +53,20 @@ let handleRailwayResource = function
     | Ok x -> JSON OK x
     | Error e -> JSON (Encoding.UTF8.GetBytes >> Response.response e.Status) e
 
+let validate (entity : 'a) =
+    let vctx = ValidationContext(entity)
+    let results = new List<ValidationResult>()
+    let isValid = Validator.TryValidateObject(entity, vctx, results)
+    // (isValid, results)
+    match isValid with
+    | true -> Ok entity
+    | false -> Error { Errors = results |> Seq.map(fun x -> x.ErrorMessage) |> Seq.toArray; Status = HTTP_422 }
+
 let rest resource =
     let resourcePath = "/" + resource.Name
     // let resourceIdPath = new PrintfFormat<(Guid -> string),unit,string,string,Guid>(resourcePath + "/%s")
 
     // let badRequest = BAD_REQUEST "Resource not found"
-
-    let validate (entity : 'a) =
-        let vctx = ValidationContext(entity)
-        let results = new List<ValidationResult>()
-        let isValid = Validator.TryValidateObject(entity, vctx, results)
-        // (isValid, results)
-        match isValid with
-        | true -> Ok entity
-        | false -> Error { Errors = results |> Seq.map(fun x -> x.ErrorMessage) |> Seq.toArray; Status = HTTP_422 }
 
     // let handleValidate : WebPart =
     //     fun (ctx : HttpContext) -> async {
