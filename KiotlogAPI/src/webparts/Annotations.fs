@@ -31,7 +31,12 @@ open Suave.Successful
 
 let updateAnnotationById<'T when 'T : not struct and 'T : null> (cs : string) (conversionId: Guid) (annotation: Annotations) =
     let updateFunc (entity : Annotations) =
-         if not (isNull annotation.Description) then entity.Description <- annotation.Description
+    // this function updates entire object. Updates on other objects shoud follow it.
+    // for partial update use PATCH
+        entity.Description <- annotation.Description
+        entity.Begin <- annotation.Begin
+        entity.End <- annotation.End
+        entity.Data <- annotation.Data
 
     updateEntityById<Annotations> updateFunc cs [] [] conversionId
 
@@ -39,8 +44,8 @@ let webPart (cs : string) =
     choose [
         rest {
             Name = "annotations"
-            GetAll = fun _ -> Error { Errors = [|"Not available"|]; Status = HTTP_422 } //getEntities<Annotations> cs
-            Create = fun _ -> Error { Errors = [|"Not available"|]; Status = HTTP_422 } //createEntity<Annotations> cs
+            GetAll = fun _ -> Error { Errors = [|"Not available: Get device's annotations with GET /devices/<device_id>/annotations"|]; Status = HTTP_422 } //getEntities<Annotations> cs
+            Create = fun _ -> Error { Errors = [|"Not available: Create new annotations for device with POST /devices/<device_id>/annotations"|]; Status = HTTP_422 } //createEntity<Annotations> cs
             Delete = deleteEntity<Annotations> cs
             GetById =  getEntity<Annotations> cs [] []
             UpdateById = updateAnnotationById cs
