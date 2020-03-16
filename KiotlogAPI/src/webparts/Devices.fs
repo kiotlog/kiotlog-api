@@ -39,6 +39,7 @@ open Kiotlog.Web.Json
 open System.Text
 open Suave.Filters
 open Suave.Operators
+open Newtonsoft.Json.Linq
 
 
 let getDevicesAsync (cs : string) () =
@@ -169,6 +170,9 @@ let updateDeviceByIdAsync (cs : string) (deviceId: Guid) (device: Devices) =
 let updateDeviceById (cs : string) (deviceId: Guid) (device: Devices) =
     updateDeviceByIdAsync cs deviceId device |> Async.RunSynchronously
 
+let patchDeviceById (cs : string) (annotatioId: Guid) (annotation: JObject) : Result<Devices, RestError> =
+    Error { Errors = [|"will be implemented"|]; Status = HTTP_501 }
+
 let deleteDeviceAsync (cs : string) (deviceId : Guid) =
     async {
         use ctx = getContext cs
@@ -248,5 +252,6 @@ let webPart (cs : string) =
             Delete = deleteDevice cs
             GetById = getDevice cs
             UpdateById = updateDeviceById cs
+            PatchById = patchDeviceById cs
         }
     ]

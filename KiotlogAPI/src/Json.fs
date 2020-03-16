@@ -22,6 +22,7 @@ module internal Kiotlog.Web.Json
 
 open System.Text
 open Newtonsoft.Json
+open Newtonsoft.Json.Linq
 open Suave
 open Operators
 open Railway
@@ -58,5 +59,15 @@ let fromJson<'a> json =
     with
     | e -> Error { Errors = [|"Error parsing JSON body: " + e.Message|]; Status = HTTP_422 }
 
+let fromJsonAsJObject json =
+    try
+        let j = JObject.Parse json  // JsonConvert.DeserializeObject<'a>(json, jsonSerializerSettings)
+        Ok j
+    with
+    | e -> Error { Errors = [|"Error parsing JSON body: " + e.Message|]; Status = HTTP_422 }
+
 let getResourceFromReq<'a> (req : HttpRequest) =
     req.rawForm |> Encoding.UTF8.GetString |> fromJson<'a>
+
+let getJObjectFromReq (req : HttpRequest) =
+    req.rawForm |> Encoding.UTF8.GetString |> fromJsonAsJObject

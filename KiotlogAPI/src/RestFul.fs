@@ -23,6 +23,7 @@ module Kiotlog.Web.RestFul
 
 // open Newtonsoft.Json
 // open Newtonsoft.Json.Converters
+open Newtonsoft.Json.Linq
 open Suave
 open System.Text
 open Operators
@@ -46,6 +47,7 @@ type RestResource<'a> = {
     Delete : Guid -> Result<unit, RestError>
     GetById : Guid -> Result<'a, RestError>
     UpdateById : Guid -> 'a -> Result<'a, RestError>
+    PatchById : Guid -> JObject -> Result<'a, RestError>
     // IsExists : int -> bool
 }
 
@@ -85,6 +87,9 @@ let rest resource =
     let updateResourceById id =
         request (getResourceFromReq >> Result.bind (resource.UpdateById id) >> handleRailwayResource)
 
+    let patchResourceById id =
+        request (getJObjectFromReq >> Result.bind (resource.PatchById id) >> handleRailwayResource)
+
     let deleteResourceById id =
         match resource.Delete id with
         | Ok _ -> NO_CONTENT
@@ -105,6 +110,6 @@ let rest resource =
         DELETE >=> uuidPatternRouting deleteResourceById
         GET >=> uuidPatternRouting getResourceById
         PUT >=> uuidPatternRouting updateResourceById
-        PATCH >=> uuidPatternRouting updateResourceById
+        PATCH >=> uuidPatternRouting patchResourceById
         //HEAD >=> pathScan resourceIdPath isResourceExists
     ]

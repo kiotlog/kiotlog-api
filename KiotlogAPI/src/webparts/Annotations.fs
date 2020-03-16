@@ -25,11 +25,12 @@ open Suave
 
 open Kiotlog.Web.Webparts.Generics
 open Kiotlog.Web.RestFul
+open Kiotlog.Web.Railway
 
 open KiotlogDBF.Models
-open Suave.Successful
+open Newtonsoft.Json.Linq
 
-let updateAnnotationById<'T when 'T : not struct and 'T : null> (cs : string) (conversionId: Guid) (annotation: Annotations) =
+let updateAnnotationById<'T when 'T : not struct and 'T : null> (cs : string) (annotatioId: Guid) (annotation: Annotations) =
     let updateFunc (entity : Annotations) =
     // this function updates entire object. Updates on other objects shoud follow it.
     // for partial update use PATCH
@@ -38,7 +39,11 @@ let updateAnnotationById<'T when 'T : not struct and 'T : null> (cs : string) (c
         entity.End <- annotation.End
         entity.Data <- annotation.Data
 
-    updateEntityById<Annotations> updateFunc cs [] [] conversionId
+    updateEntityById<Annotations> updateFunc cs [] [] annotatioId
+
+let patchAnnotationById (cs : string) (annotatioId: Guid) (annotation: JObject) : Result<Annotations, RestError> =
+    Error { Errors = [|"will be implemented"|]; Status = HTTP_501 }
+
 
 let webPart (cs : string) =
     choose [
@@ -49,5 +54,6 @@ let webPart (cs : string) =
             Delete = deleteEntity<Annotations> cs
             GetById =  getEntity<Annotations> cs [] []
             UpdateById = updateAnnotationById cs
+            PatchById = patchAnnotationById cs
         }
     ]
