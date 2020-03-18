@@ -88,7 +88,7 @@ let private loadDeviceWithSensorsAndAnnotationsAsync (ctx : KiotlogDBFContext) (
                         .ThenInclude(fun (s : Sensors) -> s.SensorType)
                     .Include(fun d -> d.Sensors :> IEnumerable<_>)
                         .ThenInclude(fun (s : Sensors) -> s.Conversion)
-                    .Include(fun d -> d.Annotations :> IEnumerable<_>)
+                    // .Include(fun d -> d.Annotations :> IEnumerable<_>)
                     // .Include("Sensors.SensorType")
                     // .Include("Sensors.Conversion")
 
@@ -98,7 +98,16 @@ let private loadDeviceWithSensorsAndAnnotationsAsync (ctx : KiotlogDBFContext) (
                     where (d.Id = deviceId)
                     select d
                 }
+            let now = DateTime.UtcNow
+            let annotation =
+                query {
+                    for a in ctx.Annotations do
+                    where (a.DeviceId = deviceId && a.Begin < now && (not a.End.HasValue || a.End.Value > now))
+                    sortByDescending a.Begin
+                    take 1
+                }            
             let! device = q.SingleOrDefaultAsync () |> Async.AwaitTask
+            device.Annotations = annotation.ToHashSet() |> ignore
 
             match box device with
             | null -> return Error { Errors = [|"Device not found"|]; Status = HTTP_404 }
