@@ -46,12 +46,12 @@ let patchAnnotationById (cs : string) (annotatioId: Guid) (annotation: JObject) 
     let updateFunc (entity : Annotations) =
     // this function updates entire object. Updates on other objects shoud follow it.
     // for partial update use PATCH
-        if (annotation.ContainsKey "Description") then entity.Description <- getValue annotation "Description"
-        if (annotation.ContainsKey "Begin") then entity.Begin <- getValue annotation "Begin"
-        if (annotation.ContainsKey "End") then entity.End <- getValue annotation "End"
-        if (annotation.ContainsKey "Data") then entity.Data <- getValue annotation "Data"
+        if (annotation.ContainsKey "Description") then entity.Description <- getJObjectValue annotation "Description"
+        if (annotation.ContainsKey "Begin") then entity.Begin <- getJObjectValue annotation "Begin"
+        if (annotation.ContainsKey "End") then entity.End <- getJObjectValue annotation "End"
+        if (annotation.ContainsKey "Data") then entity.Data <- getJObjectValue annotation "Data"
 
-    Error { Errors = [|"will be implemented"|]; Status = HTTP_501 }
+    updateEntityById<Annotations> updateFunc cs [] [] annotatioId
 
 let webPart (cs : string) =
     choose [

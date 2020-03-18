@@ -72,6 +72,6 @@ let getResourceFromReq<'a> (req : HttpRequest) =
 let getJObjectFromReq (req : HttpRequest) =
     req.rawForm |> Encoding.UTF8.GetString |> fromJsonAsJObject
 
-let getValue<'a> (jobj: JObject) property =
+let getJObjectValue<'a> (jobj: JObject) property =
     let jt = jobj.GetValue property
     jt.ToObject<'a>()
