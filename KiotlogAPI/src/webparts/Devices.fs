@@ -40,6 +40,7 @@ open System.Text
 open Suave.Filters
 open Suave.Operators
 open Newtonsoft.Json.Linq
+open Microsoft.EntityFrameworkCore.Query
 
 
 let getDevicesAsync (cs : string) () =
@@ -79,7 +80,21 @@ let createDevice (cs : string) (device: Devices) =
     | :? DbUpdateException -> Error { Errors = [|"Error adding Device"|]; Status = HTTP_409 }
     | _ -> Error { Errors = [|"Some DB error occurred"|]; Status = HTTP_500 }
 
-let private loadDeviceWithSensorsAndAnnotationsAsync (ctx : KiotlogDBFContext) (deviceId : Guid) =
+let querybyId (deviceId : Guid) (devices: IIncludableQueryable<Devices,Conversions>) =
+    query {
+        for d in devices do
+        where (d.Id = deviceId)
+        select d
+    }
+
+let querybyName (device : String) (devices: IIncludableQueryable<Devices,Conversions>) =
+    query {
+        for d in devices do
+        where (d.Device = device)
+        select d
+    }
+
+let private loadDeviceWithSensorsAndAnnotationsAsync (ctx : KiotlogDBFContext) (queryBy: IIncludableQueryable<Devices,Conversions> -> IQueryable<Devices>) =
     async {
         try
             let devices =
@@ -92,39 +107,45 @@ let private loadDeviceWithSensorsAndAnnotationsAsync (ctx : KiotlogDBFContext) (
                     // .Include("Sensors.SensorType")
                     // .Include("Sensors.Conversion")
 
-            let q =
-                query {
-                    for d in devices do
-                    where (d.Id = deviceId)
-                    select d
-                }
-            let now = DateTime.UtcNow
-            let annotation =
-                query {
-                    for a in ctx.Annotations do
-                    where (a.DeviceId = deviceId && a.Begin < now && (not a.End.HasValue || a.End.Value > now))
-                    sortByDescending a.Begin
-                    take 1
-                }            
+            let q = queryBy devices 
+            
             let! device = q.SingleOrDefaultAsync () |> Async.AwaitTask
-            device.Annotations = annotation.ToHashSet() |> ignore
-
             match box device with
             | null -> return Error { Errors = [|"Device not found"|]; Status = HTTP_404 }
-            | d -> return Ok (d :?> Devices)
+            | d ->
+                let now = DateTime.UtcNow
+                let annotation =
+                    query {
+                        for a in ctx.Annotations do
+                        where (a.DeviceId = device.Id && a.Begin < now && (not a.End.HasValue || a.End.Value > now))
+                        sortByDescending a.Begin
+                        take 1
+                    }            
+                device.Annotations = annotation.ToHashSet() |> ignore
+                return Ok (d :?> Devices)
         with
         | _ -> return Error { Errors = [|"Some DB error occurred"|]; Status = HTTP_500 }
     }
 
-let getDeviceAsync (cs : string) (deviceId : Guid) =
+let getDeviceByIdAsync (cs : string) (deviceId : Guid) =
     async {
         use ctx = getContext cs
 
-        return! loadDeviceWithSensorsAndAnnotationsAsync ctx deviceId
+        return! loadDeviceWithSensorsAndAnnotationsAsync ctx (querybyId deviceId)
     }
 
-let getDevice (cs : string) (deviceId: Guid) =
-    getDeviceAsync cs deviceId |> Async.RunSynchronously
+let getDeviceById (cs : string) (deviceId: Guid) =
+    getDeviceByIdAsync cs deviceId |> Async.RunSynchronously
+
+let getDeviceByNameAsync (cs : string) (device : String) =
+    async {
+        use ctx = getContext cs
+
+        return! loadDeviceWithSensorsAndAnnotationsAsync ctx (querybyName device)
+    }
+
+let getDeviceByName (cs : string) (device: String) =
+    getDeviceByNameAsync cs device |> Async.RunSynchronously
 
 let updateDeviceByIdAsync (cs : string) (deviceId: Guid) (device: Devices) =
     async {
@@ -132,7 +153,7 @@ let updateDeviceByIdAsync (cs : string) (deviceId: Guid) (device: Devices) =
 
         device.Id <- deviceId
 
-        let! res = loadDeviceWithSensorsAndAnnotationsAsync ctx deviceId
+        let! res = loadDeviceWithSensorsAndAnnotationsAsync ctx (querybyId deviceId)
 
         match res with
         | Error _ -> return res
@@ -259,8 +280,10 @@ let webPart (cs : string) =
             GetAll = getDevices cs
             Create = createDevice cs
             Delete = deleteDevice cs
-            GetById = getDevice cs
+            GetById = getDeviceById cs
             UpdateById = updateDeviceById cs
             PatchById = patchDeviceById cs
         }
+
+        GET >=> pathScan "/devices/%s" (getDeviceByName cs >> handleRailwayResource)
     ]
