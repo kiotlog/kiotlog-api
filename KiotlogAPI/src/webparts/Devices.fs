@@ -161,6 +161,17 @@ let updateDeviceByIdAsync (cs : string) (deviceId: Guid) (device: Devices) =
             if not (String.IsNullOrEmpty device.Device) then entity.Device <- device.Device
             if not (isNull (box device.Auth)) then entity.Auth <- device.Auth
             if not (isNull (box device.Frame)) then entity.Frame <- entity.Frame
+            if not (isNull device.Meta) then
+                let newMeta = device.Meta
+                let deviceMeta =
+                    match entity.Meta with
+                    | null -> DevicesMeta()
+                    | m -> m
+                if not (isNull newMeta.Description) then deviceMeta.Description <- newMeta.Description
+                if not (isNull newMeta.UserDescription) then deviceMeta.UserDescription <- newMeta.UserDescription
+
+                entity.Meta <- deviceMeta
+                ctx.Entry(entity).State <- EntityState.Modified
 
             if not (isNull device.Sensors) && device.Sensors.Count > 0 then
                 let updateSensor = fun (s : Sensors) ->
