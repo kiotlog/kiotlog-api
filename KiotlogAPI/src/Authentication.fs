@@ -1,10 +1,9 @@
 module Kiotlog.Web.Authentication
 
 open Suave
-open Suave.Successful
 open Suave.RequestErrors
 
-let apiKey = "83a1ab6a-52a5-48f5-836d-79662722345b"
+let apiKey = "" // "83a1ab6a-52a5-48f5-836d-79662722345b"
 
 let internal parseAuthenticationToken (authorization : string) =
   let parts = authorization.Split (' ')
@@ -29,7 +28,8 @@ let internal checkToken (token: string) =
 
 let authenticate webpart (ctx: HttpContext) =
     async {
-        let authResult = getToken ctx.request |> Result.bind checkToken
+        let authResult =
+            if String.isEmpty apiKey then Ok "" else getToken ctx.request |> Result.bind checkToken
         match authResult with
         | Ok _ -> return! webpart ctx
         | Error e -> return! UNAUTHORIZED e ctx
