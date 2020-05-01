@@ -14,6 +14,7 @@
     <Compile Include="src/DB.fs" />
     <Compile Include="src/Json.fs" />
     <Compile Include="src/RestFul.fs" />
+    <Compile Include="src/Authentication.fs" />
     <Compile Include="src/webparts/Generic.fs" />
     <Compile Include="src/webparts/Annotations.fs" />
     <Compile Include="src/webparts/Devices.fs" />

@@ -28,6 +28,7 @@ open Suave.CORS
 open Suave.Successful
 
 open Arguments
+open Kiotlog.Web.Authentication
 
 [<EntryPoint>]
 let main argv =
@@ -43,12 +44,16 @@ let main argv =
     let app =
         cors >=> choose [
             OPTIONS >=> OK "CORS"
-            Webparts.Devices.webPart cs
-            Webparts.SensorTypes.webPart cs
-            Webparts.Sensors.webPart cs
-            Webparts.Conversions.webPart cs
-            Webparts.Status.webPart cs
-            Webparts.Annotations.webPart cs
+            authenticate (
+                choose [
+                    Webparts.Devices.webPart cs
+                    Webparts.SensorTypes.webPart cs
+                    Webparts.Sensors.webPart cs
+                    Webparts.Conversions.webPart cs
+                    Webparts.Status.webPart cs
+                    Webparts.Annotations.webPart cs
+                ]
+            )
             RequestErrors.NOT_FOUND "Found no handlers"
         ] >=> logStructured logger logFormatStructured
 
