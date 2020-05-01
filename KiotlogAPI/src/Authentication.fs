@@ -3,7 +3,7 @@ module Kiotlog.Web.Authentication
 open Suave
 open Suave.RequestErrors
 
-let apiKey = "" // "83a1ab6a-52a5-48f5-836d-79662722345b"
+// let apiKey = "" // "83a1ab6a-52a5-48f5-836d-79662722345b"
 
 let internal parseAuthenticationToken (authorization : string) =
   let parts = authorization.Split (' ')
@@ -20,16 +20,16 @@ let internal getToken (request: HttpRequest) =
     | Choice1Of2 header -> parseAuthenticationToken header
     | Choice2Of2 _ -> Error "No Authorization Header"
 
-let internal checkToken (token: string) =
+let internal checkToken (apiKey: string) (token: string) =
     if token = apiKey then
         Ok ""
     else    
         Error "Not Authorized"
 
-let authenticate webpart (ctx: HttpContext) =
+let authenticate apiKey webpart (ctx: HttpContext) =
     async {
         let authResult =
-            if String.isEmpty apiKey then Ok "" else getToken ctx.request |> Result.bind checkToken
+            if String.isEmpty apiKey then Ok "" else getToken ctx.request |> Result.bind (checkToken apiKey)
         match authResult with
         | Ok _ -> return! webpart ctx
         | Error e -> return! UNAUTHORIZED e ctx

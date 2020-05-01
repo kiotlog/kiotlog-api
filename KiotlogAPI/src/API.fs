@@ -35,6 +35,7 @@ let main argv =
 
     let config = parseCLI argv
     let cs = config.PostgresConnectionString
+    let apiKey = config.ApiKey
 
     let logger = Targets.create Verbose [||]
 
@@ -44,7 +45,7 @@ let main argv =
     let app =
         cors >=> choose [
             OPTIONS >=> OK "CORS"
-            authenticate (
+            authenticate apiKey (
                 choose [
                     Webparts.Devices.webPart cs
                     Webparts.SensorTypes.webPart cs

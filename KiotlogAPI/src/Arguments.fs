@@ -34,6 +34,7 @@ module Arguments =
             PostgresHost: string
             PostgresPort: int
             PostgresDb: string
+            ApiKey: string
         }
 
     let private getPostgresConnectionString c =
@@ -52,6 +53,7 @@ module Arguments =
         | PgHost of pghost:string
         | PgPort of pgport:int
         | PgDb of db:string
+        | ApiKey of apikey:string
     with
         interface IArgParserTemplate with
             member s.Usage =
@@ -63,6 +65,7 @@ module Arguments =
                 | PgHost _ -> "Postgres host"
                 | PgPort _ -> "Postgres port db"
                 | PgDb _ -> "Postgres db"
+                | ApiKey _ -> "Api Key"
 
     let private errorHandler = ProcessExiter(colorizer = function ErrorCode.HelpText -> None | _ -> Some ConsoleColor.Red)
     let private parser = ArgumentParser.Create<KiotlogAPIArgs>(programName = "KiotlogAPI", errorHandler = errorHandler)
@@ -78,6 +81,7 @@ module Arguments =
             PostgresHost = results.GetResult(<@ PgHost @>, defaultValue = "localhost")
             PostgresPort = results.GetResult(<@ PgPort @>, defaultValue = 5432)
             PostgresDb = results.GetResult(<@ PgDb @>, defaultValue = "postgres")
+            ApiKey = results.GetResult(<@ ApiKey @>, defaultValue = "")
         }
 
     let parseCLI argv =
@@ -91,6 +95,7 @@ module Arguments =
             PostgresHost = results.GetResult(<@ PgHost @>, defaultValue = env.PostgresHost)
             PostgresPort = results.GetResult(<@ PgPort @>, defaultValue = env.PostgresPort)
             PostgresDb = results.GetResult(<@ PgDb @>, defaultValue = env.PostgresDb)
+            ApiKey = results.GetResult(<@ ApiKey @>, defaultValue = "")
         }
 
 //    let config = parser.ParseConfiguration
