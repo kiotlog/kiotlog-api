@@ -27,12 +27,17 @@ open Kiotlog.Web.Webparts.Generics
 open Kiotlog.Web.RestFul
 
 open KiotlogDBF.Models
+open Newtonsoft.Json.Linq
+open Kiotlog.Web.Railway
 
 let updateConversionById<'T when 'T : not struct and 'T : null> (cs : string) (conversionId: Guid) (conversion: Conversions) =
     let updateFunc (entity : Conversions) =
          if not (String.IsNullOrEmpty conversion.Fun) then entity.Fun <- conversion.Fun
 
     updateEntityById<Conversions> updateFunc cs ["Sensors"] [] conversionId
+
+let patchConversionById (cs : string) (annotatioId: Guid) (annotation: JObject) : Result<Conversions, RestError> =
+    Error { Errors = [|"will be implemented"|]; Status = HTTP_501 }
 
 let webPart (cs : string) =
     choose [
@@ -43,5 +48,6 @@ let webPart (cs : string) =
             Delete = deleteEntity<Conversions> cs
             GetById =  getEntity<Conversions> cs ["Sensors"] []
             UpdateById = updateConversionById cs
+            PatchById = patchConversionById cs
         }
     ]

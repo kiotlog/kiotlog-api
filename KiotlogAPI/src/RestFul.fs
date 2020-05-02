@@ -23,6 +23,7 @@ module Kiotlog.Web.RestFul
 
 // open Newtonsoft.Json
 // open Newtonsoft.Json.Converters
+open Newtonsoft.Json.Linq
 open Suave
 open System.Text
 open Operators
@@ -46,23 +47,28 @@ type RestResource<'a> = {
     Delete : Guid -> Result<unit, RestError>
     GetById : Guid -> Result<'a, RestError>
     UpdateById : Guid -> 'a -> Result<'a, RestError>
+    PatchById : Guid -> JObject -> Result<'a, RestError>
     // IsExists : int -> bool
 }
+
+let handleRailwayResource = function
+    | Ok x -> JSON OK x
+    | Error e -> JSON (Encoding.UTF8.GetBytes >> Response.response e.Status) e
+
+let validate (entity : 'a) =
+    let vctx = ValidationContext(entity)
+    let results = new List<ValidationResult>()
+    let isValid = Validator.TryValidateObject(entity, vctx, results)
+    // (isValid, results)
+    match isValid with
+    | true -> Ok entity
+    | false -> Error { Errors = results |> Seq.map(fun x -> x.ErrorMessage) |> Seq.toArray; Status = HTTP_422 }
 
 let rest resource =
     let resourcePath = "/" + resource.Name
     // let resourceIdPath = new PrintfFormat<(Guid -> string),unit,string,string,Guid>(resourcePath + "/%s")
 
     // let badRequest = BAD_REQUEST "Resource not found"
-
-    let validate (entity : 'a) =
-        let vctx = ValidationContext(entity)
-        let results = new List<ValidationResult>()
-        let isValid = Validator.TryValidateObject(entity, vctx, results)
-        // (isValid, results)
-        match isValid with
-        | true -> Ok entity
-        | false -> Error { Errors = results |> Seq.map(fun x -> x.ErrorMessage) |> Seq.toArray; Status = HTTP_422 }
 
     // let handleValidate : WebPart =
     //     fun (ctx : HttpContext) -> async {
@@ -73,10 +79,6 @@ let rest resource =
     //     | Some r -> r |> JSON OK
     //     | _ -> requestError
 
-    let handleRailwayResource = function
-        | Ok x -> JSON OK x
-        | Error e -> JSON (Encoding.UTF8.GetBytes >> Response.response e.Status) e
-
     let getAll = warbler (fun _ -> resource.GetAll () |> handleRailwayResource)
 
     let getResourceById =
@@ -85,24 +87,16 @@ let rest resource =
     let updateResourceById id =
         request (getResourceFromReq >> Result.bind (resource.UpdateById id) >> handleRailwayResource)
 
+    let patchResourceById id =
+        request (getJObjectFromReq >> Result.bind (resource.PatchById id) >> handleRailwayResource)
+
     let deleteResourceById id =
         match resource.Delete id with
         | Ok _ -> NO_CONTENT
         | Error e -> JSON (Encoding.UTF8.GetBytes >> Response.response e.Status) e
 
-    //let isResourceExists id =
-    //    if resource.IsExists id then OK "" else NOT_FOUND ""
-
     let uuidPatternRouting part : WebPart =
-        fun (ctx : HttpContext) -> async {
-            let resourceRegEx = resourcePath + "/([0-9A-F]{8}[-]([0-9A-F]{4}[-]){3}[0-9A-F]{12})$"
-            match ctx.request.url.AbsolutePath with
-            | RegexMatch resourceRegEx groups ->
-                match Guid.TryParse(groups.[1].Value) with
-                | (true, g) -> return! part g ctx
-                | _ -> return! fail
-            | _ -> return! fail
-        }
+        regexPatternRouting (resourcePath + "/" + uuidRegEx + "/?$") (uuidMatcher part)
 
     choose [
         path resourcePath >=> choose [
@@ -116,6 +110,6 @@ let rest resource =
         DELETE >=> uuidPatternRouting deleteResourceById
         GET >=> uuidPatternRouting getResourceById
         PUT >=> uuidPatternRouting updateResourceById
-        PATCH >=> uuidPatternRouting updateResourceById
+        PATCH >=> uuidPatternRouting patchResourceById
         //HEAD >=> pathScan resourceIdPath isResourceExists
     ]

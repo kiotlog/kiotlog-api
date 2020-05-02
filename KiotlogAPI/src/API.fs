@@ -28,12 +28,14 @@ open Suave.CORS
 open Suave.Successful
 
 open Arguments
+open Kiotlog.Web.Authentication
 
 [<EntryPoint>]
 let main argv =
 
     let config = parseCLI argv
     let cs = config.PostgresConnectionString
+    let apiKey = config.ApiKey
 
     let logger = Targets.create Verbose [||]
 
@@ -43,11 +45,16 @@ let main argv =
     let app =
         cors >=> choose [
             OPTIONS >=> OK "CORS"
-            Webparts.Devices.webPart cs
-            Webparts.SensorTypes.webPart cs
-            Webparts.Sensors.webPart cs
-            Webparts.Conversions.webPart cs
-            Webparts.Status.webPart cs
+            authenticate apiKey (
+                choose [
+                    Webparts.Devices.webPart cs
+                    Webparts.SensorTypes.webPart cs
+                    Webparts.Sensors.webPart cs
+                    Webparts.Conversions.webPart cs
+                    Webparts.Status.webPart cs
+                    Webparts.Annotations.webPart cs
+                ]
+            )
             RequestErrors.NOT_FOUND "Found no handlers"
         ] >=> logStructured logger logFormatStructured
 

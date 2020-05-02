@@ -1,3 +1,4 @@
 [submodule "KiotlogDBF"]
 	path = KiotlogDBF
-	url = https://github.com/kiotlog/kiotlog-dbf
+	url = git@github.com:kiotlog/kiotlog-dbf.git
+	branch = development

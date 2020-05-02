@@ -27,6 +27,8 @@ open Kiotlog.Web.Webparts.Generics
 open Kiotlog.Web.RestFul
 
 open KiotlogDBF.Models
+open Newtonsoft.Json.Linq
+open Kiotlog.Web.Railway
 
 let updateSensorTypeById<'T when 'T : not struct> (cs : string) (sensortypeId: Guid) (sensortype: SensorTypes) =
     let updateFunc (entity : SensorTypes) =
@@ -35,6 +37,9 @@ let updateSensorTypeById<'T when 'T : not struct> (cs : string) (sensortypeId: G
         if not (isNull sensortype.Meta) then entity.Meta <- sensortype.Meta
 
     updateEntityById<SensorTypes> updateFunc cs ["Sensors"] [] sensortypeId
+
+let patchSensorTypeById (cs : string) (annotatioId: Guid) (annotation: JObject) : Result<SensorTypes, RestError> =
+    Error { Errors = [|"will be implemented"|]; Status = HTTP_501 }
 
 let webPart (cs : string) =
     choose [
@@ -45,5 +50,6 @@ let webPart (cs : string) =
             Delete = deleteEntity<SensorTypes> cs
             GetById =  getEntity<SensorTypes> cs ["Sensors"] []
             UpdateById = updateSensorTypeById cs
+            PatchById = patchSensorTypeById cs
         }
     ]

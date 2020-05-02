@@ -22,24 +22,46 @@ module Kiotlog.Web.Webparts.Devices
 
 open System
 open System.Collections.Generic
+open System.Linq
 open Suave
 open Microsoft.EntityFrameworkCore
 
 open Kiotlog.Web.RestFul
 open Kiotlog.Web.DB
 open Kiotlog.Web.Railway
+open Kiotlog.Web.Utils
+open Kiotlog.Web.Webparts.Generics
 
 open KiotlogDBF.Models
 open KiotlogDBF.Context
+open Suave.Successful
+open Kiotlog.Web.Json
+open System.Text
+open Suave.Filters
+open Suave.Operators
+open Newtonsoft.Json.Linq
+open Microsoft.EntityFrameworkCore.Query
+
 
 let getDevicesAsync (cs : string) () =
     async {
         use ctx = getContext cs
 
         try
-            let! devices = ctx.Devices.ToArrayAsync() |> Async.AwaitTask
+            let now = DateTime.UtcNow
+            let devicesWithAnnotations =
+                ctx.Devices
+                    .Include(fun d -> d.Annotations :> IEnumerable<_>)
+                    
+            let! devices = devicesWithAnnotations.ToArrayAsync() |> Async.AwaitTask
 
-            return Ok devices
+            return Ok (
+                    devices
+                    |> Array.map(fun d ->
+                        d.Annotations <- d.Annotations.Where(fun x -> x.Begin < now && (not x.End.HasValue || x.End.Value > now)).OrderByDescending(fun a -> a.Begin).Take(1).ToHashSet()
+                        d
+                    )
+                )
         with | _ -> return Error { Errors = [|"Error getting devices from DB"|]; Status = HTTP_500 }
     }
 
@@ -58,7 +80,21 @@ let createDevice (cs : string) (device: Devices) =
     | :? DbUpdateException -> Error { Errors = [|"Error adding Device"|]; Status = HTTP_409 }
     | _ -> Error { Errors = [|"Some DB error occurred"|]; Status = HTTP_500 }
 
-let private loadDeviceWithSensorsAsync (ctx : KiotlogDBFContext) (deviceId : Guid) =
+let querybyId (deviceId : Guid) (devices: IIncludableQueryable<Devices,Conversions>) =
+    query {
+        for d in devices do
+        where (d.Id = deviceId)
+        select d
+    }
+
+let querybyName (device : String) (devices: IIncludableQueryable<Devices,Conversions>) =
+    query {
+        for d in devices do
+        where (d.Device = device)
+        select d
+    }
+
+let private loadDeviceWithSensorsAndAnnotationsAsync (ctx : KiotlogDBFContext) (queryBy: IIncludableQueryable<Devices,Conversions> -> IQueryable<Devices>) =
     async {
         try
             let devices =
@@ -67,33 +103,49 @@ let private loadDeviceWithSensorsAsync (ctx : KiotlogDBFContext) (deviceId : Gui
                         .ThenInclude(fun (s : Sensors) -> s.SensorType)
                     .Include(fun d -> d.Sensors :> IEnumerable<_>)
                         .ThenInclude(fun (s : Sensors) -> s.Conversion)
+                    // .Include(fun d -> d.Annotations :> IEnumerable<_>)
                     // .Include("Sensors.SensorType")
                     // .Include("Sensors.Conversion")
 
-            let q =
-                query {
-                    for d in devices do
-                    where (d.Id = deviceId)
-                    select d
-                }
+            let q = queryBy devices 
+            
             let! device = q.SingleOrDefaultAsync () |> Async.AwaitTask
-
             match box device with
             | null -> return Error { Errors = [|"Device not found"|]; Status = HTTP_404 }
-            | d -> return Ok (d :?> Devices)
+            | d ->
+                let now = DateTime.UtcNow
+                let annotation =
+                    query {
+                        for a in ctx.Annotations do
+                        where (a.DeviceId = device.Id && a.Begin < now && (not a.End.HasValue || a.End.Value > now))
+                        sortByDescending a.Begin
+                        take 1
+                    }            
+                device.Annotations = annotation.ToHashSet() |> ignore
+                return Ok (d :?> Devices)
         with
         | _ -> return Error { Errors = [|"Some DB error occurred"|]; Status = HTTP_500 }
     }
 
-let getDeviceAsync (cs : string) (deviceId : Guid) =
+let getDeviceByIdAsync (cs : string) (deviceId : Guid) =
     async {
         use ctx = getContext cs
 
-        return! loadDeviceWithSensorsAsync ctx deviceId
+        return! loadDeviceWithSensorsAndAnnotationsAsync ctx (querybyId deviceId)
     }
 
-let getDevice (cs : string) (deviceId: Guid) =
-    getDeviceAsync cs deviceId |> Async.RunSynchronously
+let getDeviceById (cs : string) (deviceId: Guid) =
+    getDeviceByIdAsync cs deviceId |> Async.RunSynchronously
+
+let getDeviceByNameAsync (cs : string) (device : String) =
+    async {
+        use ctx = getContext cs
+
+        return! loadDeviceWithSensorsAndAnnotationsAsync ctx (querybyName device)
+    }
+
+let getDeviceByName (cs : string) (device: String) =
+    getDeviceByNameAsync cs device |> Async.RunSynchronously
 
 let updateDeviceByIdAsync (cs : string) (deviceId: Guid) (device: Devices) =
     async {
@@ -101,7 +153,7 @@ let updateDeviceByIdAsync (cs : string) (deviceId: Guid) (device: Devices) =
 
         device.Id <- deviceId
 
-        let! res = loadDeviceWithSensorsAsync ctx deviceId
+        let! res = loadDeviceWithSensorsAndAnnotationsAsync ctx (querybyId deviceId)
 
         match res with
         | Error _ -> return res
@@ -109,6 +161,17 @@ let updateDeviceByIdAsync (cs : string) (deviceId: Guid) (device: Devices) =
             if not (String.IsNullOrEmpty device.Device) then entity.Device <- device.Device
             if not (isNull (box device.Auth)) then entity.Auth <- device.Auth
             if not (isNull (box device.Frame)) then entity.Frame <- entity.Frame
+            if not (isNull device.Meta) then
+                let newMeta = device.Meta
+                let deviceMeta =
+                    match entity.Meta with
+                    | null -> DevicesMeta()
+                    | m -> m
+                if not (isNull newMeta.Description) then deviceMeta.Description <- newMeta.Description
+                if not (isNull newMeta.UserDescription) then deviceMeta.UserDescription <- newMeta.UserDescription
+
+                entity.Meta <- deviceMeta
+                ctx.Entry(entity).State <- EntityState.Modified
 
             if not (isNull device.Sensors) && device.Sensors.Count > 0 then
                 let updateSensor = fun (s : Sensors) ->
@@ -148,6 +211,9 @@ let updateDeviceByIdAsync (cs : string) (deviceId: Guid) (device: Devices) =
 let updateDeviceById (cs : string) (deviceId: Guid) (device: Devices) =
     updateDeviceByIdAsync cs deviceId device |> Async.RunSynchronously
 
+let patchDeviceById (cs : string) (annotatioId: Guid) (annotation: JObject) : Result<Devices, RestError> =
+    Error { Errors = [|"will be implemented"|]; Status = HTTP_501 }
+
 let deleteDeviceAsync (cs : string) (deviceId : Guid) =
     async {
         use ctx = getContext cs
@@ -170,14 +236,65 @@ let deleteDeviceAsync (cs : string) (deviceId : Guid) =
 let deleteDevice (cs : string) (deviceId : Guid) =
     deleteDeviceAsync cs deviceId |> Async.RunSynchronously
 
+
+// let handleRailwayResource = function
+//     | Ok x -> JSON OK x
+//     | Error e -> JSON (Encoding.UTF8.GetBytes >> Response.response e.Status) e
+
+// let getResourceById =
+//     getDevice >> handleRailwayResource
+
+// let resourceIdPath = new PrintfFormat<(Guid -> string),unit,string,string,Guid>(resourcePath + "/%s")
+
+
+let private getAnnotationsByDeviceAsync (cs : string) (deviceId : Guid) =
+    async {
+        use ctx = getContext cs
+
+        try
+            let devices =
+                ctx.Devices
+                    .Include(fun d -> d.Annotations :> IEnumerable<_>)
+
+            let q =
+                query {
+                    for d in devices do
+                    where (d.Id = deviceId)
+                    select d
+                }
+            let! device = q.SingleOrDefaultAsync () |> Async.AwaitTask
+
+            match box device with
+            | null -> return Error { Errors = [|"Device not found"|]; Status = HTTP_404 }
+            | d -> return Ok ((d :?> Devices).Annotations.OrderByDescending(fun a -> a.Begin))
+        with
+        | _ -> return Error { Errors = [|"Some DB error occurred"|]; Status = HTTP_500 }
+    }
+
+let createAnnotation (cs : string) (devideId : Guid) (annotation : Annotations) =
+    annotation.DeviceId <- devideId
+    createEntity<Annotations> cs annotation
+
+let private annotations (cs : string) (deviceId : Guid) =
+    choose [
+        GET >=> (getAnnotationsByDeviceAsync cs deviceId |> Async.RunSynchronously |> handleRailwayResource)
+        POST >=> request (getResourceFromReq >> Result.bind validate >> Result.bind (createAnnotation cs deviceId) >> handleRailwayResource)
+    ]
+
 let webPart (cs : string) =
     choose [
+        // pathScan "/devices/%s/annotations" (Guid.Parse >> annotations cs)
+        regexPatternRouting ("/devices/" + uuidRegEx + "/annotations") (uuidMatcher (annotations cs))
+
         rest {
             Name = "devices"
             GetAll = getDevices cs
             Create = createDevice cs
             Delete = deleteDevice cs
-            GetById = getDevice cs
+            GetById = getDeviceById cs
             UpdateById = updateDeviceById cs
+            PatchById = patchDeviceById cs
         }
+
+        GET >=> pathScan "/devices/%s" (getDeviceByName cs >> handleRailwayResource)
     ]
