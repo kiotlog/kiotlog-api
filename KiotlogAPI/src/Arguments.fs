@@ -95,7 +95,7 @@ module Arguments =
             PostgresHost = results.GetResult(<@ PgHost @>, defaultValue = env.PostgresHost)
             PostgresPort = results.GetResult(<@ PgPort @>, defaultValue = env.PostgresPort)
             PostgresDb = results.GetResult(<@ PgDb @>, defaultValue = env.PostgresDb)
-            ApiKey = results.GetResult(<@ ApiKey @>, defaultValue = "")
+            ApiKey = results.GetResult(<@ ApiKey @>, defaultValue = env.ApiKey)
         }
 
 //    let config = parser.ParseConfiguration
